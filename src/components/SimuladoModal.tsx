@@ -100,40 +100,40 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
     const percentage = Math.round((score / examQuestions.length) * 100);
 
     return (
-      <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center border-b-6 border-slate-300 shadow-2xl animate-in zoom-in-95">
-          <div className="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl mb-4 border-4 shadow-lg bg-amber-100 border-amber-300">
+      <div className="fixed inset-0 z-50 bg-slate-900/90 dark:bg-black/90 backdrop-blur-md flex items-center justify-center p-4 select-none">
+        <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center border-b-6 border-slate-300 dark:border-slate-700 shadow-2xl animate-in zoom-in-95">
+          <div className="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl mb-4 border-4 shadow-lg bg-amber-100 dark:bg-amber-950/80 border-amber-300 dark:border-amber-700">
             {passed ? '🎉' : '⚠️'}
           </div>
 
-          <span className={`text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full ${passed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+          <span className={`text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full ${passed ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}`}>
             {passed ? 'APROVADO NO SIMULADO' : 'NÃO FOI DESTA VEZ'}
           </span>
 
-          <h2 className="text-3xl font-black text-slate-900 mt-3">
+          <h2 className="text-3xl font-black mt-3">
             {score} de {examQuestions.length} acertos ({percentage}%)
           </h2>
 
-          <p className="text-sm font-semibold text-slate-600 mt-2">
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-2">
             {passed
               ? 'Parabéns! Você atingiu a nota mínima de 70% exigida pelo DETRAN para aprovação na Prova Teórica!'
               : 'O DETRAN exige no mínimo 70% de acertos (21 de 30 questões). Continue praticando as lições para reforçar os pontos fracos!'}
           </p>
 
           {/* Detailed breakdown */}
-          <div className="mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left">
-            <h4 className="text-xs font-black uppercase text-slate-500 mb-2">Resumo da Avaliação</h4>
-            <div className="flex justify-between text-sm font-bold text-slate-700 py-1 border-b border-slate-200">
+          <div className="mt-6 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left">
+            <h4 className="text-xs font-black uppercase text-slate-500 dark:text-slate-400 mb-2">Resumo da Avaliação</h4>
+            <div className="flex justify-between text-sm font-bold py-1 border-b border-slate-200 dark:border-slate-700">
               <span>Questões Respondidas:</span>
               <span>{answeredCount} de {examQuestions.length}</span>
             </div>
-            <div className="flex justify-between text-sm font-bold text-slate-700 py-1 border-b border-slate-200">
+            <div className="flex justify-between text-sm font-bold py-1 border-b border-slate-200 dark:border-slate-700">
               <span>Tempo Restante:</span>
               <span>{formatTime(timeLeft)}</span>
             </div>
-            <div className="flex justify-between text-sm font-bold text-slate-700 py-1">
+            <div className="flex justify-between text-sm font-bold py-1">
               <span>Critério CONTRAN:</span>
-              <span className="text-amber-600">Mínimo 70% (21 acertos)</span>
+              <span className="text-amber-600 dark:text-amber-400">Mínimo 70% (21 acertos)</span>
             </div>
           </div>
 
@@ -153,7 +153,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
                 sounds.playClick();
                 onClose();
               }}
-              className="w-full py-3 rounded-2xl border-2 border-slate-200 hover:bg-slate-50 font-bold text-slate-700 text-sm cursor-pointer"
+              className="w-full py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-slate-700 dark:text-slate-300 text-sm cursor-pointer"
             >
               Voltar ao Início
             </button>
@@ -164,9 +164,9 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-100 flex flex-col justify-between select-none">
+    <div className="fixed inset-0 z-50 bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between select-none transition-colors">
       {/* Top Header */}
-      <header className="bg-white border-b-2 border-slate-200 px-4 py-3 shadow-sm">
+      <header className="bg-white dark:bg-slate-900 border-b-2 border-slate-200 dark:border-slate-800 px-4 py-3 shadow-sm">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -176,20 +176,20 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
                   onClose();
                 }
               }}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 cursor-pointer"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>
             <div>
-              <h2 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+              <h2 className="text-base sm:text-lg font-black flex items-center gap-2">
                 <span>Simulado Oficial DETRAN</span>
                 {reviewMode && (
-                  <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold">
                     Modo Gabarito
                   </span>
                 )}
               </h2>
-              <span className="text-xs font-semibold text-slate-500">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                 Questão {currentIndex + 1} de {examQuestions.length}
               </span>
             </div>
@@ -198,8 +198,8 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
           {/* Timer and Finish CTA */}
           <div className="flex items-center gap-3">
             {!reviewMode && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-300 text-slate-800 font-extrabold text-sm">
-                <Clock className="w-4 h-4 text-amber-600" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-extrabold text-sm">
+                <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <span>{formatTime(timeLeft)}</span>
               </div>
             )}
@@ -228,13 +228,13 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
       {/* Main Question Body */}
       <main className="max-w-3xl w-full mx-auto px-4 py-6 flex-1 overflow-y-auto">
         {/* Navigation Dots */}
-        <div className="flex flex-wrap gap-1.5 mb-6 pb-2 justify-center border-b border-slate-200">
+        <div className="flex flex-wrap gap-1.5 mb-6 pb-2 justify-center border-b border-slate-200 dark:border-slate-800">
           {examQuestions.map((q, idx) => {
             const isAnswered = answers[idx] !== undefined;
             const isCurrent = idx === currentIndex;
             const isCorrect = isFinished && answers[idx] === q.correctOptionId;
 
-            let dotColor = 'bg-slate-200 text-slate-600';
+            let dotColor = 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400';
             if (reviewMode) {
               dotColor = isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white';
             } else if (isAnswered) {
@@ -251,7 +251,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
                 className={`
                   w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center
                   ${dotColor}
-                  ${isCurrent ? 'ring-2 ring-slate-900 scale-110 shadow' : 'opacity-80 hover:opacity-100'}
+                  ${isCurrent ? 'ring-2 ring-slate-900 dark:ring-amber-400 scale-110 shadow' : 'opacity-80 hover:opacity-100'}
                 `}
               >
                 {idx + 1}
@@ -268,11 +268,11 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
         )}
 
         {/* Question Text */}
-        <div className="bg-white rounded-2xl p-6 border-2 border-slate-200 shadow-sm mb-4">
-          <span className="text-xs font-black uppercase text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 inline-block mb-3">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border-2 border-slate-200 dark:border-slate-800 shadow-sm mb-4">
+          <span className="text-xs font-black uppercase text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-md border border-amber-200 dark:border-amber-800 inline-block mb-3">
             Matéria: {currentQ.topic.toUpperCase().replace('_', ' ')}
           </span>
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
+          <h3 className="text-base sm:text-lg font-bold leading-relaxed">
             {currentQ.text}
           </h3>
         </div>
@@ -285,8 +285,8 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
 
             let cardStyle = 'duo-btn-card';
             if (reviewMode) {
-              if (isCorrect) cardStyle = 'bg-emerald-100 border-emerald-500 text-emerald-950 font-bold';
-              else if (isSelected && !isCorrect) cardStyle = 'bg-rose-100 border-rose-500 text-rose-950 font-bold';
+              if (isCorrect) cardStyle = 'bg-emerald-100 dark:bg-emerald-950 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-bold';
+              else if (isSelected && !isCorrect) cardStyle = 'bg-rose-100 dark:bg-rose-950 border-rose-500 text-rose-950 dark:text-rose-100 font-bold';
             } else if (isSelected) {
               cardStyle = 'selected ring-2 ring-amber-400 font-bold';
             }
@@ -302,16 +302,16 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
                 `}
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center text-xs font-black uppercase text-slate-700">
+                  <span className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs font-black uppercase text-slate-700 dark:text-slate-300">
                     {opt.id}
                   </span>
                   <span>{opt.text}</span>
                 </div>
                 {reviewMode && isCorrect && (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 ml-2" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 ml-2" />
                 )}
                 {reviewMode && isSelected && !isCorrect && (
-                  <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 ml-2" />
+                  <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 ml-2" />
                 )}
               </button>
             );
@@ -320,7 +320,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
 
         {/* Legal Explanation in review mode */}
         {reviewMode && (
-          <div className="mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-sm">
+          <div className="mt-4 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-950 dark:text-amber-200 text-sm">
             <h4 className="font-black mb-1">Fundamento Legal (CTB):</h4>
             <p className="font-medium">{currentQ.explanation}</p>
           </div>
@@ -328,7 +328,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
       </main>
 
       {/* Footer Navigation */}
-      <footer className="bg-white border-t border-slate-200 px-4 py-3">
+      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-3">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <button
             disabled={currentIndex === 0}
@@ -336,13 +336,13 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
               sounds.playClick();
               setCurrentIndex(prev => prev - 1);
             }}
-            className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Anterior</span>
           </button>
 
-          <span className="text-xs font-bold text-slate-500">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
             {currentIndex + 1} / {examQuestions.length}
           </span>
 

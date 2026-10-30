@@ -196,13 +196,13 @@ export const LearningPath: React.FC<LearningPathProps> = ({
             </div>
 
             {/* Thematic Ambient Road Container */}
-            <div className="relative py-6 rounded-3xl bg-slate-100/60 border-2 border-dashed border-slate-200">
+            <div className="relative py-6 rounded-3xl bg-slate-100/60 dark:bg-slate-900/60 border-2 border-dashed border-slate-200 dark:border-slate-800 transition-colors">
               {/* Scenery graphics */}
               {renderUnitScenery(unit.unitNumber)}
 
               {/* Road Asphalt Stripe in Center */}
-              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-28 bg-slate-200/50 rounded-2xl border-x-2 border-slate-300 pointer-events-none">
-                <div className="w-1 h-full mx-auto road-stripe opacity-40" />
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-28 bg-slate-200/50 dark:bg-slate-800/70 rounded-2xl border-x-2 border-slate-300 dark:border-slate-700 pointer-events-none">
+                <div className="w-1 h-full mx-auto road-stripe opacity-40 dark:opacity-60" />
               </div>
 
               {/* Lessons Nodes (Zigue-Zague) */}
@@ -269,11 +269,11 @@ export const LearningPath: React.FC<LearningPathProps> = ({
 
                       {/* Lesson Title and Theory Pill */}
                       <div className="flex flex-col items-center mt-2 max-w-[140px] text-center">
-                        <span className="text-xs font-bold text-slate-800 line-clamp-1">
+                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200 line-clamp-1">
                           {lesson.title}
                         </span>
                         {!isLocked && (
-                          <span className="text-[10px] font-black uppercase text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full mt-0.5 flex items-center gap-1 border border-amber-200">
+                          <span className="text-[10px] font-black uppercase text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/80 px-2 py-0.5 rounded-full mt-0.5 flex items-center gap-1 border border-amber-200 dark:border-amber-800">
                             <BookOpen className="w-3 h-3" />
                             <span>Teoria + Quiz</span>
                           </span>

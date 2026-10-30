@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { LearningPath } from './components/LearningPath';
-import { LessonModal } from './components/LessonModal';
-import { TheoryModal } from './components/TheoryModal';
+import { LessonBottomSheet } from './components/LessonBottomSheet';
+import { TheoryBottomSheet } from './components/TheoryBottomSheet';
 import { SimuladoModal } from './components/SimuladoModal';
 import { LoginPage } from './components/LoginPage';
 import { LandingPage } from './components/LandingPage';
@@ -10,19 +10,20 @@ import { UNITS, ALL_QUESTIONS } from './data/questions';
 import { Lesson, UserProfile } from './types';
 import { sounds } from './utils/sound';
 
-const STORAGE_KEY = 'diriggo_user_profile_v1';
+const STORAGE_KEY = 'diriggo_user_profile_v2';
 
 const DEFAULT_PROFILE: UserProfile = {
   name: '',
   email: '',
   isLoggedIn: false,
   streak: 3,
-  hearts: 5,
-  maxHearts: 5,
+  cnhPoints: 0,
+  maxCnhPoints: 20, // 20 points standard CTB limit for suspension
   xp: 45,
   completedLessons: ['les-1-1'],
   simuladosHistory: [],
-  soundEnabled: true
+  soundEnabled: true,
+  darkMode: false
 };
 
 export function App() {
@@ -41,6 +42,15 @@ export function App() {
   const [activeQuizLesson, setActiveQuizLesson] = useState<Lesson | null>(null);
   const [isSimuladoOpen, setIsSimuladoOpen] = useState(false);
 
+  // Sync dark mode to html document
+  useEffect(() => {
+    if (profile.darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [profile.darkMode]);
+
   // Sync to localStorage
   useEffect(() => {
     try {
@@ -56,15 +66,20 @@ export function App() {
     setProfile(prev => ({ ...prev, soundEnabled: !prev.soundEnabled }));
   };
 
-  const handleRefillHearts = () => {
-    sounds.playCorrect();
-    setProfile(prev => ({ ...prev, hearts: prev.maxHearts }));
+  const handleToggleDarkMode = () => {
+    sounds.playClick();
+    setProfile(prev => ({ ...prev, darkMode: !prev.darkMode }));
   };
 
-  const handleDeductHeart = () => {
+  const handleResetCnhPoints = () => {
+    sounds.playCorrect();
+    setProfile(prev => ({ ...prev, cnhPoints: 0 }));
+  };
+
+  const handleAddCnhPoints = (points: number) => {
     setProfile(prev => ({
       ...prev,
-      hearts: Math.max(0, prev.hearts - 1)
+      cnhPoints: Math.min(prev.maxCnhPoints, prev.cnhPoints + points)
     }));
   };
 
@@ -123,7 +138,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
+    <div className={`min-h-screen ${profile.darkMode ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
       {currentView === 'landing' && (
         <LandingPage
           onStartLearning={() => {
@@ -159,11 +174,12 @@ export function App() {
             onOpenSimulado={() => setIsSimuladoOpen(true)}
             onOpenAuth={() => setCurrentView('login')}
             onToggleSound={handleToggleSound}
-            onRefillHearts={handleRefillHearts}
+            onToggleDarkMode={handleToggleDarkMode}
+            onResetCnhPoints={handleResetCnhPoints}
           />
 
           {/* Quick Sub-header */}
-          <div className="bg-amber-100/60 border-b border-amber-200 py-1.5 px-4 text-center text-xs font-bold text-amber-900 flex items-center justify-center gap-2">
+          <div className="bg-amber-100/60 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-800 py-1.5 px-4 text-center text-xs font-bold text-amber-900 dark:text-amber-300 flex items-center justify-center gap-2">
             <span>🚗 Trilha de Aprendizado Ativa</span>
             <span>•</span>
             <button
@@ -171,7 +187,7 @@ export function App() {
                 sounds.playClick();
                 setCurrentView('landing');
               }}
-              className="text-amber-800 underline hover:text-amber-950 cursor-pointer"
+              className="text-amber-800 dark:text-amber-300 underline hover:text-amber-950 dark:hover:text-amber-100 cursor-pointer"
             >
               Ver página inicial
             </button>
@@ -189,9 +205,9 @@ export function App() {
         </div>
       )}
 
-      {/* Pre-Lesson Interactive Study Slides & Infographics */}
+      {/* Pre-Lesson Interactive Study Slides & Infographics BottomSheet */}
       {studyingTheoryLesson && (
-        <TheoryModal
+        <TheoryBottomSheet
           lesson={studyingTheoryLesson}
           onClose={() => setStudyingTheoryLesson(null)}
           onStartQuiz={() => {
@@ -202,15 +218,16 @@ export function App() {
         />
       )}
 
-      {/* Interactive Quiz / Question Player Modal */}
+      {/* Interactive Quiz / Question Player BottomSheet */}
       {activeQuizLesson && (
-        <LessonModal
+        <LessonBottomSheet
           lesson={activeQuizLesson}
-          hearts={profile.hearts}
+          cnhPoints={profile.cnhPoints}
+          maxCnhPoints={profile.maxCnhPoints}
           onClose={() => setActiveQuizLesson(null)}
           onComplete={handleCompleteLesson}
-          onDeductHeart={handleDeductHeart}
-          onRefillHearts={handleRefillHearts}
+          onAddCnhPoints={handleAddCnhPoints}
+          onResetCnhPoints={handleResetCnhPoints}
         />
       )}
 

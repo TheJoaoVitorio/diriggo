@@ -65,6 +65,24 @@
   border-bottom-color: #CA8A04;
 }
 
+/* Dark mode variations for cards */
+.dark .duo-btn-card {
+  background-color: #1E293B;
+  border: 2px solid #334155;
+  border-bottom: 4px solid #475569;
+  color: #F1F5F9;
+}
+.dark .duo-btn-card:hover {
+  background-color: #334155;
+  border-color: #475569;
+}
+.dark .duo-btn-card.selected {
+  background-color: #78350F;
+  border-color: #F59E0B;
+  border-bottom-color: #D97706;
+  color: #FEF3C7;
+}
+
 /* Winding road dashed strip */
 .road-stripe {
   background: repeating-linear-gradient(
@@ -74,4 +92,20 @@
     transparent 20px,
     transparent 40px
   );
+}
+
+/* Bottom Sheet slide-up animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-bottom-sheet {
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

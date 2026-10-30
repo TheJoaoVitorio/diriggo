@@ -124,6 +124,10 @@ class SoundManager {
     }
   }
 
+  playPenalty() {
+    this.playHeartLost();
+  }
+
   playHeartLost() {
     if (!this.enabled) return;
     try {

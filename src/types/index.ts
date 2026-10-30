@@ -85,10 +85,11 @@ export interface UserProfile {
   email: string;
   isLoggedIn: boolean;
   streak: number;
-  hearts: number;
-  maxHearts: number;
+  cnhPoints: number;
+  maxCnhPoints: number;
   xp: number;
   completedLessons: string[];
   simuladosHistory: SimuladoResult[];
   soundEnabled: boolean;
+  darkMode: boolean;
 }
