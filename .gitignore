@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+.next/
+.env*.local
+.cache/
+*.log
+.system_generated/
