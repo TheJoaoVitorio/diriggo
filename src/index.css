@@ -6,7 +6,35 @@
   }
 }
 
-/* Duolingo-style 3D tactile buttons */
+/* Duolingo Authentic 3D tactile buttons */
+.duo-btn-green {
+  background-color: #58cc02;
+  border-bottom: 4px solid #46a302;
+  color: #FFFFFF;
+  transition: all 0.1s ease;
+}
+.duo-btn-green:hover {
+  background-color: #61e002;
+}
+.duo-btn-green:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.duo-btn-blue {
+  background-color: #1cb0f6;
+  border-bottom: 4px solid #1899d6;
+  color: #FFFFFF;
+  transition: all 0.1s ease;
+}
+.duo-btn-blue:hover {
+  background-color: #2bd0ff;
+}
+.duo-btn-blue:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
 .duo-btn-yellow {
   background-color: #FFC800;
   border-bottom: 4px solid #CA8A04;
@@ -17,20 +45,6 @@
   background-color: #FACC15;
 }
 .duo-btn-yellow:active {
-  transform: translateY(2px);
-  border-bottom-width: 2px;
-}
-
-.duo-btn-green {
-  background-color: #22C55E;
-  border-bottom: 4px solid #15803D;
-  color: #FFFFFF;
-  transition: all 0.1s ease;
-}
-.duo-btn-green:hover {
-  background-color: #16A34A;
-}
-.duo-btn-green:active {
   transform: translateY(2px);
   border-bottom-width: 2px;
 }

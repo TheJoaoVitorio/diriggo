@@ -34,9 +34,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems = [
     {
       id: 'trilhas' as AppTab,
-      label: 'TRILHAS',
-      icon: <Compass className="w-6 h-6 shrink-0" />,
-      desc: 'Aprender na estrada'
+      label: 'APRENDER',
+      icon: <Home className="w-6 h-6 shrink-0" />,
+      desc: 'Trilha principal'
     },
     {
       id: 'simulados' as AppTab,
@@ -48,40 +48,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'placas' as AppTab,
       label: 'PLACAS',
       icon: <ShieldAlert className="w-6 h-6 shrink-0" />,
-      desc: 'Catálogo de sinais'
+      desc: 'Catálogo oficial'
     },
     {
       id: 'material' as AppTab,
-      label: 'MATERIAL DE APOIO',
+      label: 'MATERIAL',
       icon: <BookOpen className="w-6 h-6 shrink-0" />,
       desc: 'Resumos didáticos'
     },
     {
       id: 'perfil' as AppTab,
-      label: 'MINHA CNH',
+      label: 'PERFIL',
       icon: <CreditCard className="w-6 h-6 shrink-0" />,
-      desc: 'Pontos e histórico'
+      desc: 'Minha CNH'
     }
   ];
 
   return (
     <>
-      {/* DESKTOP SIDEBAR (w-64 fixed on the left) */}
-      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 border-r-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-6 justify-between select-none shrink-0 z-20">
+      {/* DESKTOP SIDEBAR (w-64 fixed on the left, Duolingo Style) */}
+      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 border-r-2 border-[#e5e5e5] dark:border-[#202f36] bg-white dark:bg-[#131f24] px-4 py-6 justify-between select-none shrink-0 z-20">
         <div className="flex flex-col">
-          {/* Brand Logo */}
+          {/* Brand Logo - Duolingo Green Style */}
           <div 
             onClick={() => {
               sounds.playClick();
               onSelectTab('trilhas');
             }}
-            className="flex items-center gap-3 px-3 mb-6 cursor-pointer hover:opacity-90 transition-opacity"
+            className="flex items-center gap-3 px-3 mb-8 cursor-pointer hover:opacity-90 transition-opacity"
           >
-            <div className="w-10 h-10 rounded-2xl bg-[#FFC800] border-b-4 border-[#CA8A04] flex items-center justify-center text-xl shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-[#58cc02] border-b-4 border-[#46a302] flex items-center justify-center text-xl shadow-xs">
               🚦
             </div>
-            <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              dirig<span className="text-amber-500">go</span>
+            <span className="text-2xl font-black tracking-tight text-[#58cc02] lowercase font-sans">
+              diriggo
             </span>
           </div>
 
@@ -99,18 +99,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }}
                   className={`w-full flex items-center gap-4 px-4 py-3 rounded-2xl border-2 transition-all cursor-pointer text-left ${
                     isActive
-                      ? 'bg-amber-50 dark:bg-amber-950/50 border-amber-400 dark:border-amber-500 text-amber-900 dark:text-amber-300 font-black shadow-xs'
-                      : 'border-transparent text-slate-600 dark:text-slate-400 font-extrabold hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-[#e6f7ff] dark:bg-[#182631] border-[#1cb0f6] text-[#1cb0f6] font-black shadow-xs'
+                      : 'border-transparent text-[#777777] dark:text-[#8b9ea7] font-black hover:bg-slate-100 dark:hover:bg-[#182228] hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  <span className={isActive ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400 dark:text-slate-500'}>
+                  <span className={isActive ? 'text-[#1cb0f6]' : 'text-[#777777] dark:text-[#8b9ea7]'}>
                     {item.icon}
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-[13px] tracking-wide uppercase font-black">
+                    <span className="text-[13px] tracking-widest uppercase font-black">
                       {item.label}
                     </span>
-                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-[#52656d]">
                       {item.desc}
                     </span>
                   </div>
@@ -121,66 +121,63 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Bottom Utility Controls */}
-        <div className="pt-4 border-t-2 border-slate-200 dark:border-slate-800 space-y-3">
+        <div className="pt-4 border-t-2 border-[#e5e5e5] dark:border-[#202f36] space-y-3">
           {/* CNH Mini Status Indicator */}
           <div 
             onClick={() => {
               sounds.playClick();
               onSelectTab('perfil');
             }}
-            className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl cursor-pointer hover:bg-emerald-100/60 transition-colors"
+            className="p-3 bg-emerald-50 dark:bg-[#182631] border border-emerald-200 dark:border-[#202f36] rounded-2xl cursor-pointer hover:bg-emerald-100/60 dark:hover:bg-[#203240] transition-colors"
           >
             <div className="flex items-center justify-between text-xs font-black text-emerald-800 dark:text-emerald-300">
               <span className="flex items-center gap-1.5">
                 <span>🪪 CNH</span>
-                <span className="text-[10px] bg-emerald-200 dark:bg-emerald-900 px-1.5 py-0.5 rounded font-black">CAT B</span>
+                <span className="text-[10px] bg-emerald-200 dark:bg-emerald-950 px-1.5 py-0.5 rounded font-black">CAT B</span>
               </span>
               <span>{profile.cnhPoints}/20 pts</span>
             </div>
-            <div className="w-full bg-emerald-200 dark:bg-emerald-900 h-1.5 rounded-full mt-2 overflow-hidden">
+            <div className="w-full bg-emerald-200 dark:bg-emerald-950 h-1.5 rounded-full mt-2 overflow-hidden">
               <div 
-                className={`h-full rounded-full transition-all duration-300 ${
-                  profile.cnhPoints >= 16 ? 'bg-rose-500' : profile.cnhPoints >= 10 ? 'bg-amber-500' : 'bg-emerald-600'
+                className={`h-full rounded-full transition-all ${
+                  profile.cnhPoints >= 16 ? 'bg-rose-500' : profile.cnhPoints >= 10 ? 'bg-amber-500' : 'bg-[#58cc02]'
                 }`}
                 style={{ width: `${Math.min(100, (profile.cnhPoints / 20) * 100)}%` }}
               />
             </div>
           </div>
 
-          {/* Quick controls: Dark Mode, Sound & Home */}
-          <div className="flex items-center justify-between px-1">
+          {/* Quick Controls: Dark Mode, Sound & Home */}
+          <div className="flex items-center justify-between px-2 pt-1">
             <button
               onClick={onToggleDarkMode}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
-              title="Alternar Modo Escuro"
+              className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#182228] text-slate-600 dark:text-[#8b9ea7] cursor-pointer transition-colors"
+              title={profile.darkMode ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
             >
-              {profile.darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+              {profile.darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
             </button>
 
             <button
               onClick={onToggleSound}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
-              title="Alternar Efeitos Sonoros"
+              className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#182228] text-slate-600 dark:text-[#8b9ea7] cursor-pointer transition-colors"
+              title={profile.soundEnabled ? "Desativar Sons" : "Ativar Sons"}
             >
-              {profile.soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-500" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+              {profile.soundEnabled ? <Volume2 className="w-5 h-5 text-emerald-500" /> : <VolumeX className="w-5 h-5 text-slate-400" />}
             </button>
 
             <button
-              onClick={() => {
-                sounds.playClick();
-                onGoLanding();
-              }}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
-              title="Página Inicial"
+              onClick={onGoLanding}
+              className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#182228] text-slate-600 dark:text-[#8b9ea7] cursor-pointer transition-colors"
+              title="Voltar para a Apresentação"
             >
-              <Home className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <Compass className="w-5 h-5" />
             </button>
           </div>
         </div>
       </aside>
 
-      {/* MOBILE BOTTOM NAVIGATION BAR (Fixed at bottom on small screens) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-slate-900 border-t-2 border-slate-200 dark:border-slate-800 px-2 py-1.5 flex items-center justify-around select-none">
+      {/* MOBILE BOTTOM NAVIGATION BAR */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-[#131f24] border-t-2 border-[#e5e5e5] dark:border-[#202f36] flex items-center justify-around px-2 z-40 select-none">
         {navItems.map(item => {
           const isActive = currentTab === item.id;
           return (
@@ -190,17 +187,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 sounds.playClick();
                 onSelectTab(item.id);
               }}
-              className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all ${
-                isActive
-                  ? 'text-amber-600 dark:text-amber-400 font-black'
-                  : 'text-slate-500 dark:text-slate-400 font-bold'
+              className={`flex flex-col items-center justify-center p-1.5 rounded-xl transition-all cursor-pointer ${
+                isActive 
+                  ? 'text-[#1cb0f6]' 
+                  : 'text-[#777777] dark:text-[#8b9ea7] hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <div className={`p-1 rounded-lg ${isActive ? 'bg-amber-100 dark:bg-amber-950/60' : ''}`}>
-                {item.icon}
-              </div>
-              <span className="text-[10px] uppercase tracking-wider mt-0.5">
-                {item.label === 'MATERIAL DE APOIO' ? 'MATERIAL' : item.label === 'MINHA CNH' ? 'CNH' : item.label}
+              {item.icon}
+              <span className="text-[9px] font-black uppercase mt-0.5 tracking-wider">
+                {item.label}
               </span>
             </button>
           );

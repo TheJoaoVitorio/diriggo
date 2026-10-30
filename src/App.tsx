@@ -39,7 +39,7 @@ const DEFAULT_PROFILE: UserProfile = {
     }
   ],
   soundEnabled: true,
-  darkMode: false
+  darkMode: true
 };
 
 export function App() {
@@ -175,7 +175,7 @@ export function App() {
   };
 
   return (
-    <div className={`min-h-screen ${profile.darkMode ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
+    <div className={`min-h-screen ${profile.darkMode ? 'dark bg-[#131f24] text-white' : 'bg-slate-50 text-slate-800'}`}>
       {/* 1. LANDING PAGE */}
       {currentView === 'landing' && (
         <LandingPage
@@ -222,21 +222,21 @@ export function App() {
           {/* Center Main Work Area */}
           <main className="flex-1 flex flex-col min-w-0 pb-20 md:pb-8">
             {/* Mobile Top Sub-Header */}
-            <div className="md:hidden sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
+            <div className="md:hidden sticky top-0 z-30 bg-white/95 dark:bg-[#131f24]/95 border-b border-slate-200 dark:border-[#202f36] px-4 py-3 flex items-center justify-between">
               <div 
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setCurrentTab('trilhas')}
               >
-                <div className="w-8 h-8 rounded-xl bg-amber-400 flex items-center justify-center text-sm font-black text-slate-900">
+                <div className="w-8 h-8 rounded-xl bg-[#58cc02] border-b-2 border-[#46a302] flex items-center justify-center text-sm font-black text-white">
                   🚦
                 </div>
-                <span className="font-black text-lg">Diriggo</span>
+                <span className="font-black text-lg text-[#58cc02]">diriggo</span>
               </div>
 
               <div className="flex items-center gap-3 text-xs font-black">
                 <span className="text-orange-500">🔥 {profile.streak}</span>
-                <span className="text-amber-500">⚡ {profile.xp}</span>
-                <span className="text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-lg border border-emerald-300">
+                <span className="text-[#ffc800]">⚡ {profile.xp}</span>
+                <span className="text-[#58cc02] bg-emerald-50 dark:bg-[#182631] px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-[#202f36]">
                   🪪 {profile.cnhPoints}/20
                 </span>
               </div>
