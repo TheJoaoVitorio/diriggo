@@ -66,7 +66,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin }) => {
           {/* Mascot speech bubble */}
           <div className="bg-white text-slate-900 p-4 rounded-2xl border-b-4 border-amber-400 shadow-xl mb-4 relative max-w-xs animate-bounce duration-1000">
             <span className="text-xs font-black uppercase text-amber-600 block mb-0.5">
-              Mascote Diriggo:
+              Instrutor Diriggo:
             </span>
             <p className="text-sm font-extrabold leading-snug">
               "Bora treinar para a prova teórica sem medo de ser reprovado!"
@@ -75,56 +75,45 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin }) => {
             <div className="absolute -bottom-2 left-8 w-4 h-4 bg-white rotate-45 border-r-2 border-b-2 border-amber-400" />
           </div>
 
-          {/* Scene: 3D Mascot + Cartoon Autoescola Car */}
-          <div className="flex items-end justify-center gap-4 my-2">
-            <div className="w-32 sm:w-40 drop-shadow-2xl hover:scale-105 transition-transform">
-              <img
-                src="/mascote-diriggo.png"
-                alt="Mascote Capivara CNH"
-                className="w-full h-auto object-contain"
+          {/* Cartoon Autoescola Car Scene */}
+          <div className="relative my-4 w-64 h-36 flex items-center justify-center">
+            <div className="absolute bottom-2 w-52 h-6 bg-black/40 rounded-full blur-sm" />
+            <svg viewBox="0 0 240 120" className="w-full h-full drop-shadow-2xl">
+              {/* Roof Sign (AUTOESCOLA) */}
+              <rect x="95" y="10" width="50" height="18" rx="4" fill="#FFFFFF" stroke="#CA8A04" strokeWidth="2" />
+              <text x="120" y="22" fill="#18181B" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+                DIRIGGO
+              </text>
+              <rect x="117" y="28" width="6" height="6" fill="#71717A" />
+
+              {/* Car Body (Yellow) */}
+              <path
+                d="M 25 75 L 45 42 L 80 34 L 160 34 L 195 48 L 225 65 L 225 85 L 20 85 L 20 75 Z"
+                fill="#FFC800"
+                stroke="#CA8A04"
+                strokeWidth="3"
               />
-            </div>
 
-            {/* Cartoon Car Vector Illustration */}
-            <div className="relative w-44 h-28 hidden sm:flex items-center justify-center">
-              <div className="absolute bottom-2 w-40 h-5 bg-black/40 rounded-full blur-sm" />
-              <svg viewBox="0 0 240 120" className="w-full h-full drop-shadow-2xl">
-                {/* Roof Sign (AUTOESCOLA) */}
-                <rect x="95" y="10" width="50" height="18" rx="4" fill="#FFFFFF" stroke="#CA8A04" strokeWidth="2" />
-                <text x="120" y="22" fill="#18181B" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
-                  DIRIGGO
-                </text>
-                <rect x="117" y="28" width="6" height="6" fill="#71717A" />
+              {/* Windows */}
+              <path d="M 52 44 L 80 38 L 115 38 L 115 62 L 40 62 Z" fill="#93C5FD" stroke="#1E3A8A" strokeWidth="2" />
+              <path d="M 125 38 L 160 38 L 190 50 L 190 62 L 125 62 Z" fill="#93C5FD" stroke="#1E3A8A" strokeWidth="2" />
 
-                {/* Car Body (Yellow) */}
-                <path
-                  d="M 25 75 L 45 42 L 80 34 L 160 34 L 195 48 L 225 65 L 225 85 L 20 85 L 20 75 Z"
-                  fill="#FFC800"
-                  stroke="#CA8A04"
-                  strokeWidth="3"
-                />
+              {/* Headlights & Tail Lights */}
+              <rect x="220" y="66" width="6" height="12" rx="3" fill="#FEF08A" className="animate-pulse" />
+              <rect x="18" y="66" width="5" height="10" rx="2" fill="#EF4444" />
 
-                {/* Windows */}
-                <path d="M 52 44 L 80 38 L 115 38 L 115 62 L 40 62 Z" fill="#93C5FD" stroke="#1E3A8A" strokeWidth="2" />
-                <path d="M 125 38 L 160 38 L 190 50 L 190 62 L 125 62 Z" fill="#93C5FD" stroke="#1E3A8A" strokeWidth="2" />
-
-                {/* Headlights & Tail Lights */}
-                <rect x="220" y="66" width="6" height="12" rx="3" fill="#FEF08A" className="animate-pulse" />
-                <rect x="18" y="66" width="5" height="10" rx="2" fill="#EF4444" />
-
-                {/* Wheels */}
-                <g className="animate-spin origin-[65px_85px] duration-1000">
-                  <circle cx="65" cy="85" r="20" fill="#18181B" stroke="#52525B" strokeWidth="3" />
-                  <circle cx="65" cy="85" r="10" fill="#E4E4E7" />
-                  <circle cx="65" cy="85" r="4" fill="#CA8A04" />
-                </g>
-                <g className="animate-spin origin-[175px_85px] duration-1000">
-                  <circle cx="175" cy="85" r="20" fill="#18181B" stroke="#52525B" strokeWidth="3" />
-                  <circle cx="175" cy="85" r="10" fill="#E4E4E7" />
-                  <circle cx="175" cy="85" r="4" fill="#CA8A04" />
-                </g>
-              </svg>
-            </div>
+              {/* Wheels */}
+              <g className="animate-spin origin-[65px_85px] duration-1000">
+                <circle cx="65" cy="85" r="20" fill="#18181B" stroke="#52525B" strokeWidth="3" />
+                <circle cx="65" cy="85" r="10" fill="#E4E4E7" />
+                <circle cx="65" cy="85" r="4" fill="#CA8A04" />
+              </g>
+              <g className="animate-spin origin-[175px_85px] duration-1000">
+                <circle cx="175" cy="85" r="20" fill="#18181B" stroke="#52525B" strokeWidth="3" />
+                <circle cx="175" cy="85" r="10" fill="#E4E4E7" />
+                <circle cx="175" cy="85" r="4" fill="#CA8A04" />
+              </g>
+            </svg>
           </div>
 
           {/* Gamified Benefits list */}

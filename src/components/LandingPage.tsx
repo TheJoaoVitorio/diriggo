@@ -12,7 +12,6 @@ import {
   ExamCertificateIllustration
 } from './LandingIllustrations';
 import { TrafficSignComponent } from './TrafficSign';
-import { Mascot } from './Mascot';
 import { sounds } from '../utils/sound';
 
 interface LandingPageProps {
@@ -321,18 +320,38 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Section 5: Mobile / Conheça o Mascote Diriggo */}
+      {/* Section 5: Mobile / Estude Onde e Quando Quiser */}
       <section className="py-20 border-b-2 border-[#e5e5e5] dark:border-slate-800">
         <div className="max-w-[1024px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-12">
+          {/* Smartphone Study Vector Frame */}
           <div className="flex-1 flex justify-center">
-            <Mascot size={240} />
+            <div className="w-56 h-80 bg-slate-900 rounded-[38px] p-3 shadow-2xl border-4 border-slate-700 relative flex flex-col select-none">
+              <div className="w-20 h-4 bg-slate-800 rounded-full mx-auto mb-2" />
+              <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-[28px] p-3 flex flex-col justify-between">
+                <div className="flex items-center justify-between text-xs font-black text-slate-800 dark:text-white">
+                  <span>🚦 Diriggo</span>
+                  <span className="text-amber-500 font-black">🔥 3</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-10 bg-[#FFC800] rounded-xl flex items-center justify-center font-black text-slate-900 text-xs shadow-sm">
+                    Lição 1: Placas PARE
+                  </div>
+                  <div className="h-10 bg-slate-200 dark:bg-slate-700 rounded-xl flex items-center justify-center font-bold text-slate-500 text-xs">
+                    Lição 2: Preferências
+                  </div>
+                </div>
+                <div className="h-8 bg-emerald-500 rounded-xl flex items-center justify-center font-black text-white text-[11px]">
+                  CNH: 0/20 Pontos
+                </div>
+              </div>
+            </div>
           </div>
           <div className="flex-1 text-center md:text-left max-w-[460px]">
             <h2 className="text-[36px] font-black text-[#1cb0f6] leading-[1.2] tracking-tight">
               estude onde e quando quiser
             </h2>
             <p className="mt-4 text-[17px] text-[#777777] dark:text-slate-300 font-semibold leading-relaxed">
-              O mascote oficial do Diriggo é a própria <strong>CNH em pessoa</strong>! Ele te acompanha em cada lição, comemora suas conquistas e te ajuda a manter a sua carteira limpa, longe dos 20 pontos de suspensão. Pratique 15 minutinhos por dia e conquiste sua aprovação!
+              Aproveite os intervalos do dia a dia, no ônibus, na fila do banco ou antes de dormir. Pratique 15 minutinhos por dia com trilhas guiadas, simulados oficiais e material didático completo para garantir sua aprovação de primeira!
             </p>
           </div>
         </div>

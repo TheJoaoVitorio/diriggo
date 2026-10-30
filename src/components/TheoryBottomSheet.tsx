@@ -156,14 +156,12 @@ export const TheoryBottomSheet: React.FC<TheoryBottomSheetProps> = ({
             {/* Tip / Key takeaway */}
             {slide.tip && (
               <div className="mt-5 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 text-amber-950 dark:text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
-                <img
-                  src="/mascote-diriggo.png"
-                  alt="Mascote Capibarito"
-                  className="w-10 h-10 object-contain shrink-0 drop-shadow-sm"
-                />
+                <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center text-lg font-black shrink-0 shadow-sm">
+                  🚦
+                </div>
                 <div>
                   <strong className="font-black text-amber-900 dark:text-amber-300 block text-xs uppercase tracking-wide">
-                    Dica do Capibarito (DETRAN):
+                    Dica do Instrutor (DETRAN):
                   </strong>
                   <span>{slide.tip}</span>
                 </div>

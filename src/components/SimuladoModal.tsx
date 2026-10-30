@@ -7,25 +7,28 @@ import { sounds } from '../utils/sound';
 
 interface SimuladoModalProps {
   questions: Question[];
+  title?: string;
+  timeMinutes?: number;
   onClose: () => void;
-  onFinishSimulado: (score: number, total: number, passed: boolean) => void;
+  onFinishSimulado: (score: number, total: number, passed: boolean, topicTitle?: string) => void;
 }
 
 export const SimuladoModal: React.FC<SimuladoModalProps> = ({
   questions,
+  title = 'Simulado Oficial DETRAN',
+  timeMinutes = 40,
   onClose,
   onFinishSimulado
 }) => {
-  // Use up to 30 questions (or all available)
+  // Use up to 30 questions (or all available if topic specific)
   const examQuestions = React.useMemo(() => {
-    // Shuffle and pick 30 (or all if < 30)
     const shuffled = [...questions].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, Math.min(30, shuffled.length));
   }, [questions]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [timeLeft, setTimeLeft] = useState(40 * 60); // 40 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(timeMinutes * 60);
   const [isFinished, setIsFinished] = useState(false);
   const [reviewMode, setReviewMode] = useState(false);
 
@@ -86,7 +89,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
       sounds.playIncorrect();
     }
 
-    onFinishSimulado(score, examQuestions.length, passed);
+    onFinishSimulado(score, examQuestions.length, passed, title);
   };
 
   const answeredCount = Object.keys(answers).length;
@@ -182,7 +185,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
             </button>
             <div>
               <h2 className="text-base sm:text-lg font-black flex items-center gap-2">
-                <span>Simulado Oficial DETRAN</span>
+                <span>{title}</span>
                 {reviewMode && (
                   <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold">
                     Modo Gabarito

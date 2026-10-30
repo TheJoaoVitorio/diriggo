@@ -138,15 +138,6 @@ export const HeroTrafficWorldIllustration: React.FC<{ className?: string }> = ({
         <path d="M 120 60 L 123 68 L 131 71 L 123 74 L 120 82 L 117 74 L 109 71 L 117 68 Z" fill="#F59E0B" />
         <path d="M 370 210 L 372 216 L 378 218 L 372 220 L 370 226 L 368 220 L 362 218 L 368 216 Z" fill="#22C55E" />
       </svg>
-
-      {/* Official 3D Mascot Capivara CNH */}
-      <div className="absolute -bottom-3 -right-2 sm:right-4 w-32 sm:w-40 drop-shadow-2xl animate-bounce duration-[3000ms] select-none pointer-events-none">
-        <img
-          src="/mascote-diriggo.png"
-          alt="Mascote Capivara CNH Diriggo"
-          className="w-full h-auto object-contain drop-shadow-lg"
-        />
-      </div>
     </div>
   );
 };

@@ -68,6 +68,8 @@ export interface TrafficSign {
 
 export interface SimuladoResult {
   id: string;
+  topicTitle?: string;
+  topic?: string;
   date: string;
   score: number;
   total: number;
@@ -79,6 +81,8 @@ export interface SimuladoResult {
     isCorrect: boolean;
   }[];
 }
+
+export type AppTab = 'trilhas' | 'simulados' | 'placas' | 'material' | 'perfil';
 
 export interface UserProfile {
   name: string;

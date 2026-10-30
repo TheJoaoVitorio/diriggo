@@ -26,13 +26,15 @@ interface LearningPathProps {
   completedLessons: string[];
   onStartLesson: (lesson: Lesson) => void;
   onOpenSimulado: () => void;
+  onOpenGuide?: (unit: Unit) => void;
 }
 
 export const LearningPath: React.FC<LearningPathProps> = ({
   units,
   completedLessons,
   onStartLesson,
-  onOpenSimulado
+  onOpenSimulado,
+  onOpenGuide
 }) => {
   const getIcon = (iconName: string, isCompleted: boolean) => {
     if (isCompleted) return <Check className="w-8 h-8 text-white stroke-[3]" />;
@@ -58,11 +60,6 @@ export const LearningPath: React.FC<LearningPathProps> = ({
         // Placas e Sinalização nas margens
         return (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Mascot Capibarito Cheering at Unit 1 */}
-            <div className="absolute top-6 right-2 sm:right-8 w-20 sm:w-24 drop-shadow-xl animate-bounce duration-[3000ms] z-10">
-              <img src="/mascote-diriggo.png" alt="Mascote Diriggo" className="w-full h-auto object-contain" />
-            </div>
-
             {/* Placa PARE na margem esquerda */}
             <div className="absolute top-16 left-4 sm:left-12 flex flex-col items-center opacity-90 drop-shadow-md">
               <TrafficSignComponent signId="R-1" size={54} />
@@ -175,28 +172,34 @@ export const LearningPath: React.FC<LearningPathProps> = ({
       {units.map((unit) => {
         return (
           <div key={unit.id} className="w-full mb-16 relative">
-            {/* Unit Header Card */}
-            <div className="w-full rounded-3xl p-5 text-slate-900 mb-8 border-b-6 shadow-md relative overflow-hidden bg-gradient-to-r from-amber-400 via-[#FFC800] to-yellow-400 border-amber-600">
-              <div className="flex items-start justify-between relative z-10">
-                <div className="max-w-[78%]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black uppercase tracking-widest text-amber-900 bg-white/40 px-2.5 py-1 rounded-full">
-                      Unidade {unit.unitNumber}
-                    </span>
-                    <span className="text-xs font-bold text-amber-900/80">
-                      • {unit.lessons.length} micro-aulas
-                    </span>
+            {/* Duolingo Exact Green Unit Banner (matching user screenshot) */}
+            <div className="w-full rounded-2xl p-4 sm:p-5 text-white mb-8 shadow-md relative overflow-hidden bg-[#58cc02] border-b-4 border-[#46a302] select-none">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 text-white/90 text-xs font-black uppercase tracking-wider">
+                    <span>← SEÇÃO 1, UNIDADE {unit.unitNumber}</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-black mt-2 leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-black mt-1 leading-tight text-white drop-shadow-xs">
                     {unit.title}
                   </h2>
-                  <p className="text-sm font-semibold text-amber-950 mt-1 opacity-90">
-                    {unit.description}
-                  </p>
                 </div>
-                <div className="w-12 h-12 rounded-2xl bg-white/80 border-b-4 border-amber-600 flex items-center justify-center text-2xl shadow-inner shrink-0">
-                  {unit.unitNumber === 1 ? '🚦' : unit.unitNumber === 2 ? '🌧️' : unit.unitNumber === 3 ? '🩹' : unit.unitNumber === 4 ? '📋' : '🔧'}
-                </div>
+
+                {/* Duolingo "GUIA" button */}
+                <button
+                  onClick={() => {
+                    sounds.playClick();
+                    if (onOpenGuide) {
+                      onOpenGuide(unit);
+                    } else if (unit.lessons[0]) {
+                      onStartLesson(unit.lessons[0]);
+                    }
+                  }}
+                  className="px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/30 border-2 border-white/40 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-all active:scale-95 shadow-xs shrink-0"
+                  title="Ver material didático e resumo da unidade"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>GUIA</span>
+                </button>
               </div>
             </div>
 
@@ -230,12 +233,12 @@ export const LearningPath: React.FC<LearningPathProps> = ({
                       className="flex flex-col items-center relative transition-transform duration-200"
                       style={{ transform: `translateX(${xOffset}px)` }}
                     >
-                      {/* Floating "AULA DISPONÍVEL" badge for current node */}
+                      {/* Floating "COMEÇAR" badge for current node (Duolingo Style) */}
                       {isCurrent && (
-                        <div className="absolute -top-11 z-20 animate-bounce bg-slate-900 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-lg border-2 border-amber-400 flex items-center gap-1.5 whitespace-nowrap">
-                          <Play className="w-3 h-3 fill-amber-400 text-amber-400" />
-                          <span>ESTUDAR & PRATICAR</span>
-                          <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45" />
+                        <div className="absolute -top-10 z-20 animate-bounce bg-slate-900 text-emerald-400 font-black text-xs px-3.5 py-1.5 rounded-xl shadow-lg border-2 border-emerald-500 flex items-center gap-1.5 whitespace-nowrap">
+                          <Play className="w-3 h-3 fill-emerald-400 text-emerald-400" />
+                          <span>COMEÇAR</span>
+                          <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-emerald-500" />
                         </div>
                       )}
 
