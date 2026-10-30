@@ -7,11 +7,11 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { 
-  HeroTrafficWorldIllustration, 
   GamificationIllustration, 
   RoadMapIllustration, 
   ExamCertificateIllustration
 } from './LandingIllustrations';
+import { TrafficSignComponent } from './TrafficSign';
 import { Mascot } from './Mascot';
 import { sounds } from '../utils/sound';
 
@@ -90,56 +90,76 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </header>
 
-      {/* 2. DUOLINGO HERO SECTION */}
-      <section className="max-w-[1024px] w-full mx-auto px-4 py-12 lg:py-16 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 min-h-[520px]">
+      {/* 2. CENTERED HERO SECTION (Semáforo + Placa PARE + Texto) */}
+      <section className="max-w-[1024px] w-full mx-auto px-4 py-14 sm:py-20 flex flex-col items-center justify-center text-center">
         
-        {/* Left: Traffic Globe & Autoescola Car Illustration */}
-        <div className="flex-1 flex justify-center items-center w-full">
-          <HeroTrafficWorldIllustration />
-        </div>
+        {/* Elementos de Trânsito Centralizados: Semáforo e Placa de PARE */}
+        <div className="flex items-center justify-center gap-6 sm:gap-8 mb-8 select-none">
+          {/* Semáforo Vertical com Luz Verde Ativa */}
+          <div className="flex flex-col items-center group">
+            <div className="bg-slate-900 dark:bg-slate-800 p-2 sm:p-2.5 rounded-2xl border-2 border-slate-700 shadow-xl flex flex-col items-center gap-2">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-rose-600/30 border border-rose-500/40" />
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-amber-500/30 border border-amber-500/40" />
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 animate-pulse border border-emerald-300 relative flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-white/70" />
+              </div>
+            </div>
+            {/* Poste do Semáforo */}
+            <div className="w-2 h-6 bg-slate-400 dark:bg-slate-600 rounded-b" />
+          </div>
 
-        {/* Right: Duolingo Action Hub */}
-        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-[420px]">
-          <h1 className="text-[32px] sm:text-[36px] font-black text-[#4b4b4b] dark:text-white leading-[1.25] tracking-tight">
-            O jeito grátis, divertido e eficaz de passar na prova da <span className="text-[#CA8A04] dark:text-[#FFC800]">CNH</span>!
-          </h1>
-
-          <div className="mt-8 flex flex-col w-full max-w-[330px] gap-3.5">
-            {/* Primary Duolingo Button (Traffic Yellow 3D) */}
-            <button
-              onClick={() => {
-                sounds.playClick();
-                onStartLearning();
-              }}
-              className="w-full h-[50px] rounded-2xl duo-btn-yellow font-black text-[15px] uppercase tracking-[0.8px] cursor-pointer shadow-sm flex items-center justify-center transition-all"
-            >
-              Começar Agora
-            </button>
-
-            {/* Secondary Button */}
-            <button
-              onClick={() => {
-                sounds.playClick();
-                onOpenAuth();
-              }}
-              className="w-full h-[50px] rounded-2xl bg-white dark:bg-slate-800 border-2 border-[#e5e5e5] dark:border-slate-700 border-b-4 font-black text-[15px] uppercase tracking-[0.8px] text-[#CA8A04] dark:text-[#FFC800] hover:bg-[#f7f7f7] dark:hover:bg-slate-700 cursor-pointer transition-all active:translate-y-0.5 active:border-b-2"
-            >
-              Já tenho uma conta
-            </button>
-
-            {/* Simulado Fast Action */}
-            <button
-              onClick={() => {
-                sounds.playClick();
-                onOpenSimulado();
-              }}
-              className="text-xs font-bold text-[#777777] dark:text-slate-400 hover:text-[#CA8A04] dark:hover:text-[#FFC800] pt-1 flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <Trophy className="w-3.5 h-3.5 text-amber-500" />
-              <span>Simulado Oficial DETRAN (30 Questões)</span>
-            </button>
+          {/* Placa PARE Oficial R-1 */}
+          <div className="flex flex-col items-center hover:scale-105 transition-transform duration-300">
+            <TrafficSignComponent signId="R-1" size={76} />
+            <div className="w-2 h-6 bg-slate-400 dark:bg-slate-600 rounded-b -mt-1" />
           </div>
         </div>
+
+        {/* Headline Centralizada */}
+        <h1 className="text-[34px] sm:text-[46px] md:text-[52px] font-black text-[#4b4b4b] dark:text-white leading-[1.18] tracking-tight max-w-[780px]">
+          O jeito grátis, divertido e eficaz de passar na prova da <span className="text-[#CA8A04] dark:text-[#FFC800]">CNH</span>!
+        </h1>
+
+        <p className="mt-4 text-[16px] sm:text-[18px] text-[#777777] dark:text-slate-300 font-semibold max-w-[560px] leading-relaxed">
+          Domine a legislação de trânsito, placas e direção defensiva sem o estresse das apostilas. Simulado oficial DETRAN e gameficação com base no CTB.
+        </p>
+
+        {/* Botões de Ação Centralizados */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center w-full max-w-[420px] gap-3.5">
+          {/* Botão Primário Duolingo (Amarelo Trânsito 3D) */}
+          <button
+            onClick={() => {
+              sounds.playClick();
+              onStartLearning();
+            }}
+            className="w-full sm:flex-1 h-[50px] rounded-2xl duo-btn-yellow font-black text-[15px] uppercase tracking-[0.8px] cursor-pointer shadow-sm flex items-center justify-center transition-all"
+          >
+            Começar Agora
+          </button>
+
+          {/* Botão Secundário */}
+          <button
+            onClick={() => {
+              sounds.playClick();
+              onOpenAuth();
+            }}
+            className="w-full sm:flex-1 h-[50px] rounded-2xl bg-white dark:bg-slate-800 border-2 border-[#e5e5e5] dark:border-slate-700 border-b-4 font-black text-[15px] uppercase tracking-[0.8px] text-[#CA8A04] dark:text-[#FFC800] hover:bg-[#f7f7f7] dark:hover:bg-slate-700 cursor-pointer transition-all active:translate-y-0.5 active:border-b-2"
+          >
+            Já tenho uma conta
+          </button>
+        </div>
+
+        {/* Simulado Fast Action */}
+        <button
+          onClick={() => {
+            sounds.playClick();
+            onOpenSimulado();
+          }}
+          className="text-xs font-bold text-[#777777] dark:text-slate-400 hover:text-[#CA8A04] dark:hover:text-[#FFC800] pt-3 flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <Trophy className="w-3.5 h-3.5 text-amber-500" />
+          <span>Simulado Oficial DETRAN (30 Questões)</span>
+        </button>
       </section>
 
       {/* 3. DUOLINGO COURSE RIBBON (Matérias CONTRAN com setas) */}
