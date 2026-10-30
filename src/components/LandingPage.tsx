@@ -10,9 +10,9 @@ import {
   HeroTrafficWorldIllustration, 
   GamificationIllustration, 
   RoadMapIllustration, 
-  ExamCertificateIllustration,
-  MascotFarolito
+  ExamCertificateIllustration
 } from './LandingIllustrations';
+import { Mascot } from './Mascot';
 import { sounds } from '../utils/sound';
 
 interface LandingPageProps {
@@ -301,18 +301,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Section 5: Mobile / Conheça o Instrutor Farolito */}
+      {/* Section 5: Mobile / Conheça o Mascote Diriggo */}
       <section className="py-20 border-b-2 border-[#e5e5e5] dark:border-slate-800">
         <div className="max-w-[1024px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="flex-1 flex justify-center">
-            <MascotFarolito size={160} />
+            <Mascot size={240} />
           </div>
           <div className="flex-1 text-center md:text-left max-w-[460px]">
             <h2 className="text-[36px] font-black text-[#1cb0f6] leading-[1.2] tracking-tight">
               estude onde e quando quiser
             </h2>
             <p className="mt-4 text-[17px] text-[#777777] dark:text-slate-300 font-semibold leading-relaxed">
-              Aproveite os intervalos do dia a dia, no ônibus, na fila do banco ou antes de dormir. O instrutor Farolito avisa a hora de praticar para não perder a sua ofensiva diária.
+              O mascote oficial do Diriggo é a própria <strong>CNH em pessoa</strong>! Ele te acompanha em cada lição, comemora suas conquistas e te ajuda a manter a sua carteira limpa, longe dos 20 pontos de suspensão. Pratique 15 minutinhos por dia e conquiste sua aprovação!
             </p>
           </div>
         </div>

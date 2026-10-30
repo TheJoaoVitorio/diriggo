@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ChevronLeft, ChevronRight, BookOpen, CheckCircle, Lightbulb, Play } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, BookOpen, CheckCircle, Play } from 'lucide-react';
 import { Lesson } from '../types';
 import { TrafficSignComponent } from './TrafficSign';
 import { sounds } from '../utils/sound';
@@ -156,10 +156,14 @@ export const TheoryBottomSheet: React.FC<TheoryBottomSheetProps> = ({
             {/* Tip / Key takeaway */}
             {slide.tip && (
               <div className="mt-5 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 text-amber-950 dark:text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
-                <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <img
+                  src="/mascote-diriggo.png"
+                  alt="Mascote Capibarito"
+                  className="w-10 h-10 object-contain shrink-0 drop-shadow-sm"
+                />
                 <div>
                   <strong className="font-black text-amber-900 dark:text-amber-300 block text-xs uppercase tracking-wide">
-                    Dica de Prova do DETRAN:
+                    Dica do Capibarito (DETRAN):
                   </strong>
                   <span>{slide.tip}</span>
                 </div>

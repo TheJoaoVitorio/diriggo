@@ -58,6 +58,11 @@ export const LearningPath: React.FC<LearningPathProps> = ({
         // Placas e Sinalização nas margens
         return (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {/* Mascot Capibarito Cheering at Unit 1 */}
+            <div className="absolute top-6 right-2 sm:right-8 w-20 sm:w-24 drop-shadow-xl animate-bounce duration-[3000ms] z-10">
+              <img src="/mascote-diriggo.png" alt="Mascote Diriggo" className="w-full h-auto object-contain" />
+            </div>
+
             {/* Placa PARE na margem esquerda */}
             <div className="absolute top-16 left-4 sm:left-12 flex flex-col items-center opacity-90 drop-shadow-md">
               <TrafficSignComponent signId="R-1" size={54} />

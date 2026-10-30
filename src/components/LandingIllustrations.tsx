@@ -134,29 +134,19 @@ export const HeroTrafficWorldIllustration: React.FC<{ className?: string }> = ({
           </g>
         </g>
 
-        {/* Farolito Sitting on Top of the Road waving */}
-        <g transform="translate(265, 175) scale(0.7)">
-          <path
-            d="M 25 65 C 25 35, 95 35, 95 65 C 95 98, 25 98, 25 65 Z"
-            fill="#FFC800"
-            stroke="#E0A800"
-            strokeWidth="3.5"
-          />
-          <ellipse cx="60" cy="72" rx="22" ry="20" fill="#FEF9C3" />
-          <circle cx="46" cy="56" r="13" fill="#FFFFFF" stroke="#E0A800" strokeWidth="2" />
-          <circle cx="48" cy="56" r="7.5" fill="#18181B" />
-          <circle cx="51" cy="53" r="2.5" fill="#FFFFFF" />
-          <circle cx="74" cy="56" r="13" fill="#FFFFFF" stroke="#E0A800" strokeWidth="2" />
-          <circle cx="72" cy="56" r="7.5" fill="#18181B" />
-          <circle cx="75" cy="53" r="2.5" fill="#FFFFFF" />
-          <path d="M 52 64 Q 60 74 68 64 Z" fill="#F97316" stroke="#EA580C" strokeWidth="1.5" />
-          <path d="M 26 62 Q 8 46 16 68 Q 24 70 26 62 Z" fill="#EAB308" stroke="#CA8A04" strokeWidth="2" />
-        </g>
-
         {/* Decorative Sparkles */}
         <path d="M 120 60 L 123 68 L 131 71 L 123 74 L 120 82 L 117 74 L 109 71 L 117 68 Z" fill="#F59E0B" />
         <path d="M 370 210 L 372 216 L 378 218 L 372 220 L 370 226 L 368 220 L 362 218 L 368 216 Z" fill="#22C55E" />
       </svg>
+
+      {/* Official 3D Mascot Capivara CNH */}
+      <div className="absolute -bottom-3 -right-2 sm:right-4 w-32 sm:w-40 drop-shadow-2xl animate-bounce duration-[3000ms] select-none pointer-events-none">
+        <img
+          src="/mascote-diriggo.png"
+          alt="Mascote Capivara CNH Diriggo"
+          className="w-full h-auto object-contain drop-shadow-lg"
+        />
+      </div>
     </div>
   );
 };
