@@ -61,7 +61,7 @@ export interface TrafficSign {
   id: string;
   code: string;
   name: string;
-  category: 'regulamentacao' | 'advertencia' | 'indicacao';
+  category: 'regulamentacao' | 'advertencia' | 'indicacao' | 'servicos' | 'turismo' | 'educativa';
   description: string;
   pointsToRemember: string;
 }

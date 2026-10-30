@@ -7,7 +7,7 @@ import { sounds } from '../utils/sound';
 
 export const PlacasGallery: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<'todas' | 'regulamentacao' | 'advertencia'>('todas');
+  const [selectedCategory, setSelectedCategory] = useState<'todas' | 'regulamentacao' | 'advertencia' | 'servicos' | 'turismo'>('todas');
   const [activeSignModal, setActiveSignModal] = useState<TrafficSign | null>(null);
 
   const allSigns = Object.values(TRAFFIC_SIGNS);
@@ -104,6 +104,34 @@ export const PlacasGallery: React.FC = () => {
             }`}
           >
             <span>Advertência (A-*)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sounds.playClick();
+              setSelectedCategory('servicos');
+            }}
+            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+              selectedCategory === 'servicos'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-slate-200 dark:border-slate-700 hover:border-blue-400'
+            }`}
+          >
+            <span>Serviços (SAU-*)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sounds.playClick();
+              setSelectedCategory('turismo');
+            }}
+            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+              selectedCategory === 'turismo'
+                ? 'bg-amber-800 text-white shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-amber-800 dark:text-amber-400 border border-slate-200 dark:border-slate-700 hover:border-amber-700'
+            }`}
+          >
+            <span>Turismo</span>
           </button>
         </div>
       </div>
