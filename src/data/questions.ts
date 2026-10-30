@@ -338,6 +338,52 @@ export const UNITS: Unit[] = [
         title: 'Placas de Regulamentação',
         description: 'Domine as placas vermelhas que impõem deveres e proibições no trânsito.',
         icon: 'OctagonAlert',
+        theorySlides: [
+          {
+            id: 'ts-1-1-1',
+            title: 'Placas de Regulamentação',
+            subtitle: 'Obrigações, restrições e proibições com força de lei',
+            badge: 'Fundamento CTB',
+            content: 'As placas de regulamentação têm formato predominantemente circular com fundo branco e borda vermelha (com exceções especiais como a placa PARE e Dê a Preferência). Seu desrespeito constitui infração de trânsito com aplicação de multa e pontos na CNH.',
+            bullets: [
+              'Cor padrão: Vermelho, branco e preto.',
+              'Finalidade: Impor condições, proibições, restrições ou obrigações no uso das vias.',
+              'Desrespeito: Gera autuação imediata e penalidades do CTB.'
+            ],
+            tip: 'Lembre-se: Placa vermelha NÃO avisa nem dá conselho; ela MANDA e PROÍBE!'
+          },
+          {
+            id: 'ts-1-1-2',
+            title: 'R-1: Parada Obrigatória (PARE)',
+            subtitle: 'A única placa octogonal do trânsito brasileiro',
+            badge: 'Infração Gravíssima',
+            signId: 'R-1',
+            content: 'A placa R-1 obriga o condutor a imobilizar TOTALMENTE o seu veículo antes de entrar ou cruzar a via transversal, mesmo que não haja nenhum pedestre ou veículo à vista.',
+            bullets: [
+              'Reduzir a velocidade e seguir em marcha lenta NÃO cumpre a regra.',
+              'Formato octogonal com 8 lados para ser reconhecida até vista de costas.',
+              'Art. 208 do CTB: Desobedecer à placa R-1 é infração gravíssima (7 pontos).'
+            ],
+            stat: {
+              value: '7 Pontos',
+              label: 'Penalidade na CNH por não parar na placa PARE'
+            }
+          },
+          {
+            id: 'ts-1-1-3',
+            title: 'R-2: Dê a Preferência',
+            subtitle: 'Triângulo invertido com vértice para baixo',
+            badge: 'Regra de Cruzamento',
+            signId: 'R-2',
+            content: 'Diferente da placa PARE (onde a parada é mandatória), a placa R-2 exige que você ceda passagem aos veículos que transitam na via preferencial, parando somente se houver fluxo.',
+            bullets: [
+              'Única placa de trânsito triangular com ponta voltada para baixo.',
+              'Permite seguir se a via estiver completamente livre.',
+              'Se houver qualquer veículo aproximando-se, você DEVE parar e aguardar.'
+            ],
+            tip: 'Dica de ouro para a prova: PARE = Parada obrigatória sempre | Dê a Preferência = Pare se vier veículo.'
+          }
+        ],
         questions: [ALL_QUESTIONS[0], ALL_QUESTIONS[2]],
         xpReward: 20
       },
@@ -347,6 +393,38 @@ export const UNITS: Unit[] = [
         title: 'Regras de Preferência e Velocidade',
         description: 'Quem passa primeiro nos cruzamentos sem semáforo e os limites das vias.',
         icon: 'Compass',
+        theorySlides: [
+          {
+            id: 'ts-1-2-1',
+            title: 'Cruzamentos Não Sinalizados',
+            subtitle: 'A clássica Regra da Direita (Art. 29 do CTB)',
+            badge: 'Preferência de Passagem',
+            content: 'Quando dois veículos chegam a um cruzamento sem semáforo e sem placas indicativas de preferência, a prioridade de passagem pertence sempre ao veículo que vem pela DIREITA do condutor.',
+            bullets: [
+              'Regra 1: Na rotatória, a preferência é de quem JÁ está circulando por ela.',
+              'Regra 2: Entre rodovia e via secundária, a preferência é do veículo na rodovia.',
+              'Regra 3: Nos demais casos, quem vem pela DIREITA tem a preferência absoluta.'
+            ],
+            stat: {
+              value: 'Direita',
+              label: 'Lado que detém a preferência em cruzamentos não sinalizados'
+            }
+          },
+          {
+            id: 'ts-1-2-2',
+            title: 'Velocidades Máximas nas Vias Urbanas',
+            subtitle: 'Limites quando não houver placa R-19 regulamentando',
+            badge: 'Art. 61 do CTB',
+            content: 'O Código de Trânsito Brasileiro estabelece velocidades máximas padrão para as vias urbanas onde não existir placa de sinalização de velocidade.',
+            bullets: [
+              'Via de Trânsito Rápido: 80 km/h (sem cruzamentos em nível nem semáforos).',
+              'Via Arterial: 60 km/h (liga bairros e tem semáforos/cruzamentos).',
+              'Via Coletora: 40 km/h (distribui o tráfego nos bairros).',
+              'Via Local: 30 km/h (ruas residenciais internas e de acesso restrito).'
+            ],
+            tip: 'Mnemônico fácil para memorizar na prova: 80 - 60 - 40 - 30 (cai em quase todas as provas do DETRAN!).'
+          }
+        ],
         questions: [ALL_QUESTIONS[1], ALL_QUESTIONS[3]],
         xpReward: 25
       },
@@ -356,6 +434,23 @@ export const UNITS: Unit[] = [
         title: 'Placas de Advertência (Amarelas)',
         description: 'Antecipe curvas perigosas, declives e perigos na rodovia.',
         icon: 'AlertTriangle',
+        theorySlides: [
+          {
+            id: 'ts-1-3-1',
+            title: 'Placas de Advertência',
+            subtitle: 'Alerta prévio para perigos potenciais à frente',
+            badge: 'Prevenção',
+            signId: 'A-1a',
+            content: 'As placas de advertência possuem formato quadrado disposto em losango com fundo amarelo e símbolos pretos. Elas não possuem caráter punitivo, mas alertam o motorista sobre situações de perigo na via com antecedência para permitir uma reação segura.',
+            bullets: [
+              'Cor: Fundo amarelo com orla e símbolo pretos.',
+              'A-1a: Curva acentuada à esquerda adiante.',
+              'A-32a: Passagem sinalizada de pedestres adiante.',
+              'A-33a: Área escolar adiante (crianças por perto).'
+            ],
+            tip: 'Ao avistar qualquer placa amarela: solte o acelerador e prepare-se para frear preventivamente.'
+          }
+        ],
         questions: [ALL_QUESTIONS[4]],
         xpReward: 20
       }
@@ -374,6 +469,35 @@ export const UNITS: Unit[] = [
         title: 'Pista Molhada & Aquaplanagem',
         description: 'O que fazer quando os pneus perdem contato com o asfalto molhado.',
         icon: 'CloudRain',
+        theorySlides: [
+          {
+            id: 'ts-2-1-1',
+            title: 'O Fenômeno da Aquaplanagem',
+            subtitle: 'Quando a água separa o pneu do asfalto',
+            badge: 'Alto Risco',
+            signId: 'A-28',
+            content: 'A aquaplanagem ou hidroplanagem ocorre quando uma lâmina de água na pista impede o escoamento pelos sulcos do pneu, fazendo o veículo flutuar descontrolado sem atrito.',
+            bullets: [
+              'Causas principais: Velocidade excessiva, água na pista e pneus com sulcos gastos (< 1,6mm).',
+              'Sintomas: O volante fica repentinamente leve e o motor pode acelerar em falso.',
+              'Placa A-28 alerta para trechos de pista escorregadia.'
+            ]
+          },
+          {
+            id: 'ts-2-1-2',
+            title: 'Como Reagir na Aquaplanagem',
+            subtitle: 'O erro fatal que nunca deve ser cometido',
+            badge: 'Ação Defensiva',
+            content: 'Em caso de aquaplanagem, qualquer freada brusca travará as rodas e provocará capotamento ou derrapagem fatal no momento em que os pneus tocarem novamente no asfalto seco.',
+            bullets: [
+              '1. NÃO pise no freio bruscamente!',
+              '2. Tire o pé do acelerador suavemente.',
+              '3. Mantenha o volante firme e alinhado na direção da pista.',
+              '4. Espere o atrito com o piso voltar naturalmente.'
+            ],
+            tip: 'Regra de ouro: Deixe o carro perder velocidade sozinho até o pneu furar a lâmina de água.'
+          }
+        ],
         questions: [ALL_QUESTIONS[5], ALL_QUESTIONS[8]],
         xpReward: 25
       },
@@ -383,6 +507,25 @@ export const UNITS: Unit[] = [
         title: 'Distância de Seguimento & Tempo',
         description: 'Aplique a regra dos 2 segundos para nunca bater na traseira.',
         icon: 'Clock',
+        theorySlides: [
+          {
+            id: 'ts-2-2-1',
+            title: 'A Regra dos Dois Segundos',
+            subtitle: 'Distância segura do veículo da frente',
+            badge: 'Técnica Prática',
+            content: 'Para saber se você está guardando distância segura do veículo que vai adiante, utilize a técnica dos 2 segundos em pista seca (ou 4 segundos sob chuva).',
+            bullets: [
+              '1. Escolha um ponto fixo na beira da via (árvore, placa, poste).',
+              '2. Quando o carro da frente passar pelo ponto, comece a contar pausadamente: "Cinquenta e um, cinquenta e dois".',
+              '3. Seu carro só pode atingir o mesmo ponto após você terminar a contagem.',
+              '4. Se atingir antes, reduza a velocidade e aumente a distância.'
+            ],
+            stat: {
+              value: '2 Segundos',
+              label: 'Distância mínima de reação e frenagem em pista seca'
+            }
+          }
+        ],
         questions: [ALL_QUESTIONS[6], ALL_QUESTIONS[7]],
         xpReward: 20
       },
@@ -392,6 +535,20 @@ export const UNITS: Unit[] = [
         title: 'Física do Veículo & Curvas',
         description: 'Entenda forças centrífugas e frenagens seguras nas curvas.',
         icon: 'Zap',
+        theorySlides: [
+          {
+            id: 'ts-2-3-1',
+            title: 'Força Centrífuga nas Curvas',
+            subtitle: 'A força da física que empurra o carro para fora',
+            badge: 'Física do Trânsito',
+            content: 'Ao fazer uma curva, a inércia faz o veículo tender a continuar em linha reta. A força centrífuga puxa o veículo para fora da trajetória da curva.',
+            bullets: [
+              'CentríFUGA: Força que joga o veículo para FORA da curva.',
+              'CentríPETA: Força que puxa o veículo para DENTRO da curva.',
+              'Regra defensiva: Sempre reduza a marcha e a velocidade ANTES da curva, acelerando levemente e com suavidade no contorno para manter a tração.'
+            ]
+          }
+        ],
         questions: [ALL_QUESTIONS[9]],
         xpReward: 20
       }
@@ -410,6 +567,32 @@ export const UNITS: Unit[] = [
         title: 'Sinalização da Cena do Acidente',
         description: 'A primeira regra: proteger a si e aos outros de novos impactos.',
         icon: 'ShieldAlert',
+        theorySlides: [
+          {
+            id: 'ts-3-1-1',
+            title: '1ª Providência: Sinalizar o Local',
+            subtitle: 'Evite que um acidente vire um engavetamento em massa',
+            badge: 'Prioridade Absoluta',
+            content: 'Ao chegar a um acidente, o instinto humano é correr em direção às vítimas. Porém, no socorrismo de trânsito, a PRIMEIRA coisa a fazer é proteger o local e sinalizar a via com triângulo, galhos e pisca-alerta ligado.',
+            bullets: [
+              'Se o local não for sinalizado, outros veículos colidirão com o carro acidentado e atropelarão os próprios socorristas.',
+              'Use o triângulo de segurança a uma distância compatível com a velocidade da via.',
+              'Sob chuva ou à noite, dobre a distância de sinalização.'
+            ]
+          },
+          {
+            id: 'ts-3-1-2',
+            title: 'Acionando o Socorro Especializado',
+            subtitle: 'Números de emergência obrigatórios para a CNH',
+            badge: 'Emergência',
+            content: 'Ligue com calma e informe com precisão: onde é o acidente (km ou ponto de referência), quantos veículos se envolveram e quantas vítimas aparentam estar graves.',
+            bullets: [
+              '192 - SAMU (Serviço de Atendimento Móvel de Urgência): Atendimento médico geral.',
+              '193 - Corpo de Bombeiros: Vítimas presas em ferragens, vazamento de combustível, incêndios e afogamentos.',
+              '190 - Polícia Militar | 191 - Polícia Rodoviária Federal.'
+            ]
+          }
+        ],
         questions: [ALL_QUESTIONS[10], ALL_QUESTIONS[12]],
         xpReward: 25
       },
@@ -419,6 +602,22 @@ export const UNITS: Unit[] = [
         title: 'Cuidados com Vítimas & Motociclistas',
         description: 'Por que JAMAIS retirar o capacete e como conter sangramentos.',
         icon: 'HeartHandshake',
+        theorySlides: [
+          {
+            id: 'ts-3-2-1',
+            title: 'O que NUNCA Fazer com a Vítima',
+            subtitle: 'Erros graves que podem causar lesões irreparáveis',
+            badge: 'Regra de Ouro',
+            content: 'A principal causa de morte e invalidez pós-acidente em motociclistas decorre do manuseio inadequado da coluna cervical por curiosos ou socorristas sem treinamento.',
+            bullets: [
+              'JAMAIS retire o capacete de um motociclista acidentado!',
+              'NÃO movimente ou transporte a vítima antes da chegada dos socorristas.',
+              'NÃO dê água, alimentos ou remédios para as vítimas.',
+              'NÃO retire objetos encravados no corpo da vítima (vidros, ferros).'
+            ],
+            tip: 'Para conter hemorragias externas abundantes: faça apenas compressão direta sobre o ferimento com pano limpo ou gaze.'
+          }
+        ],
         questions: [ALL_QUESTIONS[11], ALL_QUESTIONS[13]],
         xpReward: 25
       }
@@ -437,6 +636,38 @@ export const UNITS: Unit[] = [
         title: 'Pontuação & Permissão Provisória',
         description: 'Tudo o que você precisa para não perder sua CNH no primeiro ano.',
         icon: 'FileBadge',
+        theorySlides: [
+          {
+            id: 'ts-4-1-1',
+            title: 'Tabela de Pontos por Infração',
+            subtitle: 'Art. 259 do Código de Trânsito Brasileiro',
+            badge: 'Legislação CTB',
+            content: 'As infrações de trânsito são divididas em 4 naturezas, cada uma associada a uma pontuação que é lançada no prontuário do condutor.',
+            bullets: [
+              'Gravíssima: 7 pontos (ex: avançar sinal vermelho, dirigir alcoolizado).',
+              'Grave: 5 pontos (ex: não usar cinto de segurança, pneu careca).',
+              'Média: 4 pontos (ex: parar sobre a faixa de pedestre, usar celular segurando).',
+              'Leve: 3 pontos (ex: não portar documentos, estacionar afastado da guia).'
+            ],
+            stat: {
+              value: '7 - 5 - 4 - 3',
+              label: 'Pontos na CNH: Gravíssima, Grave, Média e Leve'
+            }
+          },
+          {
+            id: 'ts-4-1-2',
+            title: 'A Regra da PPD (Permissão Para Dirigir)',
+            subtitle: 'O período probatório do condutor novato',
+            badge: 'Atenção Recém-Habilitado',
+            content: 'Ao passar na prova do DETRAN, o candidato recebe a PPD válida por 1 ano. Para receber a CNH definitiva após 12 meses:',
+            bullets: [
+              'NÃO pode ter cometido NENHUMA infração GRAVÍSSIMA.',
+              'NÃO pode ter cometido NENHUMA infração GRAVE.',
+              'NÃO pode ser REINCIDENTE em infração MÉDIA (duas ou mais).',
+              'Se violar essa regra, a PPD é cassada e o candidato deve reiniciar todo o processo do zero!'
+            ]
+          }
+        ],
         questions: [ALL_QUESTIONS[14], ALL_QUESTIONS[16]],
         xpReward: 25
       },
@@ -446,6 +677,31 @@ export const UNITS: Unit[] = [
         title: 'Lei Seca & Convivência com Ciclistas',
         description: 'Tolerância zero ao álcool e a distância sagrada de 1,5 metro.',
         icon: 'Scale',
+        theorySlides: [
+          {
+            id: 'ts-4-2-1',
+            title: 'Lei Seca: Álcool e Direção',
+            subtitle: 'Artigos 165 e 165-A do CTB',
+            badge: 'Tolerância Zero',
+            content: 'Dirigir sob efeito de álcool ou substâncias psicoativas é infração gravíssima multiplicada por 10 (multa próxima de R$ 3.000,00), com recolhimento da CNH e suspensão do direito de dirigir por 12 meses.',
+            bullets: [
+              'Recusar o teste do bafômetro gera exatamente a mesma penalidade e valor de multa!',
+              'Se o bafômetro constatar concentração igual ou superior a 0,34 mg/L de ar, torna-se CRIME DE TRÂNSITO (pena de detenção de 6 meses a 3 anos).'
+            ]
+          },
+          {
+            id: 'ts-4-2-2',
+            title: 'Respeito aos Ciclistas na Via',
+            subtitle: 'Distância lateral obrigatória de 1,50 metro',
+            badge: 'Cidadania',
+            content: 'O ciclista e o pedestre são os agentes mais frágeis do trânsito. A lei determina que veículos maiores sempre devem zelar pela segurança dos menores.',
+            bullets: [
+              'Ao ultrapassar uma bicicleta, o motorista DEVE manter distância lateral mínima de 1,50 METRO (um metro e meio).',
+              'Não guardar essa distância é infração de trânsito média (Art. 201).',
+              'Reduza a velocidade ao cruzar com ciclistas para evitar desequilíbrios provocados pelo deslocamento de ar.'
+            ]
+          }
+        ],
         questions: [ALL_QUESTIONS[15], ALL_QUESTIONS[17]],
         xpReward: 30
       }
@@ -464,6 +720,32 @@ export const UNITS: Unit[] = [
         title: 'Segurança do Veículo & Pneus TWI',
         description: 'Evite multas e acidentes mantendo pneus e luzes em dia.',
         icon: 'Wrench',
+        theorySlides: [
+          {
+            id: 'ts-5-1-1',
+            title: 'Pneus e o Indicador TWI',
+            subtitle: 'A profundidade mínima de 1,6 milímetros',
+            badge: 'Segurança Veicular',
+            content: 'Os pneus possuem pequenos filetes de borracha no fundo dos sulcos chamados TWI (Tread Wear Indicator). Quando a borracha da banda de rodagem se desgasta e fica no mesmo nível do TWI, o pneu está "careca".',
+            bullets: [
+              'Profundidade mínima legal: 1,6 mm.',
+              'Pneu careca não escoa água (aquaplanagem) e aumenta muito o espaço de frenagem.',
+              'Conduzir com pneu careca é infração GRAVE (5 pontos) e acarreta retenção do veículo para regularização.'
+            ]
+          },
+          {
+            id: 'ts-5-1-2',
+            title: 'Luzes do Painel de Instrumentos',
+            subtitle: 'Código de cores dos alertas',
+            badge: 'Painel do Carro',
+            content: 'O painel do veículo comunica o estado dos sistemas por cores semelhantes às do semáforo:',
+            bullets: [
+              'Luzes VERMELHAS: Problemas críticos. Pare o veículo imediatamente! (Pressão de óleo, temperatura do motor, bateria/alternador, freio de mão).',
+              'Luzes AMARELAS/ÂMBAR: Alerta ou falha não-crítica. Procure assistência técnica em breve (injeção eletrônica, combustível na reserva, ABS).',
+              'Luzes VERDES/AZUIS: Indicadores de funcionamento normal (farol baixo, seta, pisca-alerta, farol alto).'
+            ]
+          }
+        ],
         questions: [ALL_QUESTIONS[18], ALL_QUESTIONS[19]],
         xpReward: 20
       },
@@ -473,6 +755,20 @@ export const UNITS: Unit[] = [
         title: 'Emissões & Meio Ambiente (PROCONVE)',
         description: 'O papel do catalisador e a redução de fumaça e ruído nas cidades.',
         icon: 'Leaf',
+        theorySlides: [
+          {
+            id: 'ts-5-2-1',
+            title: 'PROCONVE e o Catalisador',
+            subtitle: 'Controle de poluição automotiva no Brasil',
+            badge: 'Meio Ambiente',
+            content: 'O PROCONVE (Programa de Controle da Poluição do Ar por Veículos Automotores) foi criado pelo CONAMA para fixar metas rigorosas de emissão de fumaça e ruídos pelos motores.',
+            bullets: [
+              'Catalisador: Peça instalada no sistema de escapamento que transforma gases tóxicos (monóxido de carbono, óxidos de nitrogênio) em vapor de água e nitrogênio.',
+              'Baterias usadas: Devem ser devolvidas aos revendedores ou fabricantes para reciclagem de chumbo e ácido.',
+              'Poluição Sonora: Sons automotivos em volume excessivo perturbam a ordem e configuram infração grave com apreensão do som.'
+            ]
+          }
+        ],
         questions: [ALL_QUESTIONS[20], ALL_QUESTIONS[21]],
         xpReward: 25
       }

@@ -22,12 +22,28 @@ export interface Question {
   difficulty?: 'easy' | 'medium' | 'hard';
 }
 
+export interface TheorySlide {
+  id: string;
+  title: string;
+  subtitle?: string;
+  content: string;
+  bullets?: string[];
+  signId?: string;
+  badge?: string;
+  tip?: string;
+  stat?: {
+    value: string;
+    label: string;
+  };
+}
+
 export interface Lesson {
   id: string;
   unitId: string;
   title: string;
   description: string;
   icon: string;
+  theorySlides?: TheorySlide[];
   questions: Question[];
   xpReward: number;
 }

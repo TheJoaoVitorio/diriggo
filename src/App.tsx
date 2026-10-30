@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { LearningPath } from './components/LearningPath';
 import { LessonModal } from './components/LessonModal';
+import { TheoryModal } from './components/TheoryModal';
 import { SimuladoModal } from './components/SimuladoModal';
-import { AuthModal } from './components/AuthModal';
+import { LoginPage } from './components/LoginPage';
 import { LandingPage } from './components/LandingPage';
 import { UNITS, ALL_QUESTIONS } from './data/questions';
 import { Lesson, UserProfile } from './types';
@@ -15,11 +16,11 @@ const DEFAULT_PROFILE: UserProfile = {
   name: '',
   email: '',
   isLoggedIn: false,
-  streak: 3, // starter streak encouragement
+  streak: 3,
   hearts: 5,
   maxHearts: 5,
   xp: 45,
-  completedLessons: ['les-1-1'], // first completed for demonstration
+  completedLessons: ['les-1-1'],
   simuladosHistory: [],
   soundEnabled: true
 };
@@ -35,10 +36,10 @@ export function App() {
     return DEFAULT_PROFILE;
   });
 
-  const [currentView, setCurrentView] = useState<'landing' | 'app'>('landing');
-  const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+  const [currentView, setCurrentView] = useState<'landing' | 'login' | 'app'>('landing');
+  const [studyingTheoryLesson, setStudyingTheoryLesson] = useState<Lesson | null>(null);
+  const [activeQuizLesson, setActiveQuizLesson] = useState<Lesson | null>(null);
   const [isSimuladoOpen, setIsSimuladoOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   // Sync to localStorage
   useEffect(() => {
@@ -68,18 +69,18 @@ export function App() {
   };
 
   const handleCompleteLesson = (xpEarned: number) => {
-    if (!activeLesson) return;
+    if (!activeQuizLesson) return;
     setProfile(prev => {
-      const alreadyCompleted = prev.completedLessons.includes(activeLesson.id);
+      const alreadyCompleted = prev.completedLessons.includes(activeQuizLesson.id);
       return {
         ...prev,
         xp: prev.xp + xpEarned,
         completedLessons: alreadyCompleted
           ? prev.completedLessons
-          : [...prev.completedLessons, activeLesson.id]
+          : [...prev.completedLessons, activeQuizLesson.id]
       };
     });
-    setActiveLesson(null);
+    setActiveQuizLesson(null);
   };
 
   const handleFinishSimulado = (score: number, total: number, passed: boolean) => {
@@ -108,13 +109,22 @@ export function App() {
       email,
       isLoggedIn: true
     }));
-    setIsAuthOpen(false);
     setCurrentView('app');
+  };
+
+  // When student clicks a node on the path:
+  // Open the study slides/infographics first!
+  const handleNodeClick = (lesson: Lesson) => {
+    if (lesson.theorySlides && lesson.theorySlides.length > 0) {
+      setStudyingTheoryLesson(lesson);
+    } else {
+      setActiveQuizLesson(lesson);
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
-      {currentView === 'landing' ? (
+      {currentView === 'landing' && (
         <LandingPage
           onStartLearning={() => {
             sounds.playClick();
@@ -126,23 +136,35 @@ export function App() {
           }}
           onOpenAuth={() => {
             sounds.playClick();
-            setIsAuthOpen(true);
+            setCurrentView('login');
           }}
         />
-      ) : (
+      )}
+
+      {currentView === 'login' && (
+        <LoginPage
+          onBack={() => {
+            sounds.playClick();
+            setCurrentView('landing');
+          }}
+          onLogin={handleLogin}
+        />
+      )}
+
+      {currentView === 'app' && (
         <div className="min-h-screen flex flex-col">
           {/* Main App Navbar */}
           <Navbar
             profile={profile}
             onOpenSimulado={() => setIsSimuladoOpen(true)}
-            onOpenAuth={() => setIsAuthOpen(true)}
+            onOpenAuth={() => setCurrentView('login')}
             onToggleSound={handleToggleSound}
             onRefillHearts={handleRefillHearts}
           />
 
-          {/* Quick Bar / Switch to Landing */}
+          {/* Quick Sub-header */}
           <div className="bg-amber-100/60 border-b border-amber-200 py-1.5 px-4 text-center text-xs font-bold text-amber-900 flex items-center justify-center gap-2">
-            <span>🚗 Modo Estudo Ativo</span>
+            <span>🚗 Trilha de Aprendizado Ativa</span>
             <span>•</span>
             <button
               onClick={() => {
@@ -160,39 +182,44 @@ export function App() {
             <LearningPath
               units={UNITS}
               completedLessons={profile.completedLessons}
-              onStartLesson={(lesson) => setActiveLesson(lesson)}
+              onStartLesson={handleNodeClick}
               onOpenSimulado={() => setIsSimuladoOpen(true)}
             />
           </main>
         </div>
       )}
 
-      {/* Lesson Modal */}
-      {activeLesson && (
+      {/* Pre-Lesson Interactive Study Slides & Infographics */}
+      {studyingTheoryLesson && (
+        <TheoryModal
+          lesson={studyingTheoryLesson}
+          onClose={() => setStudyingTheoryLesson(null)}
+          onStartQuiz={() => {
+            const lessonToQuiz = studyingTheoryLesson;
+            setStudyingTheoryLesson(null);
+            setActiveQuizLesson(lessonToQuiz);
+          }}
+        />
+      )}
+
+      {/* Interactive Quiz / Question Player Modal */}
+      {activeQuizLesson && (
         <LessonModal
-          lesson={activeLesson}
+          lesson={activeQuizLesson}
           hearts={profile.hearts}
-          onClose={() => setActiveLesson(null)}
+          onClose={() => setActiveQuizLesson(null)}
           onComplete={handleCompleteLesson}
           onDeductHeart={handleDeductHeart}
           onRefillHearts={handleRefillHearts}
         />
       )}
 
-      {/* Simulado Modal */}
+      {/* Official DETRAN 30Q Simulado Modal */}
       {isSimuladoOpen && (
         <SimuladoModal
           questions={ALL_QUESTIONS}
           onClose={() => setIsSimuladoOpen(false)}
           onFinishSimulado={handleFinishSimulado}
-        />
-      )}
-
-      {/* Auth Modal */}
-      {isAuthOpen && (
-        <AuthModal
-          onClose={() => setIsAuthOpen(false)}
-          onLogin={handleLogin}
         />
       )}
     </div>
