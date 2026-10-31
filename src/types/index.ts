@@ -85,6 +85,8 @@ export interface SimuladoResult {
 export type AppTab = 'trilhas' | 'simulados' | 'placas' | 'material' | 'perfil';
 
 export interface UserProfile {
+  uid?: string;
+  photoURL?: string;
   name: string;
   email: string;
   isLoggedIn: boolean;

@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions (Security Best Practice)
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Users Collection:
+    // Only the authenticated user can read or modify their own progress, CNH points, streak, and quiz history.
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Global deny-all fallback for unspecified paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
