@@ -1,27 +1,71 @@
 import React, { useState } from 'react';
-import { ArrowLeft, User, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  AlertCircle, 
+  CheckCircle2, 
+  ShieldCheck, 
+  Cloud, 
+  Sparkles,
+  Loader2,
+  Lock
+} from 'lucide-react';
+import { User } from 'firebase/auth';
 import { sounds } from '../utils/sound';
+import { signInWithGoogle, isFirebaseConfigured } from '../services/firebase';
 
 interface LoginPageProps {
   onBack: () => void;
-  onLogin: (name: string, email: string) => void;
+  onLogin: (user: User) => void;
+  isLoggingIn?: boolean;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [isRegister, setIsRegister] = useState(false);
+export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin, isLoggingIn = false }) => {
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [sessionOnly, setSessionOnly] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleSignIn = async () => {
     sounds.playClick();
-    if (!name.trim()) return;
-    onLogin(name.trim(), email.trim() || `${name.toLowerCase().replace(/\s+/g, '')}@aluno.diriggo.com`);
-  };
+    setAuthError(null);
+    setIsLoadingGoogle(true);
 
-  const handleGuest = () => {
-    sounds.playClick();
-    onLogin('Futuro Condutor', 'visitante@diriggo.com');
+    try {
+      if (!isFirebaseConfigured()) {
+        setAuthError(
+          'Configuração pendente: Adicione as credenciais do Firebase no arquivo .env para ativar a autenticação com conta Google.'
+        );
+        setIsLoadingGoogle(false);
+        return;
+      }
+
+      // Autenticação com opção de persistência de sessão (browserSessionPersistence)
+      const user = await signInWithGoogle(sessionOnly);
+      if (user) {
+        sounds.playCorrect();
+        onLogin(user);
+      }
+    } catch (err: any) {
+      console.error('[LoginPage] Erro na autenticação com Google:', err);
+      if (err.message === 'CONFIG_REQUIRED') {
+        setAuthError(
+          'Chaves do Firebase não encontradas no arquivo .env. Configure VITE_FIREBASE_API_KEY e VITE_FIREBASE_PROJECT_ID.'
+        );
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setAuthError('Janela de login fechada antes da confirmação. Clique novamente para continuar.');
+      } else if (err.code === 'auth/cancelled-popup-request') {
+        setAuthError(null);
+      } else if (err.code === 'auth/popup-blocked') {
+        setAuthError('O navegador bloqueou a janela pop-up do Google. Por favor, permita pop-ups para este site.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setAuthError(
+          'Domínio não autorizado: Adicione este domínio ou "localhost" nos domínios autorizados do Firebase Console (Authentication > Settings > Authorized domains).'
+        );
+      } else {
+        setAuthError(err.message || 'Falha ao autenticar com Google. Tente novamente.');
+      }
+    } finally {
+      setIsLoadingGoogle(false);
+    }
   };
 
   return (
@@ -58,7 +102,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin }) => {
         </div>
       </header>
 
-      {/* Main Content: Gamified Hero Scene & Login Card */}
+      {/* Main Content: Gamified Hero Scene & Exclusively Google Login Card */}
       <main className="relative z-10 max-w-5xl w-full mx-auto px-4 py-4 flex flex-col lg:flex-row items-center justify-center gap-10 flex-1">
         
         {/* Left Side: Cartoon Car & Traffic Sign Scene */}
@@ -69,7 +113,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin }) => {
               Instrutor Diriggo:
             </span>
             <p className="text-sm font-extrabold leading-snug">
-              "Bora treinar para a prova teórica sem medo de ser reprovado!"
+              "Acesso protegido! Conecte com sua conta Google para salvar sua evolução na nuvem."
             </p>
             {/* Bubble arrow */}
             <div className="absolute -bottom-2 left-8 w-4 h-4 bg-white rotate-45 border-r-2 border-b-2 border-amber-400" />
@@ -117,113 +161,141 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin }) => {
           </div>
 
           {/* Gamified Benefits list */}
-          <div className="mt-4 space-y-2 hidden sm:block">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
+          <div className="mt-4 space-y-2.5 hidden sm:block">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Metodologia Duolingo com Vidas e Ofensivas diárias</span>
+              <span>Salva seu progresso e CNH na nuvem com Firebase</span>
             </div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Simulado com 30 questões idêntico ao DETRAN</span>
+              <span>Login exclusivo e seguro em 1 clique com conta Google</span>
             </div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>100% Gratuito e sem pegadinhas</span>
+              <span>Histórico de simulados e infrações isolados por condutor</span>
+            </div>
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Sua foto oficial do Google na CNH virtual do aplicativo</span>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Login / Register Form Card */}
+        {/* Right Side: Exclusively Google Login Card */}
         <div className="w-full max-w-md bg-white text-slate-900 rounded-3xl p-6 sm:p-8 border-b-8 border-slate-300 shadow-2xl relative">
+          {/* Header of Card */}
           <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Acesso Rápido & Seguro</span>
+            </div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              {isRegister ? 'Criar sua Conta' : 'Acesse sua Garagem'}
+              Acesse sua Garagem
             </h2>
-            <p className="text-xs font-bold text-slate-500 mt-1">
-              Guarde seus XP, vidas e o histórico da sua aprovação.
+            <p className="text-xs font-semibold text-slate-500 mt-1.5 leading-relaxed">
+              Faça login com a sua conta Google para acessar a plataforma e carregar sua trilha individual.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-xs font-black uppercase text-slate-700 mb-1">
-                Seu Nome ou Apelido
-              </label>
-              <div className="relative">
-                <User className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  required
-                  placeholder="Ex: Amanda Santos"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-amber-400 focus:outline-none font-bold text-slate-900 text-sm bg-slate-50 focus:bg-white transition-colors"
-                />
+          {/* Warning / Error banner */}
+          {authError && (
+            <div className="mb-5 p-3.5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-900 text-xs flex items-start gap-2.5 animate-fadeIn">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <span className="font-bold block leading-relaxed">{authError}</span>
               </div>
             </div>
+          )}
 
-            <div>
-              <label className="block text-xs font-black uppercase text-slate-700 mb-1">
-                E-mail (Para salvar progresso)
-              </label>
-              <div className="relative">
-                <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  placeholder="amanda@exemplo.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-amber-400 focus:outline-none font-bold text-slate-900 text-sm bg-slate-50 focus:bg-white transition-colors"
-                />
+          {/* Configuration Notice if Firebase is not yet filled in .env */}
+          {!isFirebaseConfigured() && !authError && (
+            <div className="mb-5 p-3 bg-blue-50 border border-blue-200 rounded-2xl text-blue-900 text-xs flex items-start gap-2.5">
+              <Cloud className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <div className="flex-1 font-semibold leading-relaxed">
+                As credenciais do Firebase no arquivo <code className="bg-blue-100 px-1 py-0.5 rounded font-mono text-[11px]">.env</code> ativam o login real com o Google.
               </div>
             </div>
+          )}
 
+          {/* Exclusively Google Login Button */}
+          <div className="space-y-4">
             <button
-              type="submit"
-              className="w-full py-4 mt-2 rounded-2xl duo-btn-yellow font-black text-sm uppercase tracking-wide cursor-pointer shadow-lg flex items-center justify-center gap-2"
+              type="button"
+              disabled={isLoadingGoogle || isLoggingIn}
+              onClick={handleGoogleSignIn}
+              className="w-full py-4 px-5 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-300 hover:border-slate-400 border-b-4 font-black text-slate-800 text-sm cursor-pointer transition-all flex items-center justify-center gap-3 active:translate-y-0.5 active:border-b-2 shadow-sm group disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <span>{isRegister ? 'Cadastrar e Começar' : 'Entrar na Autoescola'}</span>
-              <ArrowRight className="w-5 h-5" />
+              {isLoadingGoogle || isLoggingIn ? (
+                <>
+                  <Loader2 className="w-5 h-5 text-amber-500 animate-spin" />
+                  <span className="font-black text-slate-700">Conectando ao Google...</span>
+                </>
+              ) : (
+                <>
+                  {/* Official Multi-Color Google "G" Logo */}
+                  <svg className="w-5 h-5 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                    <path
+                      fill="#4285F4"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    />
+                  </svg>
+                  <span className="tracking-wide">Continuar com o Google</span>
+                </>
+              )}
             </button>
-          </form>
 
-          {/* Divider */}
-          <div className="relative my-5 text-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
+            {/* Opção de Persistência de Sessão (Firebase Session Authentication) */}
+            <label className="flex items-start gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100/70 transition-colors">
+              <input
+                type="checkbox"
+                checked={sessionOnly}
+                onChange={(e) => setSessionOnly(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-slate-300 cursor-pointer accent-amber-500"
+              />
+              <div className="text-left">
+                <span className="text-[11px] font-black text-slate-800 flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-amber-600 inline" />
+                  <span>Autenticação de Sessão Temporária</span>
+                </span>
+                <span className="text-[10px] font-medium text-slate-500 block leading-tight mt-0.5">
+                  Exige novo login ao fechar o navegador (Firebase <code className="text-slate-600 font-mono">browserSessionPersistence</code>).
+                </span>
+              </div>
+            </label>
+
+            {/* Security Guarantee Badge */}
+            <div className="pt-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-slate-500">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Autenticação direta e protegida pelo Google</span>
             </div>
-            <span className="relative bg-white px-3 text-xs font-black text-slate-400 uppercase">
-              ou
-            </span>
           </div>
 
-          {/* 1-Click Guest Button */}
-          <button
-            onClick={handleGuest}
-            className="w-full py-3.5 rounded-2xl border-2 border-slate-200 hover:bg-slate-50 border-b-4 font-black text-slate-700 text-xs uppercase tracking-wide cursor-pointer transition-colors flex items-center justify-center gap-2"
-          >
-            <span>Entrar como Visitante (1 Clique)</span>
-          </button>
-
-          <div className="mt-5 text-center">
-            <button
-              onClick={() => {
-                sounds.playClick();
-                setIsRegister(prev => !prev);
-              }}
-              className="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline cursor-pointer"
-            >
-              {isRegister
-                ? 'Já tem cadastro? Clique aqui para entrar'
-                : 'Novo aluno? Cadastre-se em segundos'}
-            </button>
+          {/* Gamified Footer Highlights inside card */}
+          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
+            <span>🚦 CNH CTB 2026</span>
+            <span className="flex items-center gap-1">
+              <Cloud className="w-3.5 h-3.5 text-blue-500" />
+              <span>Nuvem Firestore</span>
+            </span>
           </div>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="relative z-10 py-4 text-center text-xs font-semibold text-slate-500">
-        Diriggo © 2026 • Simulados e Didática Gamificada para CNH Brasil
+        Diriggo © 2026 • Login Exclusivo Google & Persistência na Nuvem Firebase
       </footer>
     </div>
   );
