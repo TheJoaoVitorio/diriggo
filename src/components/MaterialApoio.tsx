@@ -129,18 +129,18 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
   const currentTopic = topics.find(t => t.id === selectedTopicId) || topics[0];
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 select-none">
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-6 select-none">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-5">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-xl font-black shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center text-lg font-black shadow-xs shrink-0">
             📚
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Material de Apoio Didático
             </h1>
-            <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Guias resumidos, regras essenciais do CTB e pegadinhas frequentes de cada disciplina.
             </p>
           </div>
@@ -148,7 +148,7 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
       </div>
 
       {/* Topics Horizontal Selector */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-5 no-scrollbar scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {topics.map(t => {
           const isSelected = t.id === selectedTopicId;
 
@@ -159,13 +159,13 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
                 sounds.playClick();
                 setSelectedTopicId(t.id);
               }}
-              className={`px-4 py-3 rounded-2xl border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+              className={`px-3 py-2 rounded-xl border-2 font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
                 isSelected
                   ? 'bg-amber-100 dark:bg-amber-950/60 border-amber-400 dark:border-amber-500 text-amber-900 dark:text-amber-300 shadow-xs'
                   : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400'
               }`}
             >
-              <span className="text-lg">{t.icon}</span>
+              <span className="text-base">{t.icon}</span>
               <span>{t.name}</span>
             </button>
           );
@@ -173,16 +173,16 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
       </div>
 
       {/* Main Topic Detail Sheet */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-xs">
         {/* Topic Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-slate-100 dark:border-slate-800 pb-5 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-slate-100 dark:border-slate-800 pb-4 mb-4">
           <div className="flex items-center gap-3">
-            <span className="text-4xl">{currentTopic.icon}</span>
+            <span className="text-2xl sm:text-3xl">{currentTopic.icon}</span>
             <div>
               <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
                 {currentTopic.badge}
               </span>
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
                 {currentTopic.name}
               </h2>
             </div>
@@ -191,7 +191,7 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
           {onGoToSimulado && (
             <button
               onClick={onGoToSimulado}
-              className="px-4 py-2.5 rounded-xl duo-btn-yellow font-black text-xs uppercase tracking-wider cursor-pointer shadow-xs self-start sm:self-auto flex items-center gap-2"
+              className="px-3 py-2 rounded-xl duo-btn-yellow font-black text-xs uppercase tracking-wider cursor-pointer shadow-xs self-start sm:self-auto flex items-center gap-1.5"
             >
               <span>Praticar este Tópico</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -200,19 +200,19 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
         </div>
 
         {/* Overview Summary */}
-        <p className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
+        <p className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
           {currentTopic.summary}
         </p>
 
         {/* Stat badges if available */}
         {currentTopic.stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
             {currentTopic.stats.map((s, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-center"
+                className="p-2.5 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-center"
               >
-                <span className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 block">
+                <span className="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 block">
                   {s.value}
                 </span>
                 <span className="text-[10px] font-extrabold uppercase text-slate-500 dark:text-slate-400 mt-0.5 block">
@@ -224,17 +224,17 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
         )}
 
         {/* Key Points (Checklist) */}
-        <div className="space-y-3 mb-8">
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-400">
+        <div className="space-y-2 mb-5">
+          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2 block">
             Pontos Cruciais para Memorizar:
           </h3>
           {currentTopic.keyPoints.map((point, idx) => (
             <div
               key={idx}
-              className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-start gap-3"
+              className="p-2.5 sm:p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-start gap-2.5"
             >
               <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-              <span className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
                 {point}
               </span>
             </div>
@@ -242,14 +242,14 @@ export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) 
         </div>
 
         {/* DETRAN Trap Box */}
-        <div className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 shadow-xs">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 shadow-xs">
           <div className="flex items-center gap-2 mb-2">
-            <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-            <h4 className="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-900 dark:text-amber-300">
+            <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+            <h4 className="text-xs font-black uppercase tracking-wider text-amber-900 dark:text-amber-300">
               Pegadinha Frequente na Prova do DETRAN:
             </h4>
           </div>
-          <p className="text-xs sm:text-sm font-medium text-amber-950 dark:text-amber-200 leading-relaxed">
+          <p className="text-xs font-medium text-amber-950 dark:text-amber-200 leading-relaxed">
             {currentTopic.detranTrap}
           </p>
         </div>

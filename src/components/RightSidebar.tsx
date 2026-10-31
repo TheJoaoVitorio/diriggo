@@ -6,7 +6,8 @@ import {
   RotateCcw,
   CheckCircle2,
   Shield,
-  Lock
+  Lock,
+  ChevronRight
 } from 'lucide-react';
 import { UserProfile } from '../types';
 import { sounds } from '../utils/sound';
@@ -15,18 +16,31 @@ interface RightSidebarProps {
   profile: UserProfile;
   onOpenSimulado: () => void;
   onResetCnhPoints: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export const RightSidebar: React.FC<RightSidebarProps> = ({
   profile,
   onOpenSimulado,
-  onResetCnhPoints
+  onResetCnhPoints,
+  isCollapsed = false,
+  onToggleCollapse
 }) => {
   const isSuspended = profile.cnhPoints >= profile.maxCnhPoints;
 
+  if (isCollapsed) {
+    return (
+      <aside 
+        aria-hidden="true"
+        className="hidden xl:flex flex-col w-0 h-screen sticky top-0 border-none bg-white dark:bg-[#131f24] p-0 space-y-0 select-none shrink-0 overflow-hidden opacity-0 pointer-events-none transition-all duration-300"
+      />
+    );
+  }
+
   return (
-    <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 border-l-2 border-[#e5e5e5] dark:border-[#202f36] bg-white dark:bg-[#131f24] px-4 py-6 space-y-5 select-none shrink-0 overflow-y-auto no-scrollbar">
-      {/* Top HUD Stats Bar (Duolingo Style) */}
+    <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 border-l-2 border-[#e5e5e5] dark:border-[#202f36] bg-white dark:bg-[#131f24] px-4 py-6 space-y-5 select-none shrink-0 overflow-y-auto no-scrollbar transition-all duration-300">
+      {/* Top HUD Stats Bar with Collapse Toggle Button */}
       <div className="flex items-center justify-between pb-4 border-b-2 border-[#e5e5e5] dark:border-[#202f36] text-xs font-black">
         {/* Country / Exam Standard */}
         <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
@@ -47,17 +61,31 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         </div>
 
         {/* CNH Points */}
-        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border-2 font-black ${
+        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-xl border-2 font-black ${
           isSuspended 
             ? 'bg-rose-100 text-rose-800 border-rose-400 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800' 
             : 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-[#182631] dark:text-[#58cc02] dark:border-[#202f36]'
         }`}>
           <span>🪪</span>
-          <span>{profile.cnhPoints}/20 pts</span>
+          <span>{profile.cnhPoints}p</span>
         </div>
+
+        {/* Discreet Collapse Button */}
+        {onToggleCollapse && (
+          <button
+            onClick={() => {
+              sounds.playClick();
+              onToggleCollapse();
+            }}
+            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-[#182228] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors"
+            title="Recolher painel lateral"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      {/* Widget 1: Desbloqueie os Simulados (Duolingo Shield Style) */}
+      {/* Widget 1: Desbloqueie os Simulados */}
       <div className="p-4 rounded-2xl border-2 border-[#e5e5e5] dark:border-[#202f36] bg-white dark:bg-[#131f24] shadow-xs">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-[#202f36] flex items-center justify-center text-slate-400 dark:text-[#8b9ea7] shrink-0 border border-slate-200 dark:border-[#2b3d45]">
@@ -85,7 +113,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         </button>
       </div>
 
-      {/* Widget 2: Missões do Dia (Duolingo Daily Quests) */}
+      {/* Widget 2: Missões do Dia */}
       <div className="p-4 rounded-2xl border-2 border-[#e5e5e5] dark:border-[#202f36] bg-white dark:bg-[#131f24] shadow-xs">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-[#8b9ea7]">
@@ -110,7 +138,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 <div className="bg-[#ffc800] h-full w-full rounded-full" />
               </div>
             </div>
-            <CheckCircle2 className="w-4 h-4 text-[#58cc02] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#FFC800] shrink-0" />
           </div>
 
           {/* Mission 2 */}
@@ -138,14 +166,14 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             Minha Habilitação
           </h3>
           <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${
-            isSuspended ? 'bg-rose-500 text-white animate-pulse' : 'bg-[#58cc02] text-white'
+            isSuspended ? 'bg-rose-500 text-white animate-pulse' : 'bg-[#FFC800] text-slate-950 font-black'
           }`}>
             {isSuspended ? 'Suspensa' : 'Regular'}
           </span>
         </div>
 
         <div className="flex items-center gap-3 mt-2">
-          <div className="w-11 h-11 rounded-2xl bg-[#58cc02] text-white flex items-center justify-center text-xl shadow-xs border-b-2 border-[#46a302] shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-[#FFC800] text-slate-950 flex items-center justify-center text-xl shadow-xs border-b-2 border-[#CA8A04] shrink-0 font-black">
             🪪
           </div>
           <div>
@@ -162,7 +190,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         <div className="w-full bg-slate-100 dark:bg-[#202f36] h-2.5 rounded-full mt-3 overflow-hidden">
           <div 
             className={`h-full rounded-full transition-all duration-300 ${
-              profile.cnhPoints >= 16 ? 'bg-rose-500' : profile.cnhPoints >= 10 ? 'bg-[#ffc800]' : 'bg-[#58cc02]'
+              profile.cnhPoints >= 16 ? 'bg-rose-500' : profile.cnhPoints >= 10 ? 'bg-[#ffc800]' : 'bg-[#FFC800]'
             }`}
             style={{ width: `${Math.min(100, (profile.cnhPoints / 20) * 100)}%` }}
           />
@@ -189,7 +217,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               sounds.playClick();
               onOpenSimulado();
             }}
-            className="mt-4 w-full py-3.5 px-4 rounded-2xl duo-btn-green font-black uppercase text-xs tracking-wider shadow-md cursor-pointer transition-all flex items-center justify-center gap-2"
+            className="mt-4 w-full py-3.5 px-4 rounded-2xl duo-btn-yellow font-black uppercase text-xs tracking-wider shadow-md cursor-pointer transition-all flex items-center justify-center gap-2"
           >
             <Lock className="w-4 h-4" />
             <span>Treinar sem Riscos</span>

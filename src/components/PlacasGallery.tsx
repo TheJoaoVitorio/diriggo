@@ -5,7 +5,11 @@ import { TrafficSignComponent } from './TrafficSign';
 import { TrafficSign } from '../types';
 import { sounds } from '../utils/sound';
 
-export const PlacasGallery: React.FC = () => {
+interface PlacasGalleryProps {
+  bothSidebarsActive?: boolean;
+}
+
+export const PlacasGallery: React.FC<PlacasGalleryProps> = ({ bothSidebarsActive = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'todas' | 'regulamentacao' | 'advertencia' | 'servicos' | 'turismo'>('todas');
   const [activeSignModal, setActiveSignModal] = useState<TrafficSign | null>(null);
@@ -25,51 +29,51 @@ export const PlacasGallery: React.FC = () => {
   });
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 select-none">
-      {/* Header */}
-      <div className="mb-6">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-6 select-none">
+      {/* Header Compacto */}
+      <div className="mb-5">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-xl font-black shadow-xs">
+          <div className="w-9 h-9 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-lg font-black shadow-xs shrink-0">
             🛑
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Catálogo de Placas de Trânsito
             </h1>
-            <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Aprenda os códigos, significados e implicações legais das placas oficiais do CONTRAN.
             </p>
           </div>
         </div>
 
         {/* Informative pill */}
-        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700/80 text-amber-950 dark:text-amber-200 text-xs sm:text-sm leading-relaxed mt-4 shadow-xs">
-          <strong>Atenção para a prova:</strong> Placas de <strong>Regulamentação (vermelhas)</strong> têm caráter mandatório e seu desrespeito constitui infração de trânsito (multa e pontos). Placas de <strong>Advertência (amarelas)</strong> têm caráter de alerta para perigos na via.
+        <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/80 text-amber-950 dark:text-amber-200 text-xs leading-relaxed mt-3 shadow-xs">
+          <strong>Atenção para a prova:</strong> Placas de <strong>Regulamentação (vermelhas)</strong> têm caráter mandatório e geram multa e pontos. Placas de <strong>Advertência (amarelas)</strong> alertam para perigos potenciais na via.
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 mb-5">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Buscar por código ou nome (ex: PARE, R-1, Curva)..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 focus:border-amber-400 dark:focus:border-amber-500 outline-none text-xs sm:text-sm font-bold text-slate-900 dark:text-white transition-colors"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 focus:border-amber-400 dark:focus:border-amber-500 outline-none text-xs font-bold text-slate-900 dark:text-white transition-colors"
           />
         </div>
 
         {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none no-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <button
             onClick={() => {
               sounds.playClick();
               setSelectedCategory('todas');
             }}
-            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
               selectedCategory === 'todas'
                 ? 'bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-900 shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-400'
@@ -83,7 +87,7 @@ export const PlacasGallery: React.FC = () => {
               sounds.playClick();
               setSelectedCategory('regulamentacao');
             }}
-            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
               selectedCategory === 'regulamentacao'
                 ? 'bg-rose-600 text-white shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 border border-slate-200 dark:border-slate-700 hover:border-rose-400'
@@ -97,7 +101,7 @@ export const PlacasGallery: React.FC = () => {
               sounds.playClick();
               setSelectedCategory('advertencia');
             }}
-            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
               selectedCategory === 'advertencia'
                 ? 'bg-amber-500 text-slate-950 shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 border border-slate-200 dark:border-slate-700 hover:border-amber-400'
@@ -111,13 +115,13 @@ export const PlacasGallery: React.FC = () => {
               sounds.playClick();
               setSelectedCategory('servicos');
             }}
-            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
               selectedCategory === 'servicos'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-slate-200 dark:border-slate-700 hover:border-blue-400'
             }`}
           >
-            <span>Serviços (SAU-*)</span>
+            <span>Serviços</span>
           </button>
 
           <button
@@ -125,7 +129,7 @@ export const PlacasGallery: React.FC = () => {
               sounds.playClick();
               setSelectedCategory('turismo');
             }}
-            className={`px-3.5 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
               selectedCategory === 'turismo'
                 ? 'bg-amber-800 text-white shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-amber-800 dark:text-amber-400 border border-slate-200 dark:border-slate-700 hover:border-amber-700'
@@ -136,8 +140,12 @@ export const PlacasGallery: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid of Signs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Grid Denso e Elegante de Placas */}
+      <div className={
+        bothSidebarsActive
+          ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3.5"
+          : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
+      }>
         {filteredSigns.map(sign => {
           const isReg = sign.category === 'regulamentacao';
 
@@ -148,43 +156,46 @@ export const PlacasGallery: React.FC = () => {
                 sounds.playClick();
                 setActiveSignModal(sign);
               }}
-              className="p-5 rounded-3xl bg-white dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 border-b-4 hover:border-amber-400 dark:hover:border-amber-500 hover:translate-y-[-2px] transition-all cursor-pointer flex flex-col justify-between shadow-xs group"
+              className="p-3 rounded-2xl bg-white dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 border-b-4 hover:border-amber-400 dark:hover:border-amber-500 hover:translate-y-[-2px] transition-all cursor-pointer flex flex-col justify-between shadow-xs group"
             >
               <div>
                 {/* Header with Code and Category */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-black uppercase tracking-wider ${
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
                     isReg 
                       ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' 
                       : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
                   }`}>
                     {sign.code}
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 truncate ml-1">
                     {isReg ? 'Regulamentação' : 'Advertência'}
                   </span>
                 </div>
 
-                {/* Vector Traffic Sign Graphic */}
-                <div className="my-3 flex justify-center items-center py-2 group-hover:scale-105 transition-transform">
-                  <TrafficSignComponent signId={sign.id} size={90} />
+                {/* Vector Traffic Sign Graphic (Refinado 56px) */}
+                <div className={`my-1.5 flex justify-center items-center ${bothSidebarsActive ? 'h-20' : 'h-16'} group-hover:scale-105 transition-transform`}>
+                  <TrafficSignComponent signId={sign.id} size={bothSidebarsActive ? 64 : 56} />
                 </div>
 
                 {/* Sign Name */}
-                <h3 className="text-base font-black text-slate-900 dark:text-white mt-2 leading-tight">
+                <h3 
+                  className={`${bothSidebarsActive ? 'text-xs sm:text-sm' : 'text-xs'} font-black text-slate-900 dark:text-white mt-1 leading-tight line-clamp-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors`}
+                  title={sign.name}
+                >
                   {sign.name}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2 leading-relaxed line-clamp-2">
+                <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-1 leading-snug line-clamp-2">
                   {sign.description}
                 </p>
               </div>
 
               {/* CTB Test Tip */}
-              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-[11px] font-bold text-amber-700 dark:text-amber-400">
-                <span>Ver detalhes e regras CTB</span>
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                <span>Regras CTB</span>
+                <span className="group-hover:translate-x-0.5 transition-transform">→</span>
               </div>
             </div>
           );
@@ -192,8 +203,8 @@ export const PlacasGallery: React.FC = () => {
       </div>
 
       {filteredSigns.length === 0 && (
-        <div className="p-12 text-center bg-white dark:bg-slate-800/40 rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700 mt-6">
-          <p className="text-base font-black text-slate-700 dark:text-slate-300">
+        <div className="p-8 text-center bg-white dark:bg-slate-800/40 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 mt-4">
+          <p className="text-sm font-black text-slate-700 dark:text-slate-300">
             Nenhuma placa encontrada para "{searchTerm}"
           </p>
           <button
@@ -201,14 +212,14 @@ export const PlacasGallery: React.FC = () => {
               setSearchTerm('');
               setSelectedCategory('todas');
             }}
-            className="mt-3 px-4 py-2 rounded-xl duo-btn-yellow font-black text-xs uppercase cursor-pointer"
+            className="mt-3 px-3.5 py-1.5 rounded-xl duo-btn-yellow font-black text-xs uppercase cursor-pointer"
           >
             Limpar Filtros
           </button>
         </div>
       )}
 
-      {/* Modal Detailed Sign View */}
+      {/* Modal Detailed Sign View (Mantém zoom completo ao clicar) */}
       {activeSignModal && (
         <div 
           className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
