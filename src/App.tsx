@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { User } from 'firebase/auth';
+import { ChevronLeft } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { RightSidebar } from './components/RightSidebar';
 import { LearningPath } from './components/LearningPath';
@@ -11,47 +13,48 @@ import { TheoryBottomSheet } from './components/TheoryBottomSheet';
 import { SimuladoModal } from './components/SimuladoModal';
 import { LoginPage } from './components/LoginPage';
 import { LandingPage } from './components/LandingPage';
+import { TrafficLoader } from './components/TrafficLoader';
 import { UNITS, ALL_QUESTIONS } from './data/questions';
 import { Lesson, Unit, UserProfile, AppTab, Question } from './types';
 import { sounds } from './utils/sound';
+import { 
+  subscribeToAuthChanges, 
+  saveUserProgressToFirestore, 
+  logoutFirebase,
+  syncOrInitUserProfile,
+  INITIAL_USER_PROFILE
+} from './services/firebase';
 
-const STORAGE_KEY = 'diriggo_user_profile_v3';
-
-const DEFAULT_PROFILE: UserProfile = {
-  name: '',
-  email: '',
-  isLoggedIn: false,
-  streak: 3,
-  cnhPoints: 0,
-  maxCnhPoints: 20, // 20 points standard CTB limit for suspension
-  xp: 45,
-  completedLessons: ['les-1-1'],
-  simuladosHistory: [
-    {
-      id: 'demo-1',
-      topicTitle: 'Simulado Geral Oficial DETRAN',
-      date: '28/10 19:30',
-      score: 24,
-      total: 30,
-      passed: true,
-      timeSpentSeconds: 1540,
-      answers: []
-    }
-  ],
-  soundEnabled: true,
-  darkMode: true
-};
+const STORAGE_KEY = 'diriggo_user_profile_v4';
 
 export function App() {
   const [profile, setProfile] = useState<UserProfile>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...INITIAL_USER_PROFILE,
+            ...parsed,
+            completedLessons: Array.isArray(parsed.completedLessons) ? parsed.completedLessons : [],
+            simuladosHistory: Array.isArray(parsed.simuladosHistory) ? parsed.simuladosHistory : []
+          };
+        }
+      }
     } catch {
       // fallback
     }
-    return DEFAULT_PROFILE;
+    return INITIAL_USER_PROFILE;
   });
+
+  const [pageLoader, setPageLoader] = useState<{
+    isLoading: boolean;
+    message: string;
+    subMessage?: string;
+    stage?: 'red' | 'yellow' | 'green' | 'auto';
+    phase?: 'red' | 'yellow' | 'green' | 'auto';
+  } | null>(null);
 
   const [currentView, setCurrentView] = useState<'landing' | 'login' | 'app'>('landing');
   const [currentTab, setCurrentTab] = useState<AppTab>('trilhas');
@@ -64,91 +67,282 @@ export function App() {
     timeMinutes: number;
   } | null>(null);
 
-  // Sync dark mode to html document
-  useEffect(() => {
-    if (profile.darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+  // Sidebars collapsible states
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('diriggo_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
     }
-  }, [profile.darkMode]);
+  });
 
-  // Sync to localStorage
+  const [isRightCollapsed, setIsRightCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('diriggo_right_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleToggleLeftSidebar = () => {
+    sounds.playClick();
+    setIsLeftCollapsed(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem('diriggo_sidebar_collapsed', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  const handleToggleRightSidebar = () => {
+    sounds.playClick();
+    setIsRightCollapsed(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem('diriggo_right_sidebar_collapsed', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  // 1. Dark mode permanente (Modo Light removido da aplicação)
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
+  // 2. Sync to localStorage for fast reload (only for active session)
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      if (profile.isLoggedIn && profile.uid) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      }
     } catch {
       // ignore
     }
     sounds.enabled = profile.soundEnabled;
   }, [profile]);
 
+  // 3. Listen to Firebase Auth state on mount (Strict isolation per user)
+  useEffect(() => {
+    const unsubscribe = subscribeToAuthChanges(async (user: User | null) => {
+      if (user) {
+        // Se trocou de usuário, limpa o estado anterior imediatamente
+        setProfile(prev => {
+          if (prev.uid && prev.uid !== user.uid) {
+            return {
+              ...INITIAL_USER_PROFILE,
+              uid: user.uid,
+              name: user.displayName || 'Condutor',
+              email: user.email || '',
+              photoURL: user.photoURL || undefined,
+              isLoggedIn: true,
+            };
+          }
+          return prev;
+        });
+
+        // Carrega os dados persistidos no Firestore ou inicializa novo usuário
+        const userProfile = await syncOrInitUserProfile(user);
+        setProfile(userProfile);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
+        } catch {
+          // ignore
+        }
+      } else {
+        // Usuário deslogado: zera o estado local para evitar vazamento de progresso
+        setProfile(INITIAL_USER_PROFILE);
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          sessionStorage.clear();
+        } catch {
+          // ignore
+        }
+        // Se estiver dentro da área restrita do app, expulsa para a tela de login
+        setCurrentView(prev => (prev === 'app' ? 'login' : prev));
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // 4. Proteção de Rota Estrita: Só pode entrar na aplicação ('app') se estiver logado
+  useEffect(() => {
+    if (currentView === 'app') {
+      const isAuthenticated = Boolean(profile.isLoggedIn && profile.uid);
+      if (!isAuthenticated) {
+        sounds.playClick();
+        setCurrentView('login');
+      }
+    }
+  }, [currentView, profile.isLoggedIn, profile.uid]);
+
   // Handlers
   const handleToggleSound = () => {
-    setProfile(prev => ({ ...prev, soundEnabled: !prev.soundEnabled }));
+    setProfile(prev => {
+      const updated = { ...prev, soundEnabled: !prev.soundEnabled };
+      if (updated.isLoggedIn && updated.uid) {
+        saveUserProgressToFirestore(updated);
+      }
+      return updated;
+    });
   };
 
-  const handleToggleDarkMode = () => {
-    sounds.playClick();
-    setProfile(prev => ({ ...prev, darkMode: !prev.darkMode }));
-  };
+
 
   const handleResetCnhPoints = () => {
     sounds.playCorrect();
-    setProfile(prev => ({ ...prev, cnhPoints: 0 }));
+    setProfile(prev => {
+      const updated = { ...prev, cnhPoints: 0 };
+      if (updated.isLoggedIn && updated.uid) {
+        saveUserProgressToFirestore(updated);
+      }
+      return updated;
+    });
   };
 
   const handleAddCnhPoints = (points: number) => {
-    setProfile(prev => ({
-      ...prev,
-      cnhPoints: Math.min(prev.maxCnhPoints, prev.cnhPoints + points)
-    }));
+    setProfile(prev => {
+      const updated = {
+        ...prev,
+        cnhPoints: Math.min(prev.maxCnhPoints, prev.cnhPoints + points)
+      };
+      if (updated.isLoggedIn && updated.uid) {
+        saveUserProgressToFirestore(updated);
+      }
+      return updated;
+    });
   };
 
   const handleCompleteLesson = (xpEarned: number) => {
     if (!activeQuizLesson) return;
+
+    sounds.playComplete();
     setProfile(prev => {
       const alreadyCompleted = prev.completedLessons.includes(activeQuizLesson.id);
-      return {
+      const newCompleted = alreadyCompleted
+        ? prev.completedLessons
+        : [...prev.completedLessons, activeQuizLesson.id];
+
+      const updated: UserProfile = {
         ...prev,
         xp: prev.xp + xpEarned,
-        completedLessons: alreadyCompleted
-          ? prev.completedLessons
-          : [...prev.completedLessons, activeQuizLesson.id]
+        completedLessons: newCompleted
       };
+
+      if (updated.isLoggedIn && updated.uid) {
+        saveUserProgressToFirestore(updated);
+      }
+
+      return updated;
     });
     setActiveQuizLesson(null);
   };
 
-  // Vital rule: Simulados NEVER affect CNH points!
+  // Sincronização imediata no Firestore ao finalizar um simulado (DETRAN rule: simulados não afetam pontos CNH)
   const handleFinishSimulado = (score: number, total: number, passed: boolean, topicTitle?: string) => {
-    setProfile(prev => ({
-      ...prev,
-      xp: prev.xp + (passed ? 50 : 15),
-      simuladosHistory: [
-        ...prev.simuladosHistory,
-        {
-          id: Date.now().toString(),
-          topicTitle: topicTitle || 'Simulado Oficial DETRAN',
-          date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
-          score,
-          total,
-          passed,
-          timeSpentSeconds: 0,
-          answers: []
-        }
-      ]
-    }));
+    setProfile(prev => {
+      const updated: UserProfile = {
+        ...prev,
+        xp: prev.xp + (passed ? 50 : 15),
+        simuladosHistory: [
+          ...prev.simuladosHistory,
+          {
+            id: Date.now().toString(),
+            topicTitle: topicTitle || 'Simulado Geral Oficial DETRAN',
+            date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
+            score,
+            total,
+            passed,
+            timeSpentSeconds: 0,
+            answers: []
+          }
+        ]
+      };
+      if (updated.isLoggedIn && updated.uid) {
+        saveUserProgressToFirestore(updated);
+      }
+      return updated;
+    });
   };
 
-  const handleLogin = (name: string, email: string) => {
-    setProfile(prev => ({
-      ...prev,
-      name,
-      email,
-      isLoggedIn: true
-    }));
-    setCurrentView('app');
+  // Handler exclusivo de autenticação com conta Google com Loader de Semáforo Otimizado
+  const handleGoogleLoginSuccess = async (user: User) => {
+    // 1. Ativar o loader imediatamente (Fase 1: Semáforo Vermelho - Pare / Conectando)
+    setPageLoader({
+      isLoading: true,
+      stage: 'red',
+      phase: 'red',
+      message: 'Conectando à sua conta Google...',
+      subMessage: 'Verificando credenciais seguras'
+    });
+
+    try {
+      // Transição visual rápida e elegante (200ms)
+      await new Promise(r => setTimeout(r, 200));
+
+      // 2. Carregar/sincronizar perfil no Firestore (Fase 2: Semáforo Amarelo - Atenção / Sincronizando)
+      setPageLoader({
+        isLoading: true,
+        stage: 'yellow',
+        phase: 'yellow',
+        message: 'Sincronizando suas matérias do DETRAN...',
+        subMessage: 'Carregando trilhas e pontuação na CNH'
+      });
+
+      // Busca dados com timeout rápido e deduplicado
+      const userProfile = await syncOrInitUserProfile(user);
+      setProfile(userProfile);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
+      } catch {
+        // ignore
+      }
+
+      // Pequena pausa (100ms) para transição perceptível
+      await new Promise(r => setTimeout(r, 100));
+
+      // 3. Transicionar para Verde imediatamente (Fase 3: Semáforo Verde - Siga / Pronto para pilotar!)
+      sounds.playCorrect();
+      setPageLoader({
+        isLoading: true,
+        stage: 'green',
+        phase: 'green',
+        message: 'Sinal verde para pilotar!',
+        subMessage: 'Entrando na Garagem...'
+      });
+
+      // 380ms para celebrar o sinal verde e entrar suavemente no app
+      await new Promise(r => setTimeout(r, 380));
+
+      setCurrentView('app');
+      setCurrentTab('trilhas');
+    } catch (err) {
+      console.error('[Diriggo] Erro na sincronização:', err);
+      setCurrentView('app');
+      setCurrentTab('trilhas');
+    } finally {
+      setPageLoader(null);
+    }
+  };
+
+  // Logout completo com limpeza do estado e Firebase Auth
+  const handleLogout = async () => {
+    sounds.playClick();
+    await logoutFirebase();
+    setProfile(INITIAL_USER_PROFILE);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    setCurrentView('landing');
+    setCurrentTab('trilhas');
   };
 
   const handleLaunchSimulado = (questions: Question[], title: string, timeMinutes: number) => {
@@ -175,48 +369,73 @@ export function App() {
   };
 
   return (
-    <div className={`min-h-screen ${profile.darkMode ? 'dark bg-[#131f24] text-white' : 'bg-slate-50 text-slate-800'}`}>
+    <div className="min-h-screen dark bg-[#131f24] text-white">
+      {/* Global Traffic Light Page Loader */}
+      {pageLoader?.isLoading && (
+        <TrafficLoader
+          message={pageLoader.message}
+          subMessage={pageLoader.subMessage}
+          stage={pageLoader.stage || pageLoader.phase}
+          phase={pageLoader.phase || pageLoader.stage}
+        />
+      )}
       {/* 1. LANDING PAGE */}
       {currentView === 'landing' && (
         <LandingPage
+          profile={profile}
+          onLogout={handleLogout}
           onStartLearning={() => {
             sounds.playClick();
-            setCurrentView('app');
-            setCurrentTab('trilhas');
+            if (profile.isLoggedIn && profile.uid) {
+              setCurrentView('app');
+              setCurrentTab('trilhas');
+            } else {
+              setCurrentView('login');
+            }
           }}
           onOpenSimulado={() => {
             sounds.playClick();
-            handleLaunchSimulado(ALL_QUESTIONS, 'Simulado Geral Oficial DETRAN (30Q)', 40);
+            if (profile.isLoggedIn && profile.uid) {
+              handleLaunchSimulado(ALL_QUESTIONS, 'Simulado Geral Oficial DETRAN (30Q)', 40);
+            } else {
+              setCurrentView('login');
+            }
           }}
           onOpenAuth={() => {
             sounds.playClick();
-            setCurrentView('login');
+            if (profile.isLoggedIn && profile.uid) {
+              setCurrentView('app');
+            } else {
+              setCurrentView('login');
+            }
           }}
         />
       )}
 
-      {/* 2. LOGIN PAGE */}
+      {/* 2. LOGIN PAGE (EXCLUSIVO GOOGLE) */}
       {currentView === 'login' && (
         <LoginPage
           onBack={() => {
             sounds.playClick();
             setCurrentView('landing');
           }}
-          onLogin={handleLogin}
+          onLogin={handleGoogleLoginSuccess}
+          isLoggingIn={Boolean(pageLoader?.isLoading)}
         />
       )}
 
-      {/* 3. MAIN APPLICATION (DUOLINGO 3-COLUMN DESKTOP LAYOUT) */}
+      {/* 3. MAIN APPLICATION */}
       {currentView === 'app' && (
-        <div className="min-h-screen flex w-full">
+        <div className="min-h-screen flex w-full relative">
           {/* Left Sidebar (Desktop fixed / Mobile bottom bar) */}
           <Sidebar
             currentTab={currentTab}
             onSelectTab={setCurrentTab}
             profile={profile}
-            onToggleDarkMode={handleToggleDarkMode}
             onToggleSound={handleToggleSound}
             onGoLanding={() => setCurrentView('landing')}
+            isCollapsed={isLeftCollapsed}
+            onToggleCollapse={handleToggleLeftSidebar}
           />
 
           {/* Center Main Work Area */}
@@ -227,16 +446,16 @@ export function App() {
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setCurrentTab('trilhas')}
               >
-                <div className="w-8 h-8 rounded-xl bg-[#58cc02] border-b-2 border-[#46a302] flex items-center justify-center text-sm font-black text-white">
+                <div className="w-8 h-8 rounded-xl bg-[#FFC800] border-b-2 border-[#CA8A04] flex items-center justify-center text-sm font-black text-slate-950">
                   🚦
                 </div>
-                <span className="font-black text-lg text-[#58cc02]">diriggo</span>
+                <span className="font-black text-lg text-slate-900 dark:text-white">diriggo</span>
               </div>
 
               <div className="flex items-center gap-3 text-xs font-black">
                 <span className="text-orange-500">🔥 {profile.streak}</span>
                 <span className="text-[#ffc800]">⚡ {profile.xp}</span>
-                <span className="text-[#58cc02] bg-emerald-50 dark:bg-[#182631] px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-[#202f36]">
+                <span className="text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-[#182631] px-2 py-0.5 rounded-lg border border-amber-300 dark:border-[#202f36]">
                   🪪 {profile.cnhPoints}/20
                 </span>
               </div>
@@ -250,12 +469,12 @@ export function App() {
                   units={UNITS}
                   completedLessons={profile.completedLessons}
                   onStartLesson={handleNodeClick}
-                  onOpenSimulado={() => handleLaunchSimulado(ALL_QUESTIONS, 'Simulado Geral Oficial DETRAN', 40)}
+                  onOpenSimulado={() => handleLaunchSimulado(ALL_QUESTIONS, "Simulado Geral Oficial DETRAN", 40)}
                   onOpenGuide={handleOpenUnitGuide}
                 />
               )}
 
-              {/* TAB 2: SIMULADOS (Topic-Specific & General with History) */}
+              {/* TAB 2: SIMULADOS HUB (Topic Specific + Official Exam) */}
               {currentTab === 'simulados' && (
                 <SimuladosHub
                   profile={profile}
@@ -263,9 +482,11 @@ export function App() {
                 />
               )}
 
-              {/* TAB 3: PLACAS (Visual Traffic Signs Catalog) */}
+              {/* TAB 3: GALERIA DE PLACAS CONTRAN */}
               {currentTab === 'placas' && (
-                <PlacasGallery />
+                <PlacasGallery 
+                  bothSidebarsActive={!isLeftCollapsed && !isRightCollapsed}
+                />
               )}
 
               {/* TAB 4: MATERIAL DE APOIO (Didactic Study Center) */}
@@ -280,10 +501,7 @@ export function App() {
                 <PerfilView
                   profile={profile}
                   onResetCnhPoints={handleResetCnhPoints}
-                  onLogout={() => {
-                    sounds.playClick();
-                    setCurrentView('landing');
-                  }}
+                  onLogout={handleLogout}
                 />
               )}
             </div>
@@ -294,7 +512,30 @@ export function App() {
             profile={profile}
             onOpenSimulado={() => handleLaunchSimulado(ALL_QUESTIONS, 'Simulado Geral Oficial DETRAN', 40)}
             onResetCnhPoints={handleResetCnhPoints}
+            isCollapsed={isRightCollapsed}
+            onToggleCollapse={handleToggleRightSidebar}
           />
+
+          {/* Floating Expand Button for Right Sidebar when collapsed */}
+          {isRightCollapsed && (
+            <button
+              onClick={handleToggleRightSidebar}
+              className="hidden xl:flex fixed right-4 top-4 z-30 bg-white/95 dark:bg-[#131f24]/95 backdrop-blur-md hover:bg-slate-50 dark:hover:bg-[#182631] border-2 border-slate-200 dark:border-[#202f36] px-3 py-2 rounded-2xl shadow-lg items-center gap-2.5 text-xs font-black cursor-pointer transition-all hover:scale-105 select-none"
+              title="Expandir painel de estatísticas e missões"
+            >
+              <ChevronLeft className="w-4 h-4 text-[#ffc800]" />
+              <span className="text-orange-500 flex items-center gap-1">
+                🔥 {profile.streak}
+              </span>
+              <span className="text-[#ffc800] flex items-center gap-1">
+                ⚡ {profile.xp}
+              </span>
+              <span className="text-slate-300 dark:text-slate-600">|</span>
+              <span className="text-slate-700 dark:text-slate-200 uppercase tracking-wider text-[11px]">
+                Painel
+              </span>
+            </button>
+          )}
         </div>
       )}
 
