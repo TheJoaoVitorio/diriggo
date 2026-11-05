@@ -301,7 +301,7 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
             <div className="w-28 h-28 rounded-3xl bg-amber-400/20 border-2 border-amber-400/40 flex items-center justify-center text-6xl shadow-2xl animate-bounce">
               🏆
             </div>
-            <div className="absolute -bottom-2 -right-2 bg-[#58CC02] text-white rounded-full p-2 border-2 border-[#131f24] shadow-md">
+            <div className="absolute -bottom-2 -right-2 bg-amber-400 text-slate-950 rounded-full p-2 border-2 border-[#131f24] shadow-md">
               <Sparkles className="w-5 h-5" />
             </div>
           </div>
@@ -323,8 +323,8 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
             </div>
 
             <div className="bg-[#182631] border-2 border-[#2b3e4e] rounded-2xl p-4 flex flex-col items-center shadow-md">
-              <span className="text-xs font-black uppercase tracking-wider text-emerald-400 mb-1 flex items-center gap-1">
-                <Trophy className="w-4 h-4 text-emerald-400" /> Precisão
+              <span className="text-xs font-black uppercase tracking-wider text-amber-400 mb-1 flex items-center gap-1">
+                <Trophy className="w-4 h-4 text-amber-400" /> Precisão
               </span>
               <span className="text-3xl font-black text-white">{accuracy}%</span>
             </div>
@@ -456,7 +456,7 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
         {/* Progress Bar Container */}
         <div className="flex-1 h-3.5 sm:h-4 bg-[#37464f] rounded-full overflow-hidden relative shadow-inner">
           <div 
-            className="h-full bg-[#58CC02] transition-all duration-300 ease-out rounded-full relative"
+            className="h-full bg-amber-400 transition-all duration-300 ease-out rounded-full relative"
             style={{ width: `${progressPercent}%` }}
           >
             {/* Glossy top edge reflection */}
@@ -519,9 +519,9 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
               }
             } else if (status === 'correct') {
               if (isCorrectOption) {
-                cardClasses = "bg-[#58CC02]/15 border-2 border-[#58CC02] border-b-4 border-b-[#46a302] shadow-[0_0_20px_rgba(88,204,2,0.2)]";
-                labelClasses = "text-[#58CC02] font-black";
-                badgeClasses = "text-[#58CC02] border-[#58CC02] bg-[#58CC02]/20 font-black";
+                cardClasses = "bg-amber-400/15 border-2 border-amber-400 border-b-4 border-b-amber-500 shadow-[0_0_20px_rgba(251,191,36,0.2)]";
+                labelClasses = "text-amber-400 font-black";
+                badgeClasses = "text-amber-400 border-amber-400 bg-amber-400/20 font-black";
               } else {
                 cardClasses = "opacity-40 bg-[#182631] border-2 border-[#2b3e4e]";
               }
@@ -531,9 +531,9 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
                 labelClasses = "text-rose-400 font-black";
                 badgeClasses = "text-rose-400 border-rose-500 bg-rose-500/20 font-black";
               } else if (isCorrectOption) {
-                cardClasses = "bg-[#58CC02]/15 border-2 border-[#58CC02] border-b-4 border-b-[#46a302]";
-                labelClasses = "text-[#58CC02] font-black";
-                badgeClasses = "text-[#58CC02] border-[#58CC02] bg-[#58CC02]/20 font-black";
+                cardClasses = "bg-amber-400/15 border-2 border-amber-400 border-b-4 border-b-amber-500";
+                labelClasses = "text-amber-400 font-black";
+                badgeClasses = "text-amber-400 border-amber-400 bg-amber-400/20 font-black";
               } else {
                 cardClasses = "opacity-40 bg-[#182631] border-2 border-[#2b3e4e]";
               }
@@ -579,7 +579,7 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
       <div 
         className={`w-full py-4 sm:py-6 px-4 sm:px-12 transition-all duration-200 ${
           status === 'correct'
-            ? 'bg-[#142918] border-t-2 border-[#58CC02]'
+            ? 'bg-[#2b2414] border-t-2 border-amber-400'
             : status === 'wrong'
             ? 'bg-[#2b1418] border-t-2 border-rose-500'
             : 'bg-[#131f24] border-t-2 border-[#202f36]'
@@ -601,14 +601,14 @@ export const PlacasQuizView: React.FC<PlacasQuizViewProps> = ({
             </div>
           ) : status === 'correct' ? (
             <div className="flex items-start gap-3 w-full sm:w-auto">
-              <div className="w-10 h-10 rounded-full bg-[#58CC02] flex items-center justify-center shrink-0 text-white shadow-md">
+              <div className="w-10 h-10 rounded-full bg-amber-400 flex items-center justify-center shrink-0 text-slate-950 shadow-md">
                 <CheckCircle2 className="w-6 h-6 stroke-[3]" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-black text-[#58CC02] tracking-tight">
+                <span className="text-xl font-black text-amber-400 tracking-tight">
                   Muito bem!
                 </span>
-                <span className="text-xs sm:text-sm font-semibold text-emerald-200/90 max-w-lg line-clamp-2">
+                <span className="text-xs sm:text-sm font-semibold text-amber-200/90 max-w-lg line-clamp-2">
                   <strong>{currentQ.targetSign.code}:</strong> {currentQ.legalTip}
                 </span>
               </div>

@@ -51,8 +51,8 @@ export const PlacasGallery: React.FC<PlacasGalleryProps> = ({
                   <Sparkles className="w-3 h-3 text-amber-400" />
                   NOVO: MODO DUOLINGO
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
-                  <Trophy className="w-3 h-3 text-emerald-400" />
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
+                  <Trophy className="w-3 h-3 text-amber-400" />
                   +30 XP POR ROUND
                 </span>
               </div>
