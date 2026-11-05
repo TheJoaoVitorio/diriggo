@@ -319,12 +319,12 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
                   `}
                 >
                   {/* Visual plate / illustration preview */}
-                  <div className="w-full h-32 flex items-center justify-center p-2 mb-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                  <div className="w-full h-32 flex items-center justify-center p-2 mb-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl overflow-hidden [&_svg]:max-h-28 [&_svg]:w-auto">
                     {opt.signId && (
                       <TrafficSignComponent signId={opt.signId} size={105} />
                     )}
                     {opt.illustration && (
-                      <VisualIllustration type={opt.illustration} size="sm" />
+                      <VisualIllustration type={opt.illustration} size="sm" className="w-full h-full flex items-center justify-center" />
                     )}
                     {!opt.signId && !opt.illustration && (
                       <div className="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-3xl">
