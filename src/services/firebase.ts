@@ -80,14 +80,15 @@ if (isFirebaseConfigured()) {
   try {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
+    const databaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID || 'default';
     try {
       db = initializeFirestore(app, {
         localCache: persistentLocalCache({
           tabManager: persistentMultipleTabManager()
         })
-      });
+      }, databaseId);
     } catch {
-      db = getFirestore(app);
+      db = getFirestore(app, databaseId);
     }
     googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({ prompt: 'select_account' });
