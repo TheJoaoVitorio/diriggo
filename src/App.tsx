@@ -6,6 +6,7 @@ import { RightSidebar } from './components/RightSidebar';
 import { LearningPath } from './components/LearningPath';
 import { SimuladosHub } from './components/SimuladosHub';
 import { PlacasGallery } from './components/PlacasGallery';
+import { PlacasQuizView, PlacaQuizCategory } from './components/PlacasQuizView';
 import { MaterialApoio } from './components/MaterialApoio';
 import { PerfilView } from './components/PerfilView';
 import { LessonBottomSheet } from './components/LessonBottomSheet';
@@ -13,8 +14,10 @@ import { TheoryBottomSheet } from './components/TheoryBottomSheet';
 import { SimuladoModal } from './components/SimuladoModal';
 import { LoginPage } from './components/LoginPage';
 import { LandingPage } from './components/LandingPage';
+import { SeoArticlePage } from './components/SeoArticlePage';
 import { TrafficLoader } from './components/TrafficLoader';
 import { UNITS, ALL_QUESTIONS } from './data/questions';
+import { SEO_PAGES } from './data/seoPages';
 import { Lesson, Unit, UserProfile, AppTab, Question } from './types';
 import { sounds } from './utils/sound';
 import { 
@@ -22,10 +25,21 @@ import {
   saveUserProgressToFirestore, 
   logoutFirebase,
   syncOrInitUserProfile,
+  checkRedirectResult,
   INITIAL_USER_PROFILE
 } from './services/firebase';
 
 const STORAGE_KEY = 'diriggo_user_profile_v4';
+
+const getSlugFromPath = (path: string): string | null => {
+  const normalized = path.replace(/\/+$/, '') || '/';
+  for (const [key, page] of Object.entries(SEO_PAGES)) {
+    if (page.path === normalized || `/${page.slug}` === normalized) {
+      return key;
+    }
+  }
+  return null;
+};
 
 export function App() {
   const [profile, setProfile] = useState<UserProfile>(() => {
@@ -56,7 +70,20 @@ export function App() {
     phase?: 'red' | 'yellow' | 'green' | 'auto';
   } | null>(null);
 
-  const [currentView, setCurrentView] = useState<'landing' | 'login' | 'app'>('landing');
+  const [activeSeoSlug, setActiveSeoSlug] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return getSlugFromPath(window.location.pathname);
+    }
+    return null;
+  });
+
+  const [currentView, setCurrentView] = useState<'landing' | 'login' | 'app' | 'seo'>(() => {
+    if (typeof window !== 'undefined') {
+      const initialSlug = getSlugFromPath(window.location.pathname);
+      if (initialSlug) return 'seo';
+    }
+    return 'landing';
+  });
   const [currentTab, setCurrentTab] = useState<AppTab>('trilhas');
   const [studyingTheoryLesson, setStudyingTheoryLesson] = useState<Lesson | null>(null);
   const [activeQuizLesson, setActiveQuizLesson] = useState<Lesson | null>(null);
@@ -66,6 +93,8 @@ export function App() {
     title: string;
     timeMinutes: number;
   } | null>(null);
+  const [isPlacasQuizOpen, setIsPlacasQuizOpen] = useState(false);
+  const [placasQuizCategory, setPlacasQuizCategory] = useState<PlacaQuizCategory>('todas');
 
   // Sidebars collapsible states
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(() => {
@@ -127,8 +156,22 @@ export function App() {
     sounds.enabled = profile.soundEnabled;
   }, [profile]);
 
-  // 3. Listen to Firebase Auth state on mount (Strict isolation per user)
+  // 3. Listen to Firebase Auth state on mount & handle mobile redirect result
   useEffect(() => {
+    checkRedirectResult().then(async (redirectUser) => {
+      if (redirectUser) {
+        const userProfile = await syncOrInitUserProfile(redirectUser);
+        setProfile(userProfile);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
+        } catch {
+          // ignore
+        }
+        setCurrentView('app');
+        setCurrentTab('trilhas');
+      }
+    });
+
     const unsubscribe = subscribeToAuthChanges(async (user: User | null) => {
       if (user) {
         // Se trocou de usuário, limpa o estado anterior imediatamente
@@ -182,26 +225,68 @@ export function App() {
     }
   }, [currentView, profile.isLoggedIn, profile.uid]);
 
+  // Client-side URL history & popstate listener for SEO pages
+  useEffect(() => {
+    const handlePopState = () => {
+      const slug = getSlugFromPath(window.location.pathname);
+      if (slug) {
+        setActiveSeoSlug(slug);
+        setCurrentView('seo');
+      } else {
+        setActiveSeoSlug(null);
+        if (currentView === 'seo') {
+          setCurrentView('landing');
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [currentView]);
+
+  // Helper central para sincronização imediata no LocalStorage e Firestore
+  const persistProfileChange = (updated: UserProfile) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    } catch {
+      // ignore
+    }
+    if (updated.isLoggedIn && updated.uid) {
+      saveUserProgressToFirestore(updated);
+    }
+  };
+
   // Handlers
+  const handleNavigateToSeoPage = (slug: string) => {
+    sounds.playClick();
+    const page = SEO_PAGES[slug];
+    if (page) {
+      window.history.pushState({}, '', page.path);
+      setActiveSeoSlug(slug);
+      setCurrentView('seo');
+    }
+  };
+
+  const handleGoHomeFromSeo = () => {
+    sounds.playClick();
+    window.history.pushState({}, '', '/');
+    setActiveSeoSlug(null);
+    setCurrentView('landing');
+  };
+
   const handleToggleSound = () => {
     setProfile(prev => {
       const updated = { ...prev, soundEnabled: !prev.soundEnabled };
-      if (updated.isLoggedIn && updated.uid) {
-        saveUserProgressToFirestore(updated);
-      }
+      persistProfileChange(updated);
       return updated;
     });
   };
-
-
 
   const handleResetCnhPoints = () => {
     sounds.playCorrect();
     setProfile(prev => {
       const updated = { ...prev, cnhPoints: 0 };
-      if (updated.isLoggedIn && updated.uid) {
-        saveUserProgressToFirestore(updated);
-      }
+      persistProfileChange(updated);
       return updated;
     });
   };
@@ -212,9 +297,7 @@ export function App() {
         ...prev,
         cnhPoints: Math.min(prev.maxCnhPoints, prev.cnhPoints + points)
       };
-      if (updated.isLoggedIn && updated.uid) {
-        saveUserProgressToFirestore(updated);
-      }
+      persistProfileChange(updated);
       return updated;
     });
   };
@@ -235,13 +318,29 @@ export function App() {
         completedLessons: newCompleted
       };
 
-      if (updated.isLoggedIn && updated.uid) {
-        saveUserProgressToFirestore(updated);
-      }
-
+      persistProfileChange(updated);
       return updated;
     });
     setActiveQuizLesson(null);
+  };
+
+  const handleOpenPlacasQuiz = (cat: PlacaQuizCategory = 'todas') => {
+    sounds.playClick();
+    setPlacasQuizCategory(cat);
+    setIsPlacasQuizOpen(true);
+  };
+
+  const handleCompletePlacasQuiz = (xpEarned: number) => {
+    sounds.playComplete();
+    setIsPlacasQuizOpen(false);
+    setProfile(prev => {
+      const updated: UserProfile = {
+        ...prev,
+        xp: prev.xp + xpEarned
+      };
+      persistProfileChange(updated);
+      return updated;
+    });
   };
 
   // Sincronização imediata no Firestore ao finalizar um simulado (DETRAN rule: simulados não afetam pontos CNH)
@@ -264,9 +363,7 @@ export function App() {
           }
         ]
       };
-      if (updated.isLoggedIn && updated.uid) {
-        saveUserProgressToFirestore(updated);
-      }
+      persistProfileChange(updated);
       return updated;
     });
   };
@@ -384,6 +481,7 @@ export function App() {
         <LandingPage
           profile={profile}
           onLogout={handleLogout}
+          onNavigateToSeoPage={handleNavigateToSeoPage}
           onStartLearning={() => {
             sounds.playClick();
             if (profile.isLoggedIn && profile.uid) {
@@ -412,11 +510,56 @@ export function App() {
         />
       )}
 
+      {/* 1.1 SEO CONTENT PAGES (ROTAS DETRAN, MATÉRIAS & REGRAS CTB) */}
+      {currentView === 'seo' && activeSeoSlug && SEO_PAGES[activeSeoSlug] && (
+        <SeoArticlePage
+          page={SEO_PAGES[activeSeoSlug]}
+          profile={profile}
+          onGoHome={handleGoHomeFromSeo}
+          onNavigateToPage={handleNavigateToSeoPage}
+          onStartLearning={() => {
+            sounds.playClick();
+            window.history.pushState({}, '', '/');
+            setActiveSeoSlug(null);
+            if (profile.isLoggedIn && profile.uid) {
+              setCurrentView('app');
+              setCurrentTab('trilhas');
+            } else {
+              setCurrentView('login');
+            }
+          }}
+          onOpenSimulado={() => {
+            sounds.playClick();
+            window.history.pushState({}, '', '/');
+            setActiveSeoSlug(null);
+            if (profile.isLoggedIn && profile.uid) {
+              setCurrentView('app');
+              handleLaunchSimulado(ALL_QUESTIONS, 'Simulado Geral Oficial DETRAN (30Q)', 40);
+            } else {
+              setCurrentView('login');
+            }
+          }}
+          onOpenAuth={() => {
+            sounds.playClick();
+            window.history.pushState({}, '', '/');
+            setActiveSeoSlug(null);
+            if (profile.isLoggedIn && profile.uid) {
+              setCurrentView('app');
+            } else {
+              setCurrentView('login');
+            }
+          }}
+          onLogout={handleLogout}
+        />
+      )}
+
       {/* 2. LOGIN PAGE (EXCLUSIVO GOOGLE) */}
       {currentView === 'login' && (
         <LoginPage
           onBack={() => {
             sounds.playClick();
+            window.history.pushState({}, '', '/');
+            setActiveSeoSlug(null);
             setCurrentView('landing');
           }}
           onLogin={handleGoogleLoginSuccess}
@@ -433,7 +576,11 @@ export function App() {
             onSelectTab={setCurrentTab}
             profile={profile}
             onToggleSound={handleToggleSound}
-            onGoLanding={() => setCurrentView('landing')}
+            onGoLanding={() => {
+              window.history.pushState({}, '', '/');
+              setActiveSeoSlug(null);
+              setCurrentView('landing');
+            }}
             isCollapsed={isLeftCollapsed}
             onToggleCollapse={handleToggleLeftSidebar}
           />
@@ -479,6 +626,7 @@ export function App() {
                 <SimuladosHub
                   profile={profile}
                   onLaunchSimulado={handleLaunchSimulado}
+                  onStartPlacasQuiz={() => handleOpenPlacasQuiz('todas')}
                 />
               )}
 
@@ -486,6 +634,7 @@ export function App() {
               {currentTab === 'placas' && (
                 <PlacasGallery 
                   bothSidebarsActive={!isLeftCollapsed && !isRightCollapsed}
+                  onStartQuiz={handleOpenPlacasQuiz}
                 />
               )}
 
@@ -576,6 +725,15 @@ export function App() {
             setActiveSimuladoData(null);
           }}
           onFinishSimulado={handleFinishSimulado}
+        />
+      )}
+
+      {/* Duolingo-Style Interactive Placas Quiz View */}
+      {isPlacasQuizOpen && (
+        <PlacasQuizView
+          initialCategory={placasQuizCategory}
+          onClose={() => setIsPlacasQuizOpen(false)}
+          onComplete={handleCompletePlacasQuiz}
         />
       )}
     </div>

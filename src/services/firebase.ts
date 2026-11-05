@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider, 
   signInWithPopup, 
   signInWithRedirect, 
+  getRedirectResult,
   signOut, 
   onAuthStateChanged,
   setPersistence,
@@ -16,6 +17,9 @@ import {
 } from 'firebase/auth';
 import { 
   getFirestore, 
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
   doc, 
   getDoc, 
   setDoc, 
@@ -76,7 +80,15 @@ if (isFirebaseConfigured()) {
   try {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
-    db = getFirestore(app);
+    try {
+      db = initializeFirestore(app, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager()
+        })
+      });
+    } catch {
+      db = getFirestore(app);
+    }
     googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({ prompt: 'select_account' });
   } catch (err) {
@@ -147,6 +159,20 @@ export const signInWithGoogle = async (sessionOnly: boolean = false): Promise<Us
       return null;
     }
     throw error;
+  }
+};
+
+/**
+ * Verifica o resultado de login via redirect do Google (especialmente útil em navegadores móveis)
+ */
+export const checkRedirectResult = async (): Promise<User | null> => {
+  if (!auth) return null;
+  try {
+    const result = await getRedirectResult(auth);
+    return result?.user || null;
+  } catch (err) {
+    console.warn('[Diriggo Firebase] Erro ao verificar resultado de redirect:', err);
+    return null;
   }
 };
 
@@ -274,29 +300,28 @@ export const syncOrInitUserProfile = async (user: User): Promise<UserProfile> =>
 
     try {
       const userRef = doc(db, 'users', user.uid);
-      // Timeout de segurança de 1.8s para não travar a interface caso o Firestore tenha latência inicial
-      const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1800));
-      const snapshot = await Promise.race([getDoc(userRef), timeoutPromise]);
+      const snapshot = await getDoc(userRef);
 
-    if (snapshot && snapshot.exists()) {
-      const data = snapshot.data();
-      return {
-        uid: user.uid,
-        name: user.displayName || data.name || 'Condutor Diriggo',
-        email: user.email || data.email || '',
-        photoURL: user.photoURL || data.photoURL || undefined,
-        isLoggedIn: true,
-        streak: typeof data.streak === 'number' ? data.streak : 0,
-        cnhPoints: typeof data.cnhPoints === 'number' ? data.cnhPoints : 0,
-        maxCnhPoints: typeof data.maxCnhPoints === 'number' ? data.maxCnhPoints : 20,
-        xp: typeof data.xp === 'number' ? data.xp : 0,
-        completedLessons: Array.isArray(data.completedLessons) ? data.completedLessons : [],
-        simuladosHistory: Array.isArray(data.simuladosHistory) ? data.simuladosHistory : [],
-        soundEnabled: data.soundEnabled !== false,
-        darkMode: data.darkMode !== false,
-      };
-    } else if (snapshot) {
-      // Usuário novo: cria documento no Firestore com valores iniciais limpos
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        return {
+          uid: user.uid,
+          name: user.displayName || data.name || 'Condutor Diriggo',
+          email: user.email || data.email || '',
+          photoURL: user.photoURL || data.photoURL || undefined,
+          isLoggedIn: true,
+          streak: typeof data.streak === 'number' ? data.streak : 0,
+          cnhPoints: typeof data.cnhPoints === 'number' ? data.cnhPoints : 0,
+          maxCnhPoints: typeof data.maxCnhPoints === 'number' ? data.maxCnhPoints : 20,
+          xp: typeof data.xp === 'number' ? data.xp : 0,
+          completedLessons: Array.isArray(data.completedLessons) ? data.completedLessons : [],
+          simuladosHistory: Array.isArray(data.simuladosHistory) ? data.simuladosHistory : [],
+          soundEnabled: data.soundEnabled !== false,
+          darkMode: data.darkMode !== false,
+        };
+      }
+
+      // Documento não existe no Firestore: novo usuário cadastrado
       const newProfile: UserProfile = {
         ...INITIAL_USER_PROFILE,
         uid: user.uid,
@@ -306,7 +331,7 @@ export const syncOrInitUserProfile = async (user: User): Promise<UserProfile> =>
         isLoggedIn: true,
       };
 
-      // Criação assíncrona sem bloquear
+      // Gravação garantida no Firestore com { merge: true }
       setDoc(userRef, {
         uid: newProfile.uid,
         name: newProfile.name,
@@ -322,12 +347,28 @@ export const syncOrInitUserProfile = async (user: User): Promise<UserProfile> =>
         darkMode: true,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      }).catch(e => console.warn('[Diriggo Firebase] Erro ao criar documento inicial:', e));
+      }, { merge: true }).catch(e => console.warn('[Diriggo Firebase] Erro ao gravar documento inicial:', e));
 
       return newProfile;
-    } else {
-      // Caso ocorra timeout no Firestore (>1.8s), utiliza os dados locais/iniciais imediatamente
-      console.warn('[Diriggo Firebase] Timeout ao consultar Firestore, utilizando fallback rápido');
+    } catch (err) {
+      console.error('[Diriggo Firebase] Erro ao carregar dados do usuário no Firestore:', err);
+      // Tenta recuperar do cache local do navegador para nunca perder progresso offline
+      try {
+        const cached = localStorage.getItem('diriggo_user_profile_v4');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.uid === user.uid) {
+            return {
+              ...INITIAL_USER_PROFILE,
+              ...parsed,
+              isLoggedIn: true,
+            };
+          }
+        }
+      } catch {
+        // fallback
+      }
+
       return {
         ...INITIAL_USER_PROFILE,
         uid: user.uid,
@@ -337,17 +378,6 @@ export const syncOrInitUserProfile = async (user: User): Promise<UserProfile> =>
         isLoggedIn: true,
       };
     }
-  } catch (err) {
-    console.error('[Diriggo Firebase] Erro ao sincronizar/inicializar perfil:', err);
-    return {
-      ...INITIAL_USER_PROFILE,
-      uid: user.uid,
-      name: user.displayName || 'Condutor Diriggo',
-      email: user.email || '',
-      photoURL: user.photoURL || undefined,
-      isLoggedIn: true,
-    };
-  }
   })();
 
   inFlightSyncMap.set(user.uid, syncTask);
