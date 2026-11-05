@@ -64,7 +64,7 @@ export const ALL_QUESTIONS: Question[] = [
     id: 'q-leg-05',
     topic: 'signs',
     text: 'Qual o significado da placa de advertência A-1a (losango amarelo)?',
-    signId: 'A-1a',
+    signId: 'A-1A',
     options: [
       { id: 'a', text: 'Pista sinuosa à direita adiante.' },
       { id: 'b', text: 'Curva acentuada à esquerda adiante.' },
@@ -102,7 +102,7 @@ export const ALL_QUESTIONS: Question[] = [
       { id: 'd', text: 'A duração recomendada para uso da buzina.' }
     ],
     correctOptionId: 'b',
-    explanation: 'A regra dos 2 segundos consiste em escolher um ponto fixo de referência e contar pausadamente "cinquenta e um, cinquenta e dois" após a passagem do carro da frente para garantir espaço suficiente de frenagem.',
+    explanation: 'A regra dos 2 segundos consiste em escolher um ponto fixo de referência à frente e contar "um segundo, dois segundos" após o veículo da frente passar por ele. Se você chegar ao ponto antes de terminar a contagem, sua distância de seguimento é insuficiente.',
     difficulty: 'easy'
   },
   {
@@ -158,7 +158,7 @@ export const ALL_QUESTIONS: Question[] = [
       { id: 'a', text: 'Retirar as vítimas das ferragens imediatamente puxando-as pelos braços.' },
       { id: 'b', text: 'Garantir a segurança do local sinalizando adequadamente a via com triângulo e galhos.' },
       { id: 'c', text: 'Dar água e medicamentos calmantes para as vítimas conscientes.' },
-      { id: 'd', text: 'Ligar para a imprensa local para noticiar o acidente.' }
+      { id: 'd', text: 'Seguir viagem e comunicar a ocorrência somente ao chegar ao destino.' }
     ],
     correctOptionId: 'b',
     explanation: 'A primeira regra de ouro do socorrismo é SINALIZAR O LOCAL para evitar novos acidentes (engavetamentos ou atropelamento do socorrista).',
@@ -198,7 +198,7 @@ export const ALL_QUESTIONS: Question[] = [
     text: 'Para conter uma hemorragia externa abundante em um membro da vítima de trânsito, a conduta correta recomendada é:',
     options: [
       { id: 'a', text: 'Fazer compressão direta sobre o ferimento com pano limpo ou gaze.' },
-      { id: 'b', text: 'Fazer torniquete de arame no pescoço da vítima.' },
+      { id: 'b', text: 'Aplicar torniquete imediatamente, antes mesmo de tentar a compressão direta.' },
       { id: 'c', text: 'Passar pó de café ou pomadas sobre a ferida aberta.' },
       { id: 'd', text: 'Lavar o corte com água gelada e esfregar vigorosamente.' }
     ],
@@ -213,10 +213,10 @@ export const ALL_QUESTIONS: Question[] = [
     topic: 'legislation',
     text: 'O candidato aprovado nos exames da Primeira Habilitação recebe a PPD (Permissão Para Dirigir). Ele obterá a CNH definitiva após 1 ano desde que:',
     options: [
-      { id: 'a', text: 'Não tenha cometido nenhuma infração gravíssima, grave ou seja reincidente em média.' },
+      { id: 'a', text: 'Não tenha cometido nenhuma infração grave ou gravíssima, nem seja reincidente em infração média.' },
       { id: 'b', text: 'Não tenha tomado nenhuma multa de natureza leve.' },
       { id: 'c', text: 'Realize novamente todos os exames práticos e teóricos do DETRAN.' },
-      { id: 'd', text: 'Tenha rodado pelo menos 10.000 km comprovados no velocímetro.' }
+      { id: 'd', text: 'Tenha o veículo aprovado em vistoria anual obrigatória do DETRAN.' }
     ],
     correctOptionId: 'a',
     explanation: 'Art. 148, § 3º do CTB: A CNH definitiva é conferida ao término de 1 ano desde que o condutor não tenha cometido nenhuma infração de natureza GRAVE ou GRAVÍSSIMA, nem seja reincidente em infração MÉDIA.',
@@ -346,12 +346,12 @@ export const ALL_QUESTIONS: Question[] = [
     type: 'sign_choice',
     badge: 'IDENTIFIQUE A PLACA',
     options: [
-      { id: 'a', text: 'Placa A-1b', signId: 'A-1B' },
-      { id: 'b', text: 'Placa R-1', signId: 'R-1' },
+      { id: 'a', text: 'Placa R-1', signId: 'R-1' },
+      { id: 'b', text: 'Placa A-5a', signId: 'A-5A' },
       { id: 'c', text: 'Placa A-21a', signId: 'A-21A' }
     ],
-    correctOptionId: 'a',
-    explanation: 'A placa A-1B adverte sobre curvas sucessivas em S iniciando para a esquerda. Requer desaceleração antes de entrar na curva.',
+    correctOptionId: 'b',
+    explanation: 'A placa A-5A adverte sobre duas curvas acentuadas sucessivas em sentidos contrários, iniciando para a esquerda. Exige redução de velocidade antes de entrar no primeiro trecho.',
     difficulty: 'medium'
   },
   {
@@ -361,11 +361,11 @@ export const ALL_QUESTIONS: Question[] = [
     type: 'image_choice',
     badge: 'PREFERÊNCIA NO CRUZAMENTO',
     options: [
-      { id: 'a', text: 'Cruzamento não sinalizado', illustration: 'cruzamento-direita' },
-      { id: 'b', text: 'Rotatória', illustration: 'rotatoria' },
-      { id: 'c', text: 'Via de Trânsito Rápido', illustration: 'via-transito-rapido' }
+      { id: 'a', text: 'Rotatória', illustration: 'rotatoria' },
+      { id: 'b', text: 'Via de Trânsito Rápido', illustration: 'via-transito-rapido' },
+      { id: 'c', text: 'Cruzamento não sinalizado', illustration: 'cruzamento-direita' }
     ],
-    correctOptionId: 'a',
+    correctOptionId: 'c',
     explanation: 'Art. 29 do CTB: Em cruzamentos sem semáforo, quem se aproxima pela DIREITA do condutor tem a preferência absoluta de passagem.',
     difficulty: 'easy'
   },
@@ -376,11 +376,11 @@ export const ALL_QUESTIONS: Question[] = [
     type: 'image_choice',
     badge: 'CLASSIFICAÇÃO DAS VIAS',
     options: [
-      { id: 'a', text: 'Via de Trânsito Rápido', illustration: 'via-transito-rapido' },
-      { id: 'b', text: 'Via Arterial', illustration: 'via-arterial' },
+      { id: 'a', text: 'Via Arterial', illustration: 'via-arterial' },
+      { id: 'b', text: 'Via de Trânsito Rápido', illustration: 'via-transito-rapido' },
       { id: 'c', text: 'Rotatória Urbana', illustration: 'rotatoria' }
     ],
-    correctOptionId: 'a',
+    correctOptionId: 'b',
     explanation: 'Art. 61 do CTB: As vias de trânsito rápido não possuem interseções em nível nem semáforos, permitindo velocidade de até 80 km/h.',
     difficulty: 'easy'
   },
@@ -406,11 +406,11 @@ export const ALL_QUESTIONS: Question[] = [
     type: 'image_choice',
     badge: 'LUZES DE EMERGÊNCIA',
     options: [
-      { id: 'a', text: 'Luz de Alerta 1', illustration: 'luz-oleo' },
-      { id: 'b', text: 'Luz de Alerta 2', illustration: 'luz-injecao' },
-      { id: 'c', text: 'Luz de Alerta 3', illustration: 'luz-bateria' }
+      { id: 'a', text: 'Luz de Alerta 1', illustration: 'luz-injecao' },
+      { id: 'b', text: 'Luz de Alerta 2', illustration: 'luz-bateria' },
+      { id: 'c', text: 'Luz de Alerta 3', illustration: 'luz-oleo' }
     ],
-    correctOptionId: 'a',
+    correctOptionId: 'c',
     explanation: 'A almotolia de óleo vermelha indica perda de pressão de óleo. Continuar rodando causa o travamento e fundição imediata do motor.',
     difficulty: 'easy'
   },
@@ -421,11 +421,11 @@ export const ALL_QUESTIONS: Question[] = [
     type: 'image_choice',
     badge: 'SISTEMA DE FREIOS',
     options: [
-      { id: 'a', text: 'Componente 1', illustration: 'freios' },
-      { id: 'b', text: 'Componente 2', illustration: 'motor-4-tempos' },
+      { id: 'a', text: 'Componente 1', illustration: 'motor-4-tempos' },
+      { id: 'b', text: 'Componente 2', illustration: 'freios' },
       { id: 'c', text: 'Componente 3', illustration: 'bateria' }
     ],
-    correctOptionId: 'a',
+    correctOptionId: 'b',
     explanation: 'O freio a disco com ABS impede o travamento das rodas durante frenagens de emergência, mantendo o controle direcional do veículo.',
     difficulty: 'easy'
   },
@@ -451,11 +451,11 @@ export const ALL_QUESTIONS: Question[] = [
     type: 'image_choice',
     badge: 'SEGURANÇA DOS PNEUS',
     options: [
-      { id: 'a', text: 'Item 1', illustration: 'pneu-twi' },
-      { id: 'b', text: 'Item 2', illustration: 'freios' },
-      { id: 'c', text: 'Item 3', illustration: 'radiador' }
+      { id: 'a', text: 'Item 1', illustration: 'freios' },
+      { id: 'b', text: 'Item 2', illustration: 'radiador' },
+      { id: 'c', text: 'Item 3', illustration: 'pneu-twi' }
     ],
-    correctOptionId: 'a',
+    correctOptionId: 'c',
     explanation: 'O TWI é o ressalto de borracha nos sulcos do pneu. Se atingir 1,6 mm, o pneu está "careca" e deve ser substituído imediatamente.',
     difficulty: 'easy'
   }
@@ -579,7 +579,7 @@ export const UNITS: Unit[] = [
             title: 'Placas de Advertência',
             subtitle: 'Alerta prévio para perigos potenciais à frente',
             badge: 'Prevenção',
-            signId: 'A-1a',
+            signId: 'A-1A',
             content: 'As placas de advertência possuem formato quadrado disposto em losango com fundo amarelo e símbolos pretos. Elas não possuem caráter punitivo, mas alertam o motorista sobre situações de perigo na via com antecedência para permitir uma reação segura.',
             bullets: [
               'Cor: Fundo amarelo com orla e símbolo pretos.',
