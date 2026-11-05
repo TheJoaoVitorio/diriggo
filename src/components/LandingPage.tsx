@@ -17,11 +17,8 @@ import {
   Award,
   Flame
 } from 'lucide-react';
-import { 
-  GamificationIllustration, 
-  RoadMapIllustration, 
-  ExamCertificateIllustration
-} from './LandingIllustrations';
+import { ExamCertificateIllustration } from './LandingIllustrations';
+import { TrilhaMockupPreview, QuizMockupPreview } from './ProductPreviews';
 import { sounds } from '../utils/sound';
 import { UserProfile } from '../types';
 import { SEO_PAGES } from '../data/seoPages';
@@ -368,18 +365,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* Section 1: grátis. divertido. eficaz. */}
       <section className="reveal-on-scroll py-20 border-b-2 border-[#e5e5e5] dark:border-slate-800">
         <div className="max-w-[1024px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-12">
-          {/* Left Illustration */}
-          <div className="flex-1 flex justify-center hover:scale-105 transition-transform duration-500">
-            <GamificationIllustration />
+          {/* Left: Quiz Capture Mockup */}
+          <div className="flex-1 flex justify-center hover:scale-[1.02] transition-transform duration-500 w-full">
+            <QuizMockupPreview />
           </div>
 
           {/* Right Copy */}
           <div className="flex-1 text-center md:text-left max-w-[460px]">
+            <span className="text-xs font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800 inline-block mb-3">
+              Quiz Interativo & Placas
+            </span>
             <h2 className="text-[36px] font-black text-[#EAB308] dark:text-[#FACC15] leading-[1.2] tracking-tight">
               grátis. divertido. eficaz.
             </h2>
             <p className="mt-4 text-[17px] text-[#777777] dark:text-slate-300 font-semibold leading-relaxed">
-              Aprender para a prova da CNH no Diriggo é como jogar um videogame. Ganhe pontos ao acertar questões, acumule ofensivas diárias e compita com você mesmo sem o estresse das apostilas antigas.
+              Aprender para a prova da CNH no Diriggo é como jogar um videogame. Identifique placas oficiais, decifre situações de trânsito e receba feedback imediato sem o tédio de apostilas antigas.
             </p>
           </div>
         </div>
@@ -390,17 +390,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-[1024px] mx-auto px-4 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
           {/* Left Copy */}
           <div className="flex-1 text-center md:text-left max-w-[460px]">
+            <span className="text-xs font-black uppercase tracking-widest text-[#1cb0f6] bg-sky-50 dark:bg-sky-950/60 px-3 py-1 rounded-full border border-sky-200 dark:border-sky-800 inline-block mb-3">
+              Trilha Gamificada Passo a Passo
+            </span>
             <h2 className="text-[36px] font-black text-[#1cb0f6] leading-[1.2] tracking-tight">
               apoiado pela ciência
             </h2>
             <p className="mt-4 text-[17px] text-[#777777] dark:text-slate-300 font-semibold leading-relaxed">
-              Combinamos material de estudo prévio em <strong>slides visuais com infográficos</strong> e repetição espaçada personalizada. Se você errar uma questão, nossa fila inteligente traz ela de volta até você dominá-la 100%!
+              Percorra a estrada do aprendizado com lições curtas de 5 minutos, desbloqueando fases e acumulando ofensivas. Combinamos material de estudo prévio em <strong>slides visuais com infográficos</strong> e repetição espaçada personalizada até o domínio total!
             </p>
           </div>
 
-          {/* Right Illustration */}
-          <div className="flex-1 flex justify-center hover:scale-105 transition-transform duration-500">
-            <RoadMapIllustration />
+          {/* Right: Trilha Capture Mockup */}
+          <div className="flex-1 flex justify-center hover:scale-[1.02] transition-transform duration-500 w-full">
+            <TrilhaMockupPreview />
           </div>
         </div>
       </section>
