@@ -210,7 +210,7 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
             {!isFinished && (
               <button
                 onClick={handleFinishExam}
-                className="px-4 py-2 rounded-xl duo-btn-green font-black text-xs uppercase tracking-wide cursor-pointer shadow-sm"
+                className="px-4 py-2 rounded-xl duo-btn-yellow text-slate-950 font-black text-xs uppercase tracking-wide cursor-pointer shadow-sm"
               >
                 Entregar Prova ({answeredCount}/{examQuestions.length})
               </button>

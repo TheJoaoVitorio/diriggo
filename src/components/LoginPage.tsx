@@ -125,7 +125,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, onLogin, isLogging
             <svg viewBox="0 0 240 120" className="w-full h-full drop-shadow-2xl">
               {/* Roof Sign (AUTOESCOLA) */}
               <rect x="95" y="10" width="50" height="18" rx="4" fill="#FFFFFF" stroke="#CA8A04" strokeWidth="2" />
-              <text x="120" y="22" fill="#18181B" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+              <text x="120" y="22" fill="#18181B" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">
                 DIRIGGO
               </text>
               <rect x="117" y="28" width="6" height="6" fill="#71717A" />

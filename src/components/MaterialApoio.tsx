@@ -1,259 +1,479 @@
 import React, { useState } from 'react';
 import { 
   Lightbulb, 
-  CheckCircle2, 
-  ArrowRight
+  ArrowRight,
+  Maximize2,
+  X,
+  BookOpen,
+  Sparkles
 } from 'lucide-react';
+import { TrafficSignComponent } from './TrafficSign';
+import { VisualIllustration, IllustrationType } from './VisualIllustrations';
 import { sounds } from '../utils/sound';
 
 interface MaterialApoioProps {
   onGoToSimulado?: () => void;
 }
 
-interface TopicStudy {
+interface VisualGuideItem {
   id: string;
-  name: string;
-  icon: string;
+  title: string;
+  category: 'mecanica' | 'vias' | 'placas' | 'defensiva';
+  illustrationType?: IllustrationType;
+  signId?: string;
+  description: string;
+  ctbRule: string;
   badge: string;
-  summary: string;
-  keyPoints: string[];
-  detranTrap: string;
-  stats?: { value: string; label: string }[];
 }
 
 export const MaterialApoio: React.FC<MaterialApoioProps> = ({ onGoToSimulado }) => {
-  const [selectedTopicId, setSelectedTopicId] = useState('legislacao');
+  const [activeCategory, setActiveCategory] = useState<'mecanica' | 'vias' | 'placas' | 'defensiva'>('mecanica');
+  const [selectedZoomItem, setSelectedZoomItem] = useState<VisualGuideItem | null>(null);
 
-  const topics: TopicStudy[] = [
-    {
-      id: 'legislacao',
-      name: 'Legislação de Trânsito',
-      icon: '⚖️',
-      badge: '12 QUESTÕES NA PROVA',
-      summary: 'Baseado na Lei Federal nº 9.503/1997 (CTB). Disciplina a circulação, prioridades, classificação das vias e o sistema de pontuação e infrações.',
-      keyPoints: [
-        'Vias Urbanas sem sinalização: Trânsito Rápido (80 km/h), Arterial (60 km/h), Coletora (40 km/h), Local (30 km/h).',
-        'Vias Rurais sem sinalização: Rodovias de pista dupla (110 km/h para carros), pista simples (100 km/h) e Estradas de terra (60 km/h).',
-        'Preferência em cruzamentos não sinalizados: sempre do veículo que se aproxima pela DIREITA do condutor.',
-        'Preferência em rotatórias: sempre do veículo que já está circulando por ela.',
-        'Pontuação das Infrações: Leve (3 pts), Média (4 pts), Grave (5 pts), Gravíssima (7 pts).',
-        'Limite de Pontos para Suspensão da CNH: 20 pts (com 2+ gravíssimas), 30 pts (com 1 gravíssima) ou 40 pts (sem nenhuma gravíssima).'
-      ],
-      detranTrap: 'Em cruzamento não sinalizado com rodovia, a preferência é do veículo na rodovia. Mas entre ruas comuns perpendiculares, a regra é SEMPRE a preferência de quem vem pela direita!',
-      stats: [
-        { value: '80 km/h', label: 'Trânsito Rápido' },
-        { value: '60 km/h', label: 'Arterial' },
-        { value: '40 km/h', label: 'Coletora' },
-        { value: '30 km/h', label: 'Local' }
-      ]
-    },
-    {
-      id: 'defensiva',
-      name: 'Direção Defensiva',
-      icon: '🛡️',
-      badge: '10 QUESTÕES NA PROVA',
-      summary: 'Conjunto de procedimentos que permite ao condutor evitar sinistros, apesar das ações incorretas dos outros e das condições adversas das vias.',
-      keyPoints: [
-        'Os 5 Elementos da Direção Defensiva: Conhecimento, Atenção, Previsão, Decisão e Habilidade.',
-        'Condições Adversas (6 tipos): Iluminação, Tempo/Clima, Via, Trânsito, Veículo e Condutor.',
-        'Distância de Segurança (Regra dos 2 Segundos): escolha um ponto fixo de referência e conte "cinquenta e um, cinquenta e dois".',
-        'Aquaplanagem (ou Hidroplanagem): perda total de contato dos pneus com o asfalto devido a uma lâmina d’água.',
-        'O que fazer na aquaplanagem: tirar suavemente o pé do acelerador e manter o volante reto. NUNCA pisar bruscamente no freio nem girar o volante.'
-      ],
-      detranTrap: 'Se o veículo começar a aquaplanar, a resposta correta da prova é JAMAIS frear bruscamente. Deve-se apenas desacelerar e segurar firme a direção.',
-      stats: [
-        { value: '2 seg', label: 'Distância Mínima' },
-        { value: '1,6 mm', label: 'Sulco do Pneu' }
-      ]
-    },
-    {
-      id: 'socorros',
-      name: 'Primeiros Socorros',
-      icon: '🩹',
-      badge: '3 A 4 QUESTÕES',
-      summary: 'Ações de emergência tomadas no local do sinistro antes da chegada do atendimento médico profissional (SAMU 192 ou Bombeiros 193).',
-      keyPoints: [
-        'Ordem Obrigatória: 1º Garantir a segurança do local (sinalizar com triângulo e galhos) -> 2º Acionar o resgate especializado (192 / 193) -> 3º Prestar apoio sem agravar lesões.',
-        'Distância do Triângulo: Em pista seca a 80 km/h, sinalizar a no mínimo 80 passos longos. Se houver chuva ou neblina, DOBRAR a distância!',
-        'O que NUNCA fazer: Nunca retirar o capacete de motociclista acidentado.',
-        'Nunca dar líquidos, alimentos ou remédios para vítimas de sinistros de trânsito.',
-        'Nunca movimentar vítimas com suspeita de fratura ou trauma na coluna cervical.'
-      ],
-      detranTrap: 'Na prova, qualquer alternativa que sugira "dar água para a vítima", "fazer torniquete" ou "remover o capacete" é INCORRETA!',
-      stats: [
-        { value: '192', label: 'SAMU' },
-        { value: '193', label: 'Bombeiros' },
-        { value: '190', label: 'Polícia' }
-      ]
-    },
-    {
-      id: 'ambiente',
-      name: 'Meio Ambiente & Cidadania',
-      icon: '🌳',
-      badge: '3 A 4 QUESTÕES',
-      summary: 'Impacto dos veículos automotores na atmosfera, controle de ruídos e convivência respeitosa e harmoniosa entre condutores, pedestres e ciclistas.',
-      keyPoints: [
-        'Gases Poluentes: Monóxido de Carbono (CO) é incolor, inodoro e altamente tóxico (asfixiante).',
-        'Catalisador: Equipamento do escapamento obrigatório para transformar gases tóxicos em substâncias menos nocivas.',
-        'PROCONVE: Programa de Controle da Poluição do Ar por Veículos Automotores.',
-        'Poluição Sonora: Medida em decibéis (dB). Sons acima de 80 dB causam estresse e perda auditiva progressiva.',
-        'Distância Lateral do Ciclista: Ao ultrapassar ciclistas, o condutor deve manter a distância mínima lateral de 1,5 metro (Art. 201 CTB).'
-      ],
-      detranTrap: 'A distância lateral obrigatória para ultrapassar ciclistas é exatamente 1,5 metro (um metro e meio). Cai com frequência nas provas!',
-      stats: [
-        { value: '1,5 m', label: 'Distância do Ciclista' },
-        { value: 'CO', label: 'Gás Inodoro e Tóxico' }
-      ]
-    },
-    {
-      id: 'mecanica',
-      name: 'Mecânica Básica',
-      icon: '🔧',
-      badge: '2 A 3 QUESTÕES',
-      summary: 'Noções fundamentais sobre os sistemas do veículo para garantir a manutenção preventiva e a segurança operacional.',
-      keyPoints: [
-        'Painel de Instrumentos: Luzes vermelhas indicam emergência e exigem parada imediata (pressão do óleo, bateria, temperatura).',
-        'Sistema de Lubrificação: A luz da lâmpada de óleo indica baixa pressão no sistema (risco de fundir o motor).',
-        'Sistema de Arrefecimento: Mantém o motor na temperatura ideal com líquido de arrefecimento (água desmineralizada + aditivo etilenoglicol).',
-        'Pneus e TWI: O limite mínimo legal de profundidade dos sulcos é de 1,6 mm. Pneus "carecas" são infração grave.',
-        'Freios: Freio de serviço atua nas 4 rodas (hidráulico). Freio de estacionamento (freio de mão) atua nas rodas traseiras (mecânico/a cabo).'
-      ],
-      detranTrap: 'Se a luz vermelha da bateria acender com o carro em movimento, o problema NÃO é que a bateria descarregou, mas sim que o ALTERNADOR parou de gerar energia!',
-      stats: [
-        { value: '1,6 mm', label: 'Profundidade Mínima' },
-        { value: 'ABS', label: 'Antitravamento' }
-      ]
-    }
-  ];
+  // 1. VISUAL GUIDES DATABASE WITH RICH IMAGES
+  const visualGuides: Record<'mecanica' | 'vias' | 'placas' | 'defensiva', VisualGuideItem[]> = {
+    mecanica: [
+      {
+        id: 'mec-motor',
+        title: 'Motor de 4 Tempos (Ciclo Otto)',
+        category: 'mecanica',
+        illustrationType: 'motor-4-tempos',
+        badge: 'Coração do Veículo',
+        description: 'O motor a combustão funciona em 4 fases contínuas: 1. Admissão (pistão desce e puxa ar/combustível), 2. Compressão (pistão sobe e comprime a mistura), 3. Combustão/Explosão (vela solta centelha e gera força), 4. Escape (pistão sobe expulsando os gases queimados).',
+        ctbRule: 'Apenas no 3º tempo (Combustão) é gerada energia motriz que movimenta as rodas do automóvel.'
+      },
+      {
+        id: 'mec-radiador',
+        title: 'Sistema de Arrefecimento & Radiador',
+        category: 'mecanica',
+        illustrationType: 'radiador',
+        badge: 'Controle Térmico',
+        description: 'Mantém o motor na temperatura ideal (entre 90°C e 100°C). Composto por Radiador, Ventoinha elétrica, Bomba d\'água, Válvula Termostática e Reservatório de expansão.',
+        ctbRule: 'Utiliza líquido de arrefecimento: mistura de água desmineralizada com 50% de aditivo etilenoglicol. Nunca abra o reservatório com motor quente!'
+      },
+      {
+        id: 'mec-freios',
+        title: 'Freios a Disco, Pastilhas e Sistema ABS',
+        category: 'mecanica',
+        illustrationType: 'freios',
+        badge: 'Segurança Ativa',
+        description: 'Freio de serviço atua hidraulicamente nas 4 rodas. O sistema ABS (Antilock Braking System) evita o travamento das rodas durante frenagens bruscas de pânico, permitindo que o condutor continue desviando de obstáculos.',
+        ctbRule: 'Em carros com ABS, pise no pedal com força total e mantenha pressionado sem bombear o pedal.'
+      },
+      {
+        id: 'mec-bateria',
+        title: 'Bateria 12V & Alternador',
+        category: 'mecanica',
+        illustrationType: 'bateria',
+        badge: 'Sistema Elétrico',
+        description: 'A bateria armazena energia química para dar a partida inicial no motor e alimentar os acessórios com o carro desligado. Quando o motor funciona, quem gera energia e recarrega a bateria é o ALTERNADOR.',
+        ctbRule: 'Se a luz da bateria acender com o motor em movimento, o defeito é no ALTERNADOR (correia partida ou circuito defeituoso).'
+      },
+      {
+        id: 'mec-pneu',
+        title: 'Pneu & Indicador TWI (1,6 mm)',
+        category: 'mecanica',
+        illustrationType: 'pneu-twi',
+        badge: 'Contato com o Solo',
+        description: 'Os sulcos do pneu escoam a água para evitar a perda de aderência. No fundo dos sulcos existem pequenos ressaltos de borracha chamados TWI (Tread Wear Indicator).',
+        ctbRule: 'O limite mínimo legal de profundidade dos sulcos é de 1,6 milímetros (Res. CONTRAN 913). Pneu abaixo disso é considerado "careca": infração grave e retenção do veículo.'
+      },
+      {
+        id: 'mec-luzes-oleo',
+        title: 'Luz da Pressão do Óleo (Almotolia Vermelha)',
+        category: 'mecanica',
+        illustrationType: 'luz-oleo',
+        badge: 'Alerta Crítico',
+        description: 'Indica queda perigosa na pressão de lubrificação do motor. Sem óleo sob pressão, as peças metálicas entram em atrito direto e o motor funde em poucos minutos.',
+        ctbRule: 'Se acender em trânsito: pare o veículo no acostamento com segurança e desligue a chave de ignição imediatamente.'
+      },
+      {
+        id: 'mec-luzes-bat',
+        title: 'Luz da Bateria / Alternador (Vermelha)',
+        category: 'mecanica',
+        illustrationType: 'luz-bateria',
+        badge: 'Alerta Elétrico',
+        description: 'Indica falha no carregamento. O veículo está rodando consumindo apenas a reserva da bateria, que se esgotará rapidamente.',
+        ctbRule: 'Desligue consumidores de energia dispensáveis (faróis de milha, ar-condicionado, multimídia) e dirija-se a uma oficina.'
+      },
+      {
+        id: 'mec-luzes-temp',
+        title: 'Luz de Temperatura do Motor (Vermelha)',
+        category: 'mecanica',
+        illustrationType: 'luz-temperatura',
+        badge: 'Superaquecimento',
+        description: 'Indica que a temperatura do líquido de arrefecimento ultrapassou o limite seguro. Risco imediato de queima da junta do cabeçote ou empenamento do bloco.',
+        ctbRule: 'Pare o carro imediatamente. Aguarde esfriar completamente antes de verificar o nível do líquido.'
+      },
+      {
+        id: 'mec-luzes-inj',
+        title: 'Luz da Injeção Eletrônica (Amarela/Âmbar)',
+        category: 'mecanica',
+        illustrationType: 'luz-injecao',
+        badge: 'Alerta de Revisão',
+        description: 'Luz amarela/âmbar indica anomalia no sistema de injeção eletrônica de combustível ou emissão de poluentes. Permite que o veículo continue rodando em modo de segurança.',
+        ctbRule: 'Procure uma oficina especializada para diagnóstico computadorizado com scanner automotivo.'
+      }
+    ],
 
-  const currentTopic = topics.find(t => t.id === selectedTopicId) || topics[0];
+    vias: [
+      {
+        id: 'via-rapida',
+        title: 'Via de Trânsito Rápido (80 km/h)',
+        category: 'vias',
+        illustrationType: 'via-transito-rapido',
+        badge: 'Art. 61 CTB',
+        description: 'Via caracterizada por acessos especiais com trânsito livre, sem interseções em nível, sem semáforos nem travessia de pedestres em nível. Pistas separadas por canteiro central.',
+        ctbRule: 'Velocidade máxima sem sinalização: 80 km/h. É proibido estacionar ou circular com bicicletas ou veículos de tração animal.'
+      },
+      {
+        id: 'via-arterial',
+        title: 'Via Arterial (60 km/h)',
+        category: 'vias',
+        illustrationType: 'via-arterial',
+        badge: 'Art. 61 CTB',
+        description: 'Avenidas e vias principais que conectam diferentes regiões de um município. Possui interseções em nível geralmente controladas por semáforos e faixas de pedestres.',
+        ctbRule: 'Velocidade máxima sem sinalização: 60 km/h. Tem prioridade de fluxo sobre as vias coletoras e locais que nela desembocam.'
+      },
+      {
+        id: 'via-cruzamento',
+        title: 'Cruzamento não Sinalizado: Regra da Direita',
+        category: 'vias',
+        illustrationType: 'cruzamento-direita',
+        badge: 'Regra de Ouro CTB',
+        description: 'Em cruzamentos sem semáforo ou placas de parada/preferência, a prioridade de passagem pertence obrigatoriamente ao veículo que se aproxima pela DIREITA do condutor.',
+        ctbRule: 'Art. 29, III, "c" do CTB: Não importa quem está mais rápido ou em via mais larga; se não há placas, quem vem pela direita passa primeiro!'
+      },
+      {
+        id: 'via-rotatoria',
+        title: 'Rotatórias: Prioridade de Circulação',
+        category: 'vias',
+        illustrationType: 'rotatoria',
+        badge: 'Art. 29 CTB',
+        description: 'Nos trevos e rotatórias onde não houver sinalização semafórica ou placas específicas, a preferência de passagem pertence àquele veículo que já estiver circulando por ela.',
+        ctbRule: 'O condutor que for entrar na rotatória deve sempre desacelerar ou parar e dar preferência a quem já está no anel viário.'
+      }
+    ],
+
+    placas: [
+      {
+        id: 'plc-r1',
+        title: 'Placa R-1: Parada Obrigatória',
+        category: 'placas',
+        signId: 'R-1',
+        badge: 'Regulamentação',
+        description: 'Única placa de trânsito em formato octogonal (8 lados) com fundo vermelho e letras brancas. Exige imobilização TOTAL e completa das rodas do veículo antes da linha de retenção.',
+        ctbRule: 'Art. 208 do CTB: Desobedecer a placa R-1 é INFRAÇÃO GRAVÍSSIMA (7 pontos na CNH). Reduzir a velocidade não é suficiente!'
+      },
+      {
+        id: 'plc-r2',
+        title: 'Placa R-2: Dê a Preferência',
+        category: 'placas',
+        signId: 'R-2',
+        badge: 'Regulamentação',
+        description: 'Única placa em formato triangular com vértice voltado para baixo. Obriga o condutor a ceder passagem aos veículos que transitam pela via transversal preferencial.',
+        ctbRule: 'Não exige parada completa se a via transversal estiver totalmente desimpedida, mas exige redução cautelosa da marcha.'
+      },
+      {
+        id: 'plc-a1a',
+        title: 'Placa A-1A: Curva Acentuada à Esquerda',
+        category: 'placas',
+        signId: 'A-1A',
+        badge: 'Advertência',
+        description: 'Placa quadrada em losango amarelo. Adverte antecipadamente ao condutor sobre a existência de uma curva de raio muito fechado à esquerda.',
+        ctbRule: 'Placas de advertência alertam sobre perigos potenciais. Diante da A-1A, reduza a marcha antes de entrar na curva para evitar saída de pista.'
+      },
+      {
+        id: 'plc-a15',
+        title: 'Placa A-15: Parada Obrigatória à Frente',
+        category: 'placas',
+        signId: 'A-15',
+        badge: 'Advertência',
+        description: 'Adverte a aproximação de um cruzamento ou interseção onde existe uma placa de parada regulamentada (R-1) à frente.',
+        ctbRule: 'Permite ao condutor preparar a frenagem suave com antecedência, evitando freadas bruscas de pânico.'
+      },
+      {
+        id: 'plc-a21a',
+        title: 'Placa A-21A: Estreitamento de Pista ao Centro',
+        category: 'placas',
+        signId: 'A-21A',
+        badge: 'Advertência',
+        description: 'Adverte que a pista de rolamento vai sofrer estreitamento em ambos os lados (esquerdo e direito), afunilando o tráfego.',
+        ctbRule: 'Reduza a velocidade e pratique direção defensiva facilitando o revezamento de passagem dos veículos.'
+      },
+      {
+        id: 'plc-a32a',
+        title: 'Placa A-32A: Passagem Sinalizada de Pedestres',
+        category: 'placas',
+        signId: 'A-32A',
+        badge: 'Advertência',
+        description: 'Adverte sobre a existência de faixa de pedestres sinalizada à frente na via.',
+        ctbRule: 'O pedestre tem prioridade absoluta na faixa sem semáforo. Deixar de dar preferência é infração gravíssima (Art. 214).'
+      }
+    ],
+
+    defensiva: [
+      {
+        id: 'def-aquaplanagem',
+        title: 'Aquaplanagem ou Hidroplanagem',
+        category: 'defensiva',
+        illustrationType: 'pneu-twi',
+        badge: 'Condição Adversa',
+        description: 'Perda total de contato dos pneus com o asfalto provocada por uma fina lâmina d\'água sobre a pista. O veículo passa a "flutuar" sem controle de direção ou frenagem.',
+        ctbRule: 'O que fazer: tire suavemente o pé do acelerador e segure firme a direção em linha reta. NUNCA pise no freio bruscamente nem puxe o volante!'
+      },
+      {
+        id: 'def-regra-2s',
+        title: 'Regra dos 2 Segundos (Distância de Seguimento)',
+        category: 'defensiva',
+        badge: 'Distância de Segurança',
+        description: 'Método prático para garantir espaço suficiente de parada em relação ao veículo da frente. Escolha um ponto fixo (árvore ou placa) e conte "cinquenta e um, cinquenta e dois" após o carro da frente passar por ele.',
+        ctbRule: 'Se você atingir o ponto de referência antes de terminar a contagem, aumente a distância. Em caso de chuva ou neblina, dobre para 4 segundos!'
+      }
+    ]
+  };
+
+  const currentItems = visualGuides[activeCategory];
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-6 select-none">
-      {/* Header */}
-      <div className="mb-5">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center text-lg font-black shadow-xs shrink-0">
-            📚
+    <div className="w-full max-w-6xl mx-auto px-4 py-6 sm:py-8 select-none font-sans">
+      
+      {/* 1. DUOLINGO STYLE HERO BANNER */}
+      <div className="relative rounded-3xl bg-gradient-to-r from-[#143224] via-[#12282e] to-[#182631] border-2 border-emerald-500/40 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl overflow-hidden mb-8 group">
+        <div className="absolute -right-8 -bottom-8 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="relative z-10 max-w-xl text-center md:text-left">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-black uppercase tracking-wider mb-3 border border-emerald-500/40 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Central Visual do CTB</span>
           </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              Material de Apoio Didático
-            </h1>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-              Guias resumidos, regras essenciais do CTB e pegadinhas frequentes de cada disciplina.
-            </p>
-          </div>
-        </div>
-      </div>
 
-      {/* Topics Horizontal Selector */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-5 no-scrollbar scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {topics.map(t => {
-          const isSelected = t.id === selectedTopicId;
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
+            Guias Visuais & Mecânica Básica
+          </h2>
 
-          return (
-            <button
-              key={t.id}
-              onClick={() => {
-                sounds.playClick();
-                setSelectedTopicId(t.id);
-              }}
-              className={`px-3 py-2 rounded-xl border-2 font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                isSelected
-                  ? 'bg-amber-100 dark:bg-amber-950/60 border-amber-400 dark:border-amber-500 text-amber-900 dark:text-amber-300 shadow-xs'
-                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400'
-              }`}
-            >
-              <span className="text-base">{t.icon}</span>
-              <span>{t.name}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Main Topic Detail Sheet */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-xs">
-        {/* Topic Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b-2 border-slate-100 dark:border-slate-800 pb-4 mb-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl sm:text-3xl">{currentTopic.icon}</span>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
-                {currentTopic.badge}
-              </span>
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
-                {currentTopic.name}
-              </h2>
-            </div>
-          </div>
+          <p className="text-sm sm:text-base font-semibold text-slate-300 mt-2 leading-relaxed">
+            Consulte diagramas detalhados do motor, sistema de arrefecimento, freios ABS, velocidades das vias urbanas e placas oficiais do CONTRAN.
+          </p>
 
           {onGoToSimulado && (
-            <button
-              onClick={onGoToSimulado}
-              className="px-3 py-2 rounded-xl duo-btn-yellow font-black text-xs uppercase tracking-wider cursor-pointer shadow-xs self-start sm:self-auto flex items-center gap-1.5"
-            >
-              <span>Praticar este Tópico</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="mt-6 flex items-center justify-center md:justify-start gap-3">
+              <button
+                onClick={() => {
+                  sounds.playClick();
+                  onGoToSimulado();
+                }}
+                className="px-6 py-3.5 rounded-2xl duo-btn-yellow font-black text-xs sm:text-sm uppercase tracking-wider cursor-pointer shadow-lg flex items-center gap-2 hover:scale-105 active:translate-y-0.5 transition-all"
+              >
+                <span>Treinar nos Simulados</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           )}
         </div>
 
-        {/* Overview Summary */}
-        <p className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-          {currentTopic.summary}
-        </p>
-
-        {/* Stat badges if available */}
-        {currentTopic.stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
-            {currentTopic.stats.map((s, idx) => (
-              <div
-                key={idx}
-                className="p-2.5 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-center"
-              >
-                <span className="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 block">
-                  {s.value}
-                </span>
-                <span className="text-[10px] font-extrabold uppercase text-slate-500 dark:text-slate-400 mt-0.5 block">
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Key Points (Checklist) */}
-        <div className="space-y-2 mb-5">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2 block">
-            Pontos Cruciais para Memorizar:
-          </h3>
-          {currentTopic.keyPoints.map((point, idx) => (
-            <div
-              key={idx}
-              className="p-2.5 sm:p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-start gap-2.5"
-            >
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
-                {point}
-              </span>
+        {/* Mascot / Book Icon Container */}
+        <div className="relative z-10 shrink-0 flex items-center justify-center">
+          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 shadow-2xl flex items-center justify-center border-4 border-emerald-400/40 group-hover:scale-105 transition-transform">
+            <div className="w-full h-full bg-[#182631] rounded-[22px] flex items-center justify-center text-5xl">
+              <BookOpen className="w-16 h-16 text-emerald-400 drop-shadow-lg animate-pulse" />
             </div>
-          ))}
-        </div>
-
-        {/* DETRAN Trap Box */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 shadow-xs">
-          <div className="flex items-center gap-2 mb-2">
-            <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-            <h4 className="text-xs font-black uppercase tracking-wider text-amber-900 dark:text-amber-300">
-              Pegadinha Frequente na Prova do DETRAN:
-            </h4>
           </div>
-          <p className="text-xs font-medium text-amber-950 dark:text-amber-200 leading-relaxed">
-            {currentTopic.detranTrap}
-          </p>
         </div>
       </div>
+
+      {/* 2. CATEGORY SELECTOR PILLS (DUOLINGO TABS) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <button
+          onClick={() => {
+            sounds.playClick();
+            setActiveCategory('mecanica');
+          }}
+          className={`p-4 rounded-3xl border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2.5 ${
+            activeCategory === 'mecanica'
+              ? 'bg-[#1a384b] border-[#1cb0f6] text-white shadow-lg translate-y-[-2px]'
+              : 'bg-[#182631] border-[#2b3e4e] text-slate-400 hover:text-white hover:border-slate-500'
+          }`}
+        >
+          <span className="text-lg">🔧</span>
+          <span>Mecânica Básica</span>
+        </button>
+
+        <button
+          onClick={() => {
+            sounds.playClick();
+            setActiveCategory('vias');
+          }}
+          className={`p-4 rounded-3xl border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2.5 ${
+            activeCategory === 'vias'
+              ? 'bg-[#1a384b] border-[#1cb0f6] text-white shadow-lg translate-y-[-2px]'
+              : 'bg-[#182631] border-[#2b3e4e] text-slate-400 hover:text-white hover:border-slate-500'
+          }`}
+        >
+          <span className="text-lg">🛣️</span>
+          <span>Vias & Regras</span>
+        </button>
+
+        <button
+          onClick={() => {
+            sounds.playClick();
+            setActiveCategory('placas');
+          }}
+          className={`p-4 rounded-3xl border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2.5 ${
+            activeCategory === 'placas'
+              ? 'bg-[#1a384b] border-[#1cb0f6] text-white shadow-lg translate-y-[-2px]'
+              : 'bg-[#182631] border-[#2b3e4e] text-slate-400 hover:text-white hover:border-slate-500'
+          }`}
+        >
+          <span className="text-lg">🛑</span>
+          <span>Placas Oficiais</span>
+        </button>
+
+        <button
+          onClick={() => {
+            sounds.playClick();
+            setActiveCategory('defensiva');
+          }}
+          className={`p-4 rounded-3xl border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2.5 ${
+            activeCategory === 'defensiva'
+              ? 'bg-[#1a384b] border-[#1cb0f6] text-white shadow-lg translate-y-[-2px]'
+              : 'bg-[#182631] border-[#2b3e4e] text-slate-400 hover:text-white hover:border-slate-500'
+          }`}
+        >
+          <span className="text-lg">🛡️</span>
+          <span>Direção Defensiva</span>
+        </button>
+      </div>
+
+      {/* 3. VISUAL CARDS GRID (DUOLINGO CARD FORMAT) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {currentItems.map((item) => (
+          <div
+            key={item.id}
+            className="rounded-3xl bg-[#182631] border-2 border-[#2b3e4e] hover:border-[#1cb0f6] p-5 sm:p-6 flex flex-col justify-between shadow-sm hover:shadow-xl hover:translate-y-[-2px] transition-all group"
+          >
+            <div>
+              {/* Card Header & Badge */}
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  {item.badge}
+                </span>
+
+                <button
+                  onClick={() => {
+                    sounds.playClick();
+                    setSelectedZoomItem(item);
+                  }}
+                  className="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors cursor-pointer"
+                  title="Ampliar ilustração"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Illustration / Plate Container */}
+              <div 
+                onClick={() => {
+                  sounds.playClick();
+                  setSelectedZoomItem(item);
+                }}
+                className="w-full min-h-[170px] bg-[#131f24] rounded-2xl border border-slate-700/80 p-4 mb-4 flex items-center justify-center cursor-pointer group-hover:scale-[1.02] transition-transform shadow-inner"
+              >
+                {item.illustrationType && (
+                  <VisualIllustration type={item.illustrationType} size="md" />
+                )}
+                {item.signId && (
+                  <TrafficSignComponent signId={item.signId} size={110} />
+                )}
+                {!item.illustrationType && !item.signId && (
+                  <div className="flex flex-col items-center justify-center text-center p-4">
+                    <span className="text-5xl mb-2">⏱️</span>
+                    <span className="text-sm font-black text-amber-400">Regra dos 2 Segundos</span>
+                    <span className="text-xs text-slate-400 mt-1">"Cinquenta e um... Cinquenta e dois..."</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Title & Description */}
+              <h3 className="text-base sm:text-lg font-black text-white group-hover:text-[#1cb0f6] transition-colors leading-snug mb-1.5">
+                {item.title}
+              </h3>
+              <p className="text-xs font-semibold text-slate-300 leading-relaxed mb-4">
+                {item.description}
+              </p>
+            </div>
+
+            {/* CTB Rule / Exam Tip Box */}
+            <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs font-semibold flex items-start gap-2.5">
+              <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="leading-snug">
+                <span className="font-bold text-amber-300 block text-[11px] uppercase tracking-wide mb-0.5">
+                  Regra do DETRAN (CTB):
+                </span>
+                <span>{item.ctbRule}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 4. FULL-SCREEN ZOOM MODAL FOR DIAGRAMS */}
+      {selectedZoomItem && (
+        <div 
+          onClick={() => setSelectedZoomItem(null)}
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#182631] border-2 border-slate-600 rounded-3xl max-w-2xl w-full p-6 sm:p-8 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto"
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedZoomItem(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <span className="text-xs font-black uppercase tracking-wider text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-500/40 inline-block mb-3">
+              {selectedZoomItem.badge}
+            </span>
+
+            <h2 className="text-2xl sm:text-3xl font-black text-white mb-4">
+              {selectedZoomItem.title}
+            </h2>
+
+            {/* Zoomed illustration */}
+            <div className="w-full bg-[#131f24] rounded-2xl border border-slate-700 p-6 flex items-center justify-center mb-6">
+              {selectedZoomItem.illustrationType && (
+                <VisualIllustration type={selectedZoomItem.illustrationType} size="lg" showCaption />
+              )}
+              {selectedZoomItem.signId && (
+                <div className="flex flex-col items-center gap-3">
+                  <TrafficSignComponent signId={selectedZoomItem.signId} size={160} />
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+                    Placa Oficial CONTRAN: {selectedZoomItem.signId}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <p className="text-sm sm:text-base font-semibold text-slate-200 leading-relaxed mb-4">
+              {selectedZoomItem.description}
+            </p>
+
+            <div className="p-4 rounded-2xl bg-amber-950/40 border-2 border-amber-500/50 text-amber-100 text-xs sm:text-sm font-semibold flex items-start gap-3">
+              <Lightbulb className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-black text-amber-300 block text-xs uppercase tracking-wide mb-0.5">
+                  Regra do Código de Trânsito Brasileiro (CTB):
+                </strong>
+                <span>{selectedZoomItem.ctbRule}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

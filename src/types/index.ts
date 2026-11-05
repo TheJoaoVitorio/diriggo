@@ -9,6 +9,8 @@ export type QuestionTopic =
 export interface QuestionOption {
   id: string;
   text: string;
+  signId?: string;
+  illustration?: string;
 }
 
 export interface Question {
@@ -19,7 +21,10 @@ export interface Question {
   correctOptionId: string;
   explanation: string;
   signId?: string;
+  illustration?: string;
   difficulty?: 'easy' | 'medium' | 'hard';
+  type?: 'text' | 'image_choice' | 'sign_choice';
+  badge?: string;
 }
 
 export interface TheorySlide {
@@ -29,6 +34,7 @@ export interface TheorySlide {
   content: string;
   bullets?: string[];
   signId?: string;
+  illustration?: string;
   badge?: string;
   tip?: string;
   stat?: {

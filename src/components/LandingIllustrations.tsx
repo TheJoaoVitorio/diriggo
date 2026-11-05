@@ -88,7 +88,7 @@ export const HeroTrafficWorldIllustration: React.FC<{ className?: string }> = ({
         <g transform="translate(345, 90)">
           <rect x="23" y="65" width="6" height="100" fill="#64748B" rx="2" />
           <polygon points="18,10 34,10 46,22 46,38 34,50 18,50 6,38 6,22" fill="#DC2626" stroke="#FFFFFF" strokeWidth="2.5" />
-          <text x="26" y="34" fill="#FFFFFF" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+          <text x="26" y="34" fill="#FFFFFF" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">
             PARE
           </text>
         </g>
@@ -99,7 +99,7 @@ export const HeroTrafficWorldIllustration: React.FC<{ className?: string }> = ({
 
           {/* Roof Plaque */}
           <rect x="45" y="4" width="40" height="15" rx="3" fill="#FFFFFF" stroke="#CA8A04" strokeWidth="1.5" />
-          <text x="65" y="15" fill="#18181B" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+          <text x="65" y="15" fill="#18181B" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">
             DIRIGGO
           </text>
           <rect x="63" y="19" width="4" height="4" fill="#64748B" />
@@ -162,23 +162,23 @@ export const GamificationIllustration: React.FC<{ className?: string }> = ({ cla
         {/* Floating Streak Badge */}
         <g transform="translate(35, 75)">
           <rect x="0" y="0" width="95" height="58" rx="18" fill="#FFFFFF" stroke="#FDBA74" strokeWidth="3" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.1))" />
-          <text x="47" y="26" fill="#EA580C" fontSize="16" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">🔥 14</text>
-          <text x="47" y="46" fill="#9A3412" fontSize="9" fontWeight="800" textAnchor="middle" fontFamily="sans-serif">OFENSIVA</text>
+          <text x="47" y="26" fill="#EA580C" fontSize="16" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">🔥 14</text>
+          <text x="47" y="46" fill="#9A3412" fontSize="9" fontWeight="800" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">OFENSIVA</text>
         </g>
 
         {/* Floating XP Lightning Badge */}
         <g transform="translate(290, 85)">
           <rect x="0" y="0" width="85" height="52" rx="16" fill="#FFFFFF" stroke="#FDE047" strokeWidth="3" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.1))" />
-          <text x="42" y="26" fill="#CA8A04" fontSize="15" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">⚡ +50</text>
-          <text x="42" y="44" fill="#854D0E" fontSize="9" fontWeight="800" textAnchor="middle" fontFamily="sans-serif">XP GANHO</text>
+          <text x="42" y="26" fill="#CA8A04" fontSize="15" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">⚡ +50</text>
+          <text x="42" y="44" fill="#854D0E" fontSize="9" fontWeight="800" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">XP GANHO</text>
         </g>
 
         {/* Floating CNH Carteira Badge */}
         <g transform="translate(270, 205)">
           <rect x="0" y="0" width="115" height="65" rx="18" fill="#047857" stroke="#065F46" strokeWidth="3" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.1))" />
           <rect x="10" y="10" width="26" height="32" rx="4" fill="#A7F3D0" />
-          <text x="44" y="26" fill="#FFFFFF" fontSize="11" fontWeight="900" fontFamily="sans-serif">CNH A/B</text>
-          <text x="44" y="44" fill="#ECFDF5" fontSize="12" fontWeight="900" fontFamily="sans-serif">0 PONTOS</text>
+          <text x="44" y="26" fill="#FFFFFF" fontSize="11" fontWeight="900" fontFamily="'Plus Jakarta Sans', sans-serif">CNH A/B</text>
+          <text x="44" y="44" fill="#ECFDF5" fontSize="12" fontWeight="900" fontFamily="'Plus Jakarta Sans', sans-serif">0 PONTOS</text>
           <circle cx="100" cy="50" r="5" fill="#10B981" />
         </g>
       </svg>
@@ -214,7 +214,7 @@ export const RoadMapIllustration: React.FC<{ className?: string }> = ({ classNam
         <g transform="translate(90, 280)">
           <circle cx="0" cy="0" r="26" fill="#22C55E" stroke="#15803D" strokeWidth="4" />
           <path d="M -9 0 L -3 8 L 11 -7" fill="none" stroke="#FFFFFF" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
-          <text x="0" y="42" fill="#166534" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">Lição 1</text>
+          <text x="0" y="42" fill="#166534" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">Lição 1</text>
         </g>
 
         {/* Node 2 - Current Active (Yellow Pulsing with Crown) */}
@@ -222,7 +222,7 @@ export const RoadMapIllustration: React.FC<{ className?: string }> = ({ classNam
           <circle cx="0" cy="0" r="32" fill="#FEF08A" opacity="0.6" className="animate-ping" />
           <circle cx="0" cy="0" r="28" fill="#FFC800" stroke="#CA8A04" strokeWidth="4" />
           <polygon points="-8,-14 -2,-6 0,-17 2,-6 8,-14 6,4 -6,4" fill="#78350F" />
-          <text x="0" y="45" fill="#854D0E" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">Você está aqui</text>
+          <text x="0" y="45" fill="#854D0E" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">Você está aqui</text>
         </g>
 
         {/* Node 3 - Locked (Slate with Lock) */}
@@ -246,9 +246,9 @@ export const ExamCertificateIllustration: React.FC<{ className?: string }> = ({ 
 
         {/* Header Bar */}
         <rect x="55" y="40" width="310" height="44" rx="20" fill="#F8FAFC" />
-        <text x="75" y="66" fill="#0F172A" fontSize="13" fontWeight="900" fontFamily="sans-serif">SIMULADO OFICIAL DETRAN</text>
+        <text x="75" y="66" fill="#0F172A" fontSize="13" fontWeight="900" fontFamily="'Plus Jakarta Sans', sans-serif">SIMULADO OFICIAL DETRAN</text>
         <rect x="280" y="52" width="72" height="22" rx="8" fill="#FEF3C7" stroke="#FDE047" />
-        <text x="316" y="67" fill="#92400E" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">⏱️ 38:12</text>
+        <text x="316" y="67" fill="#92400E" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">⏱️ 38:12</text>
 
         {/* Question Mock */}
         <rect x="75" y="105" width="190" height="10" rx="3" fill="#E2E8F0" />
@@ -258,13 +258,13 @@ export const ExamCertificateIllustration: React.FC<{ className?: string }> = ({ 
         {/* Options */}
         <rect x="75" y="156" width="270" height="26" rx="8" fill="#F8FAFC" stroke="#E2E8F0" />
         <rect x="75" y="188" width="270" height="26" rx="8" fill="#DCFCE7" stroke="#22C55E" strokeWidth="2" />
-        <text x="92" y="205" fill="#15803D" fontSize="11" fontWeight="800" fontFamily="sans-serif">✓ Alternativa B (Correta - Art. 208)</text>
+        <text x="92" y="205" fill="#15803D" fontSize="11" fontWeight="800" fontFamily="'Plus Jakarta Sans', sans-serif">✓ Alternativa B (Correta - Art. 208)</text>
 
         {/* Green Stamp APROVADO */}
         <g transform="translate(195, 205) rotate(-10)">
           <rect x="0" y="0" width="155" height="60" rx="12" fill="#F0FDF4" stroke="#16A34A" strokeWidth="4" strokeDasharray="5 3" />
-          <text x="77" y="28" fill="#16A34A" fontSize="16" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">APROVADO!</text>
-          <text x="77" y="48" fill="#15803D" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">28 / 30 ACERTOS (93%)</text>
+          <text x="77" y="28" fill="#16A34A" fontSize="16" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">APROVADO!</text>
+          <text x="77" y="48" fill="#15803D" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif">28 / 30 ACERTOS (93%)</text>
         </g>
       </svg>
     </div>

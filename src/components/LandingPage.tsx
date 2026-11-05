@@ -5,16 +5,26 @@ import {
   Trophy, 
   ChevronDown,
   ArrowRight,
-  LogOut
+  LogOut,
+  ShieldAlert,
+  CloudRain,
+  HeartPulse,
+  TreePine,
+  Wrench,
+  OctagonAlert,
+  User,
+  CheckCircle2,
+  Award,
+  Flame
 } from 'lucide-react';
 import { 
   GamificationIllustration, 
   RoadMapIllustration, 
   ExamCertificateIllustration
 } from './LandingIllustrations';
-import { TrafficSignComponent } from './TrafficSign';
 import { sounds } from '../utils/sound';
 import { UserProfile } from '../types';
+import { SEO_PAGES } from '../data/seoPages';
 
 interface LandingPageProps {
   profile?: UserProfile;
@@ -22,6 +32,7 @@ interface LandingPageProps {
   onOpenSimulado: () => void;
   onOpenAuth: () => void;
   onLogout?: () => void;
+  onNavigateToSeoPage?: (slug: string) => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -29,7 +40,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onStartLearning,
   onOpenSimulado,
   onOpenAuth,
-  onLogout
+  onLogout,
+  onNavigateToSeoPage
 }) => {
   const isLoggedIn = Boolean(profile?.isLoggedIn && profile?.uid);
 
@@ -70,13 +82,52 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  const subjects = [
-    { icon: '🚦', name: 'LEGISLAÇÃO DE TRÂNSITO', desc: '12 QUESTÕES' },
-    { icon: '🌧️', name: 'DIREÇÃO DEFENSIVA', desc: '10 QUESTÕES' },
-    { icon: '🩹', name: 'PRIMEIROS SOCORROS', desc: '3 QUESTÕES' },
-    { icon: '🌳', name: 'MEIO AMBIENTE & CIDADANIA', desc: '3 QUESTÕES' },
-    { icon: '🔧', name: 'MECÂNICA BÁSICA', desc: '2 QUESTÕES' },
-    { icon: '🛑', name: 'PLACAS & SINALIZAÇÃO', desc: 'CONTRAN' }
+  // Matérias CONTRAN — ícones vetoriais Lucide com badges táteis coloridos.
+  // Substitui emojis soltos por um sistema de ícones de peso e traço consistentes.
+  type SubjectItem = {
+    Icon: typeof ShieldAlert;
+    name: string;
+    desc: string;
+    tone: string;
+  };
+
+  const subjects: SubjectItem[] = [
+    {
+      Icon: ShieldAlert,
+      name: 'Legislação de Trânsito',
+      desc: '12 questões',
+      tone: 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-400/15 dark:text-amber-300 dark:border-amber-400/30',
+    },
+    {
+      Icon: CloudRain,
+      name: 'Direção Defensiva',
+      desc: '10 questões',
+      tone: 'bg-sky-100 text-sky-700 border-sky-300 dark:bg-sky-400/15 dark:text-sky-300 dark:border-sky-400/30',
+    },
+    {
+      Icon: HeartPulse,
+      name: 'Primeiros Socorros',
+      desc: '3 questões',
+      tone: 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-400/15 dark:text-rose-300 dark:border-rose-400/30',
+    },
+    {
+      Icon: TreePine,
+      name: 'Meio Ambiente & Cidadania',
+      desc: '3 questões',
+      tone: 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-400/15 dark:text-emerald-300 dark:border-emerald-400/30',
+    },
+    {
+      Icon: Wrench,
+      name: 'Mecânica Básica',
+      desc: '2 questões',
+      tone: 'bg-stone-100 text-stone-700 border-stone-300 dark:bg-stone-400/15 dark:text-stone-300 dark:border-stone-400/30',
+    },
+    {
+      Icon: OctagonAlert,
+      name: 'Placas & Sinalização',
+      desc: 'CONTRAN',
+      tone: 'bg-red-100 text-red-700 border-red-300 dark:bg-red-400/15 dark:text-red-300 dark:border-red-400/30',
+    },
   ];
 
   return (
@@ -97,8 +148,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               }
             }}
           >
-            <div className="w-9 h-9 rounded-2xl bg-[#FFC800] border-b-4 border-[#CA8A04] flex items-center justify-center text-lg shadow-xs group-hover:scale-105 group-hover:-rotate-3 transition-transform">
-              🚦
+            <div className="w-9 h-9 rounded-2xl bg-[#FFC800] border-b-4 border-[#CA8A04] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:-rotate-3 transition-transform">
+              <div
+                aria-hidden="true"
+                className="flex flex-col items-center gap-[3px] rounded-[4px] bg-[#18181B] px-[3px] py-[3px]"
+              >
+                <span className="h-1 w-1 rounded-full bg-rose-500/40" />
+                <span className="h-1 w-1 rounded-full bg-amber-400/50" />
+                <span className="h-1 w-1 rounded-full bg-emerald-400" />
+              </div>
             </div>
             <span className="text-[28px] font-black tracking-tight text-[#18181B] dark:text-white">
               dirig<span className="text-[#CA8A04] dark:text-[#FFC800]">go</span>
@@ -132,7 +190,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       className="w-5 h-5 rounded-full object-cover border border-amber-800" 
                     />
                   ) : (
-                    <span>🪪</span>
+                    <User className="w-4 h-4" strokeWidth={2.5} />
                   )}
                   <span>Minha Garagem</span>
                 </button>
@@ -162,48 +220,40 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </header>
 
-      {/* 2. CENTERED HERO SECTION (Semáforo + Placa PARE + Texto) */}
-      <section className="relative max-w-[1024px] w-full mx-auto px-4 py-14 sm:py-20 flex flex-col items-center justify-center text-center overflow-hidden">
-        {/* Elementos de Trânsito Centralizados: Semáforo e Placa de PARE com animação */}
-        <div className="flex items-center justify-center gap-8 sm:gap-10 mb-8 select-none">
-          {/* Semáforo Vertical com Luz Verde Ativa e Glow Pulsante */}
-          <div className="flex flex-col items-center animate-float-slow group cursor-default">
-            <div className="bg-slate-900 dark:bg-slate-800 p-2 sm:p-2.5 rounded-2xl border-2 border-slate-700 shadow-2xl flex flex-col items-center gap-2 group-hover:scale-105 transition-transform duration-300">
-              {/* Luz Vermelha */}
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-rose-600/25 border border-rose-500/40 relative flex items-center justify-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-rose-400/40" />
-              </div>
-              {/* Luz Amarela */}
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-amber-500/25 border border-amber-500/40 relative flex items-center justify-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-300/40" />
-              </div>
-              {/* Luz Verde Ativa (Pulsante e Luminosa) */}
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 animate-traffic-green border border-emerald-300 relative flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-white/80" />
-              </div>
-            </div>
-            {/* Poste do Semáforo */}
-            <div className="w-2 h-6 bg-slate-400 dark:bg-slate-600 rounded-b shadow-sm" />
-            <div className="w-6 h-1 bg-slate-400/50 dark:bg-slate-700 rounded-full blur-[1px] mt-0.5" />
-          </div>
+      {/* 2. HERO — cena de trânsito: semáforo verde */}
+      <section className="relative max-w-[1024px] w-full mx-auto px-4 pt-4 sm:pt-6 pb-10 sm:pb-14 flex flex-col items-center justify-center text-center overflow-hidden">
+        {/* Cena com semáforo */}
+        <div className="relative mb-6 flex w-full max-w-[280px] items-end justify-center select-none pt-2">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-36 w-36 rounded-full bg-[#FFC800]/15 blur-2xl"
+          />
+          {/* Faixa tracejada de asfalto na base */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-4 bottom-1 h-1 rounded-full opacity-70 [background:repeating-linear-gradient(90deg,#FACC15_0_14px,transparent_14px_30px)]"
+          />
 
-          {/* Placa PARE Oficial R-1 com Flutuação e Tilt Interativo */}
-          <div className="flex flex-col items-center animate-float-reverse hover:rotate-6 hover:scale-110 transition-transform duration-300 cursor-pointer group">
-            <div className="drop-shadow-xl group-hover:drop-shadow-2xl transition-all">
-              <TrafficSignComponent signId="R-1" size={78} />
+          <div className="relative flex items-end justify-center pb-2">
+            {/* Semáforo com sinal verde aberto */}
+            <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center gap-1.5 rounded-2xl border-2 border-slate-700 bg-slate-900 p-2 shadow-xl">
+                <span className="h-4 w-4 rounded-full bg-rose-500/20 ring-1 ring-rose-500/30" />
+                <span className="h-4 w-4 rounded-full bg-amber-400/25 ring-1 ring-amber-400/30" />
+                <span className="h-4 w-4 rounded-full bg-emerald-400 ring-2 ring-emerald-300/70 shadow-[0_0_12px_2px_rgba(52,211,153,0.6)]" />
+              </div>
+              <div className="h-10 w-1.5 rounded-b bg-slate-400 dark:bg-slate-600" />
+              <div className="h-1 w-8 rounded-full bg-slate-300/60 dark:bg-slate-700" />
             </div>
-            <div className="w-2 h-6 bg-slate-400 dark:bg-slate-600 rounded-b -mt-1 shadow-sm" />
-            <div className="w-8 h-1 bg-slate-400/50 dark:bg-slate-700 rounded-full blur-[1px] mt-0.5" />
           </div>
         </div>
-
         {/* Headline Centralizada */}
         <h1 className="text-[34px] sm:text-[46px] md:text-[52px] font-black text-[#4b4b4b] dark:text-white leading-[1.18] tracking-tight max-w-[780px]">
           O jeito grátis, divertido e eficaz de passar na prova da <span className="text-[#CA8A04] dark:text-[#FFC800] underline decoration-[#FDE047] decoration-wavy decoration-2">CNH</span>!
         </h1>
 
         <p className="mt-4 text-[16px] sm:text-[18px] text-[#777777] dark:text-slate-300 font-semibold max-w-[580px] leading-relaxed">
-          Simulado DETRAN e gameficação com base no CTB.
+          Simulados oficiais e trilhas gamificadas com base no Código de Trânsito Brasileiro.
         </p>
 
         {/* Botões de Ação Centralizados com Microinterações */}
@@ -229,7 +279,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               }}
               className="w-full sm:flex-1 h-[52px] rounded-2xl bg-white dark:bg-slate-800 border-2 border-[#e5e5e5] dark:border-slate-700 border-b-4 font-black text-[15px] uppercase tracking-[0.8px] text-[#CA8A04] dark:text-[#FFC800] hover:bg-[#f7f7f7] dark:hover:bg-slate-700 cursor-pointer transition-all active:translate-y-0.5 active:border-b-2"
             >
-              Entrar com Google
+              Já Tenho uma Conta
             </button>
           )}
         </div>
@@ -266,9 +316,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 }}
                 className="flex items-center gap-2.5 shrink-0 cursor-pointer hover:bg-amber-50/80 dark:hover:bg-slate-800 px-3 py-1.5 rounded-2xl hover:scale-105 transition-all select-none border border-transparent hover:border-amber-200 dark:hover:border-slate-700"
               >
-                <span className="text-2xl transition-transform hover:scale-110">{sub.icon}</span>
-                <div className="flex flex-col">
-                  <span className="text-[12px] font-black uppercase tracking-[0.8px] text-[#4b4b4b] dark:text-slate-200">
+                <span
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-b-2 ${sub.tone}`}
+                >
+                  <sub.Icon className="h-[18px] w-[18px]" strokeWidth={2.5} />
+                </span>
+                <div className="flex flex-col text-left">
+                  <span className="text-[12px] font-extrabold text-[#4b4b4b] dark:text-slate-200">
                     {sub.name}
                   </span>
                   <span className="text-[10px] font-bold text-[#777777] dark:text-slate-400">
@@ -290,9 +344,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 }}
                 className="flex items-center gap-2.5 shrink-0 cursor-pointer hover:bg-amber-50/80 dark:hover:bg-slate-800 px-3 py-1.5 rounded-2xl hover:scale-105 transition-all select-none border border-transparent hover:border-amber-200 dark:hover:border-slate-700"
               >
-                <span className="text-2xl transition-transform hover:scale-110">{sub.icon}</span>
-                <div className="flex flex-col">
-                  <span className="text-[12px] font-black uppercase tracking-[0.8px] text-[#4b4b4b] dark:text-slate-200">
+                <span
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-b-2 ${sub.tone}`}
+                >
+                  <sub.Icon className="h-[18px] w-[18px]" strokeWidth={2.5} />
+                </span>
+                <div className="flex flex-col text-left">
+                  <span className="text-[12px] font-extrabold text-[#4b4b4b] dark:text-slate-200">
                     {sub.name}
                   </span>
                   <span className="text-[10px] font-bold text-[#777777] dark:text-slate-400">
@@ -358,8 +416,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <span className="text-[10px] bg-emerald-950 px-2 py-0.5 rounded font-black border border-emerald-500">CAT B</span>
               </div>
               <div className="flex items-center gap-4">
-                <div className="w-16 h-20 bg-emerald-900/60 rounded-xl border border-emerald-400 flex items-center justify-center text-3xl shadow-inner">
-                  👤
+                <div className="w-16 h-20 bg-emerald-900/60 rounded-xl border border-emerald-400 flex items-center justify-center shadow-inner">
+                  <User className="w-8 h-8 text-emerald-200" strokeWidth={2} />
                 </div>
                 <div>
                   <h4 className="text-sm font-black">FUTURO CONDUTOR</h4>
@@ -407,7 +465,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               }}
               className="mt-6 px-6 h-[48px] rounded-2xl duo-btn-yellow font-black text-[13px] uppercase tracking-[0.8px] cursor-pointer shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
             >
-              <Trophy className="w-4 h-4" />
+              <Award className="w-4 h-4" strokeWidth={2.5} />
               <span>Fazer Simulado 30Q</span>
             </button>
           </div>
@@ -427,16 +485,29 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="relative">
               {/* Notificação Flutuante no Topo do Celular */}
               <div className="absolute -top-4 -right-4 bg-emerald-500 text-white px-3 py-1.5 rounded-xl font-black text-[11px] shadow-lg flex items-center gap-1.5 animate-float-slow z-10 border-2 border-emerald-300">
-                <span>✓</span>
-                <span>Meta Diária Atingida!</span>
+                <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={3} />
+                <span>Meta diária atingida</span>
               </div>
 
               <div className="w-56 h-80 bg-slate-900 rounded-[38px] p-3 shadow-2xl border-4 border-slate-700 relative flex flex-col select-none hover:scale-105 transition-transform duration-300">
                 <div className="w-20 h-4 bg-slate-800 rounded-full mx-auto mb-2" />
                 <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-[28px] p-3 flex flex-col justify-between">
                   <div className="flex items-center justify-between text-xs font-black text-slate-800 dark:text-white">
-                    <span>🚦 Diriggo</span>
-                    <span className="text-amber-500 font-black">🔥 3</span>
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        aria-hidden="true"
+                        className="flex flex-col items-center gap-[2px] rounded-[3px] bg-slate-900 px-[2px] py-[2px]"
+                      >
+                        <span className="h-[3px] w-[3px] rounded-full bg-rose-500/50" />
+                        <span className="h-[3px] w-[3px] rounded-full bg-amber-400/60" />
+                        <span className="h-[3px] w-[3px] rounded-full bg-emerald-400" />
+                      </span>
+                      Diriggo
+                    </span>
+                    <span className="text-amber-600 flex items-center gap-0.5">
+                      <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
+                      3
+                    </span>
                   </div>
                   <div className="space-y-2">
                     <div className="h-10 bg-[#FFC800] rounded-xl flex items-center justify-center font-black text-slate-900 text-xs shadow-sm">
@@ -491,49 +562,181 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div>
             <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Sobre nós</h4>
             <ul className="space-y-2 text-[13px] font-bold">
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Cursos</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Metodologia</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Eficácia</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Carreiras</a></li>
+              <li>
+                <a 
+                  href={SEO_PAGES['metodologia']?.path || '/sobre/metodologia'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('metodologia'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Metodologia
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['eficacia']?.path || '/sobre/eficacia'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('eficacia'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Eficácia do Método
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['duvidas-frequentes']?.path || '/duvidas-frequentes'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('duvidas-frequentes'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Perguntas & Respostas
+                </a>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { sounds.playClick(); onStartLearning(); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left cursor-pointer"
+                >
+                  Começar a Praticar
+                </button>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Matérias CNH</h4>
             <ul className="space-y-2 text-[13px] font-bold">
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Legislação</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Direção Defensiva</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Primeiros Socorros</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Mecânica</a></li>
+              <li>
+                <a 
+                  href={SEO_PAGES['legislacao']?.path || '/materias/legislacao-de-transito'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('legislacao'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Legislação de Trânsito
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['direcao-defensiva']?.path || '/materias/direcao-defensiva'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('direcao-defensiva'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Direção Defensiva
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['primeiros-socorros']?.path || '/materias/primeiros-socorros'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('primeiros-socorros'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Primeiros Socorros
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['mecanica-basica']?.path || '/materias/mecanica-basica'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('mecanica-basica'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Mecânica Básica
+                </a>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Simulados</h4>
+            <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Simulados DETRAN</h4>
             <ul className="space-y-2 text-[13px] font-bold">
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">DETRAN SP</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">DETRAN RJ</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">DETRAN MG</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">DETRAN PR</a></li>
+              <li>
+                <a 
+                  href={SEO_PAGES['simulado-detran-sp']?.path || '/simulados/detran-sp'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('simulado-detran-sp'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  DETRAN SP (São Paulo)
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['simulado-detran-rj']?.path || '/simulados/detran-rj'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('simulado-detran-rj'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  DETRAN RJ (Rio de Janeiro)
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['simulado-detran-mg']?.path || '/simulados/detran-mg'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('simulado-detran-mg'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  DETRAN MG (Minas Gerais)
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['simulado-detran-pr']?.path || '/simulados/detran-pr'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('simulado-detran-pr'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  DETRAN PR (Paraná)
+                </a>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Ajuda</h4>
+            <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Regras & Ajuda</h4>
             <ul className="space-y-2 text-[13px] font-bold">
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Dúvidas Frequentes</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Resoluções CONTRAN</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Pontuação CTB</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Contato</a></li>
+              <li>
+                <a 
+                  href={SEO_PAGES['duvidas-frequentes']?.path || '/duvidas-frequentes'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('duvidas-frequentes'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Dúvidas Frequentes
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['pontuacao-cnh']?.path || '/pontuacao-cnh'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('pontuacao-cnh'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Tabela de Pontuação CTB
+                </a>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { sounds.playClick(); onOpenSimulado(); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left cursor-pointer"
+                >
+                  Simulado Geral Oficial
+                </button>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Privacidade</h4>
+            <h4 className="text-[#4b4b4b] dark:text-white font-black text-[13px] uppercase tracking-[0.8px] mb-4">Privacidade & Legal</h4>
             <ul className="space-y-2 text-[13px] font-bold">
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Termos de Uso</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Privacidade</a></li>
-              <li><a href="#" className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors">Segurança</a></li>
+              <li>
+                <a 
+                  href={SEO_PAGES['termos-de-uso']?.path || '/termos-de-uso'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('termos-de-uso'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Termos de Uso
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={SEO_PAGES['politica-privacidade']?.path || '/politica-de-privacidade'} 
+                  onClick={(e) => { e.preventDefault(); onNavigateToSeoPage?.('politica-privacidade'); }}
+                  className="hover:text-[#4b4b4b] dark:hover:text-white transition-colors block text-left"
+                >
+                  Política de Privacidade
+                </a>
+              </li>
             </ul>
           </div>
         </div>
