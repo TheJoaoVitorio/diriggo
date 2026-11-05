@@ -85,7 +85,8 @@ if (isFirebaseConfigured()) {
       db = initializeFirestore(app, {
         localCache: persistentLocalCache({
           tabManager: persistentMultipleTabManager()
-        })
+        }),
+        experimentalAutoDetectLongPolling: true,
       }, databaseId);
     } catch {
       db = getFirestore(app, databaseId);
