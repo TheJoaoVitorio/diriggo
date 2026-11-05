@@ -3,6 +3,7 @@ import { X, Clock, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight } from '
 import confetti from 'canvas-confetti';
 import { Question } from '../types';
 import { TrafficSignComponent } from './TrafficSign';
+import { VisualIllustration } from './VisualIllustrations';
 import { sounds } from '../utils/sound';
 
 interface SimuladoModalProps {
@@ -55,6 +56,13 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
   };
 
   const currentQ = examQuestions[currentIndex];
+  const isImageChoice = Boolean(
+    currentQ && (
+      currentQ.type === 'image_choice' ||
+      currentQ.type === 'sign_choice' ||
+      currentQ.options.some(opt => opt.signId || opt.illustration)
+    )
+  );
 
   const handleSelectOption = (optId: string) => {
     if (isFinished) return;
@@ -263,10 +271,15 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
           })}
         </div>
 
-        {/* Traffic Sign if any */}
+        {/* Traffic Sign or Illustration if any */}
         {currentQ.signId && (
           <div className="flex justify-center mb-4">
             <TrafficSignComponent signId={currentQ.signId} size={110} />
+          </div>
+        )}
+        {currentQ.illustration && (
+          <div className="flex justify-center mb-4">
+            <VisualIllustration type={currentQ.illustration} size="md" showCaption />
           </div>
         )}
 
@@ -281,45 +294,114 @@ export const SimuladoModal: React.FC<SimuladoModalProps> = ({
         </div>
 
         {/* Options */}
-        <div className="flex flex-col gap-3">
-          {currentQ.options.map((opt) => {
-            const isSelected = answers[currentIndex] === opt.id;
-            const isCorrect = opt.id === currentQ.correctOptionId;
+        {isImageChoice ? (
+          <div className={`grid grid-cols-1 ${currentQ.options.length <= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2 md:grid-cols-4'} gap-3.5`}>
+            {currentQ.options.map((opt) => {
+              const isSelected = answers[currentIndex] === opt.id;
+              const isCorrect = opt.id === currentQ.correctOptionId;
 
-            let cardStyle = 'duo-btn-card';
-            if (reviewMode) {
-              if (isCorrect) cardStyle = 'bg-emerald-100 dark:bg-emerald-950 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-bold';
-              else if (isSelected && !isCorrect) cardStyle = 'bg-rose-100 dark:bg-rose-950 border-rose-500 text-rose-950 dark:text-rose-100 font-bold';
-            } else if (isSelected) {
-              cardStyle = 'selected ring-2 ring-amber-400 font-bold';
-            }
+              let cardStyle = 'duo-btn-card';
+              if (reviewMode) {
+                if (isCorrect) cardStyle = 'bg-emerald-100 dark:bg-emerald-950 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-bold';
+                else if (isSelected && !isCorrect) cardStyle = 'bg-rose-100 dark:bg-rose-950 border-rose-500 text-rose-950 dark:text-rose-100 font-bold';
+              } else if (isSelected) {
+                cardStyle = 'selected ring-2 ring-amber-400 font-bold';
+              }
 
-            return (
-              <button
-                key={opt.id}
-                disabled={reviewMode}
-                onClick={() => handleSelectOption(opt.id)}
-                className={`
-                  w-full text-left p-4 rounded-2xl flex items-center justify-between cursor-pointer font-semibold text-sm sm:text-base
-                  ${cardStyle}
-                `}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs font-black uppercase text-slate-700 dark:text-slate-300">
-                    {opt.id}
-                  </span>
-                  <span>{opt.text}</span>
-                </div>
-                {reviewMode && isCorrect && (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 ml-2" />
-                )}
-                {reviewMode && isSelected && !isCorrect && (
-                  <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 ml-2" />
-                )}
-              </button>
-            );
-          })}
-        </div>
+              return (
+                <button
+                  key={opt.id}
+                  disabled={reviewMode}
+                  onClick={() => handleSelectOption(opt.id)}
+                  className={`
+                    relative flex flex-col justify-between items-center p-4 rounded-2xl cursor-pointer text-left transition-all
+                    ${cardStyle}
+                  `}
+                >
+                  {/* Visual plate / illustration preview */}
+                  <div className="w-full h-32 flex items-center justify-center p-2 mb-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                    {opt.signId && (
+                      <TrafficSignComponent signId={opt.signId} size={105} />
+                    )}
+                    {opt.illustration && (
+                      <VisualIllustration type={opt.illustration} size="sm" />
+                    )}
+                    {!opt.signId && !opt.illustration && (
+                      <div className="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-3xl">
+                        🚗
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card footer: Option label & Letter badge */}
+                  <div className="w-full flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800/80">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate mr-2">
+                      {currentQ.type === 'sign_choice'
+                        ? (opt.signId ? `Placa ${opt.signId}` : opt.text)
+                        : currentQ.type === 'image_choice'
+                        ? (opt.text.startsWith('Item') || opt.text.startsWith('Componente') || opt.text.startsWith('Luz') ? `Opção ${opt.id.toUpperCase()}` : opt.text)
+                        : opt.text}
+                    </span>
+                    <span className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs font-black uppercase text-slate-700 dark:text-slate-300 shrink-0">
+                      {opt.id.toUpperCase()}
+                    </span>
+                  </div>
+
+                  {reviewMode && isCorrect && (
+                    <div className="absolute top-2 right-2 bg-emerald-500 text-white rounded-full p-1 shadow-md">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                  )}
+                  {reviewMode && isSelected && !isCorrect && (
+                    <div className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1 shadow-md">
+                      <AlertCircle className="w-4 h-4" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {currentQ.options.map((opt) => {
+              const isSelected = answers[currentIndex] === opt.id;
+              const isCorrect = opt.id === currentQ.correctOptionId;
+
+              let cardStyle = 'duo-btn-card';
+              if (reviewMode) {
+                if (isCorrect) cardStyle = 'bg-emerald-100 dark:bg-emerald-950 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-bold';
+                else if (isSelected && !isCorrect) cardStyle = 'bg-rose-100 dark:bg-rose-950 border-rose-500 text-rose-950 dark:text-rose-100 font-bold';
+              } else if (isSelected) {
+                cardStyle = 'selected ring-2 ring-amber-400 font-bold';
+              }
+
+              return (
+                <button
+                  key={opt.id}
+                  disabled={reviewMode}
+                  onClick={() => handleSelectOption(opt.id)}
+                  className={`
+                    w-full text-left p-4 rounded-2xl flex items-center justify-between cursor-pointer font-semibold text-sm sm:text-base
+                    ${cardStyle}
+                  `}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs font-black uppercase text-slate-700 dark:text-slate-300">
+                      {opt.id.toUpperCase()}
+                    </span>
+                    <span>{opt.text}</span>
+                  </div>
+                  {reviewMode && isCorrect && (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 ml-2" />
+                  )}
+                  {reviewMode && isSelected && !isCorrect && (
+                    <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 ml-2" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Legal Explanation in review mode */}
         {reviewMode && (
