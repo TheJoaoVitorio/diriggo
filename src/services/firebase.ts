@@ -247,8 +247,12 @@ export const saveUserProgressToFirestore = async (profile: UserProfile): Promise
     };
 
     await setDoc(userRef, dataToSave, { merge: true });
-  } catch (err) {
-    console.error('[Diriggo Firebase] Erro ao sincronizar progresso com o Firestore:', err);
+  } catch (err: any) {
+    if (err?.message?.includes("Database '(default)' not found") || err?.code === 'not-found') {
+      console.warn("[Diriggo Firebase] Banco de dados '(default)' ainda não criado no Firebase Console. O progresso foi salvo com segurança no localStorage.");
+    } else {
+      console.error('[Diriggo Firebase] Erro ao sincronizar progresso com o Firestore:', err);
+    }
   }
 };
 
@@ -262,14 +266,15 @@ export const fetchUserProgressFromFirestore = async (
 
   try {
     const userRef = doc(db, 'users', uid);
-    const snapshot = await getDoc(userRef);
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500));
+    const snapshot = await Promise.race([getDoc(userRef), timeoutPromise]);
 
     if (snapshot && snapshot.exists()) {
       return snapshot.data() as Partial<UserProfile>;
     }
     return null;
   } catch (err) {
-    console.error('[Diriggo Firebase] Erro ao carregar dados do usuário:', err);
+    console.warn('[Diriggo Firebase] Erro ao carregar dados do usuário:', err);
     return null;
   }
 };
@@ -300,9 +305,11 @@ export const syncOrInitUserProfile = async (user: User): Promise<UserProfile> =>
 
     try {
       const userRef = doc(db, 'users', user.uid);
-      const snapshot = await getDoc(userRef);
+      // Timeout seguro de 2.5s para evitar travamento de interface se o banco Cloud Firestore estiver inacessível ou não criado
+      const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500));
+      const snapshot = await Promise.race([getDoc(userRef), timeoutPromise]);
 
-      if (snapshot.exists()) {
+      if (snapshot && snapshot.exists()) {
         const data = snapshot.data();
         return {
           uid: user.uid,
@@ -321,37 +328,66 @@ export const syncOrInitUserProfile = async (user: User): Promise<UserProfile> =>
         };
       }
 
-      // Documento não existe no Firestore: novo usuário cadastrado
-      const newProfile: UserProfile = {
+      if (snapshot && !snapshot.exists()) {
+        // Documento comprovadamente inexistente no Firestore (usuário novo): cria documento
+        const newProfile: UserProfile = {
+          ...INITIAL_USER_PROFILE,
+          uid: user.uid,
+          name: user.displayName || 'Novo Condutor',
+          email: user.email || '',
+          photoURL: user.photoURL || undefined,
+          isLoggedIn: true,
+        };
+
+        // Gravação garantida no Firestore com { merge: true }
+        setDoc(userRef, {
+          uid: newProfile.uid,
+          name: newProfile.name,
+          email: newProfile.email,
+          photoURL: newProfile.photoURL || null,
+          streak: 0,
+          xp: 0,
+          cnhPoints: 0,
+          maxCnhPoints: 20,
+          completedLessons: [],
+          simuladosHistory: [],
+          soundEnabled: true,
+          darkMode: true,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }, { merge: true }).catch(e => console.warn('[Diriggo Firebase] Erro ao gravar documento inicial:', e));
+
+        return newProfile;
+      }
+
+      // Se snapshot for nulo (timeout ou falha de conectividade): recupera do cache local sem nunca sobrescrever com perfil zerado
+      console.warn('[Diriggo Firebase] Firestore demorou para responder (banco pode não estar criado). Usando cache local seguro.');
+      try {
+        const cached = localStorage.getItem('diriggo_user_profile_v4');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.uid === user.uid) {
+            return {
+              ...INITIAL_USER_PROFILE,
+              ...parsed,
+              isLoggedIn: true,
+            };
+          }
+        }
+      } catch {
+        // fallback
+      }
+
+      return {
         ...INITIAL_USER_PROFILE,
         uid: user.uid,
-        name: user.displayName || 'Novo Condutor',
+        name: user.displayName || 'Condutor Diriggo',
         email: user.email || '',
         photoURL: user.photoURL || undefined,
         isLoggedIn: true,
       };
-
-      // Gravação garantida no Firestore com { merge: true }
-      setDoc(userRef, {
-        uid: newProfile.uid,
-        name: newProfile.name,
-        email: newProfile.email,
-        photoURL: newProfile.photoURL || null,
-        streak: 0,
-        xp: 0,
-        cnhPoints: 0,
-        maxCnhPoints: 20,
-        completedLessons: [],
-        simuladosHistory: [],
-        soundEnabled: true,
-        darkMode: true,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      }, { merge: true }).catch(e => console.warn('[Diriggo Firebase] Erro ao gravar documento inicial:', e));
-
-      return newProfile;
     } catch (err) {
-      console.error('[Diriggo Firebase] Erro ao carregar dados do usuário no Firestore:', err);
+      console.warn('[Diriggo Firebase] Erro ao carregar dados do usuário no Firestore:', err);
       // Tenta recuperar do cache local do navegador para nunca perder progresso offline
       try {
         const cached = localStorage.getItem('diriggo_user_profile_v4');
