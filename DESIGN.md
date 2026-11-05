@@ -92,10 +92,8 @@ O arquivo de referência [`duolingo-DESIGN.md`](duolingo-DESIGN.md) documenta um
 ## 2. Componentes Fundamentais
 
 ### 2.1 Botões de Ação (CTAs)
-- **Botão Primário (Amarelo Trânsito)**:
-  `bg-[#FFC800] hover:bg-[#FACC15] text-[#18181B] font-extrabold border-b-4 border-[#CA8A04] rounded-2xl`
-- **Botão de Confirmação / Sucesso (Verde Semáforo)**:
-  `bg-[#22C55E] hover:bg-[#16A34A] text-white font-extrabold border-b-4 border-[#15803D] rounded-2xl`
+- **Botão Primário de Ação (Amarelo Trânsito - Verificar, Continuar, Pronto)**:
+  `bg-[#FFC800] hover:bg-[#FACC15] text-slate-950 font-extrabold border-b-4 border-[#CA8A04] rounded-2xl` (.duo-btn-yellow)
 - **Botão de Alternativa em Lição**:
   Caixa branca com borda `border-2 border-slate-200 border-b-4 hover:border-slate-300 hover:bg-slate-50 cursor-pointer rounded-2xl p-4 flex items-center`. Quando selecionado, adquire contorno amarelo ou azul brilhante.
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Zap, Sparkles, Trophy } from 'lucide-react';
 import { TRAFFIC_SIGNS } from '../data/signs';
 import { TrafficSignComponent } from './TrafficSign';
 import { TrafficSign } from '../types';
@@ -7,9 +7,13 @@ import { sounds } from '../utils/sound';
 
 interface PlacasGalleryProps {
   bothSidebarsActive?: boolean;
+  onStartQuiz?: (category?: 'todas' | 'regulamentacao' | 'advertencia') => void;
 }
 
-export const PlacasGallery: React.FC<PlacasGalleryProps> = ({ bothSidebarsActive = false }) => {
+export const PlacasGallery: React.FC<PlacasGalleryProps> = ({ 
+  bothSidebarsActive = false,
+  onStartQuiz
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'todas' | 'regulamentacao' | 'advertencia' | 'servicos' | 'turismo'>('todas');
   const [activeSignModal, setActiveSignModal] = useState<TrafficSign | null>(null);
@@ -30,11 +34,59 @@ export const PlacasGallery: React.FC<PlacasGalleryProps> = ({ bothSidebarsActive
 
   return (
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-6 select-none">
+      {/* Super Quiz Hero Banner (Estilo Duolingo Praticar) */}
+      {onStartQuiz && (
+        <div className="mb-6 rounded-3xl bg-gradient-to-r from-[#182631] via-[#1c2d3a] to-[#241a38] border-2 border-[#2b3e4e] p-5 sm:p-7 relative overflow-hidden shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          {/* Subtle background glow */}
+          <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-10 right-1/4 w-36 h-36 rounded-full bg-purple-500/10 blur-2xl pointer-events-none" />
+
+          <div className="flex items-start gap-4 z-10">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-3xl font-black shadow-lg shrink-0 border-b-4 border-amber-600">
+              🛑
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-300 border border-amber-400/40 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-amber-400" />
+                  NOVO: MODO DUOLINGO
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                  <Trophy className="w-3 h-3 text-emerald-400" />
+                  +30 XP POR ROUND
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Quiz Interativo de Reconhecimento de Placas
+              </h2>
+              <p className="text-xs sm:text-sm font-semibold text-slate-300 max-w-xl mt-1 leading-relaxed">
+                Pratique o reconhecimento visual de placas com atalhos de teclado <strong>[1] [2] [3]</strong>, vidas dinâmicas e repetição espaçada das placas que você errar.
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full md:w-auto z-10 flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
+            <button
+              onClick={() => {
+                const cat = selectedCategory === 'regulamentacao' || selectedCategory === 'advertencia'
+                  ? selectedCategory
+                  : 'todas';
+                onStartQuiz(cat);
+              }}
+              className="duo-btn-yellow px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <Zap className="w-4 h-4 fill-slate-950" />
+              <span>Jogar Quiz de Placas</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header Compacto */}
       <div className="mb-5">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-9 h-9 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-lg font-black shadow-xs shrink-0">
-            🛑
+            🚦
           </div>
           <div>
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">

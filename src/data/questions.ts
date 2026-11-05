@@ -322,6 +322,143 @@ export const ALL_QUESTIONS: Question[] = [
     explanation: 'O catalisador promove reações químicas para transformar monóxido de carbono e óxidos de nitrogênio em vapor de água, nitrogênio e dióxido de carbono.',
     difficulty: 'medium'
   }
+,
+  // --- QUESTOES DUOLINGO (IMAGENS & PLACAS) ---
+  {
+    id: 'q-duo-01',
+    topic: 'signs',
+    text: 'Qual destas imagens é a placa de "Parada Obrigatória"?',
+    type: 'sign_choice',
+    badge: 'QUAL DESTAS É "PARE"?',
+    options: [
+      { id: 'a', text: 'Placa R-1', signId: 'R-1' },
+      { id: 'b', text: 'Placa R-2', signId: 'R-2' },
+      { id: 'c', text: 'Placa A-15', signId: 'A-15' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'A placa R-1 é a única octogonal do trânsito brasileiro. Ela exige a parada total e imediata antes da linha de retenção.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-02',
+    topic: 'signs',
+    text: 'Qual destas placas adverte sobre "Curva Acentuada em S à Esquerda"?',
+    type: 'sign_choice',
+    badge: 'IDENTIFIQUE A PLACA',
+    options: [
+      { id: 'a', text: 'Placa A-1b', signId: 'A-1B' },
+      { id: 'b', text: 'Placa R-1', signId: 'R-1' },
+      { id: 'c', text: 'Placa A-21a', signId: 'A-21A' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'A placa A-1B adverte sobre curvas sucessivas em S iniciando para a esquerda. Requer desaceleração antes de entrar na curva.',
+    difficulty: 'medium'
+  },
+  {
+    id: 'q-duo-03',
+    topic: 'legislation',
+    text: 'Qual imagem ilustra a regra de "Preferência pela Direita" em cruzamentos?',
+    type: 'image_choice',
+    badge: 'PREFERÊNCIA NO CRUZAMENTO',
+    options: [
+      { id: 'a', text: 'Cruzamento não sinalizado', illustration: 'cruzamento-direita' },
+      { id: 'b', text: 'Rotatória', illustration: 'rotatoria' },
+      { id: 'c', text: 'Via de Trânsito Rápido', illustration: 'via-transito-rapido' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'Art. 29 do CTB: Em cruzamentos sem semáforo, quem se aproxima pela DIREITA do condutor tem a preferência absoluta de passagem.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-04',
+    topic: 'legislation',
+    text: 'Em qual destas vias urbanas a velocidade máxima sem sinalização é de 80 km/h?',
+    type: 'image_choice',
+    badge: 'CLASSIFICAÇÃO DAS VIAS',
+    options: [
+      { id: 'a', text: 'Via de Trânsito Rápido', illustration: 'via-transito-rapido' },
+      { id: 'b', text: 'Via Arterial', illustration: 'via-arterial' },
+      { id: 'c', text: 'Rotatória Urbana', illustration: 'rotatoria' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'Art. 61 do CTB: As vias de trânsito rápido não possuem interseções em nível nem semáforos, permitindo velocidade de até 80 km/h.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-05',
+    topic: 'mechanics',
+    text: 'Qual destas imagens representa o "Radiador" do sistema de arrefecimento?',
+    type: 'image_choice',
+    badge: 'SISTEMA DE ARREFECIMENTO',
+    options: [
+      { id: 'a', text: 'Componente 1', illustration: 'radiador' },
+      { id: 'b', text: 'Componente 2', illustration: 'bateria' },
+      { id: 'c', text: 'Componente 3', illustration: 'freios' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'O radiador dissipa o calor gerado pelo motor através de dutos por onde circula o líquido de arrefecimento resfriado pela ventoinha.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-06',
+    topic: 'mechanics',
+    text: 'Qual luz do painel exige parar o carro imediatamente por "Baixa Pressão do Óleo"?',
+    type: 'image_choice',
+    badge: 'LUZES DE EMERGÊNCIA',
+    options: [
+      { id: 'a', text: 'Luz de Alerta 1', illustration: 'luz-oleo' },
+      { id: 'b', text: 'Luz de Alerta 2', illustration: 'luz-injecao' },
+      { id: 'c', text: 'Luz de Alerta 3', illustration: 'luz-bateria' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'A almotolia de óleo vermelha indica perda de pressão de óleo. Continuar rodando causa o travamento e fundição imediata do motor.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-07',
+    topic: 'mechanics',
+    text: 'Qual destas imagens ilustra o "Freio a Disco com Sistema ABS"?',
+    type: 'image_choice',
+    badge: 'SISTEMA DE FREIOS',
+    options: [
+      { id: 'a', text: 'Componente 1', illustration: 'freios' },
+      { id: 'b', text: 'Componente 2', illustration: 'motor-4-tempos' },
+      { id: 'c', text: 'Componente 3', illustration: 'bateria' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'O freio a disco com ABS impede o travamento das rodas durante frenagens de emergência, mantendo o controle direcional do veículo.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-08',
+    topic: 'mechanics',
+    text: 'Qual destas imagens mostra a "Bateria Automotiva (12V)"?',
+    type: 'image_choice',
+    badge: 'SISTEMA ELÉTRICO',
+    options: [
+      { id: 'a', text: 'Componente 1', illustration: 'bateria' },
+      { id: 'b', text: 'Componente 2', illustration: 'pneu-twi' },
+      { id: 'c', text: 'Componente 3', illustration: 'radiador' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'A bateria armazena eletricidade para a partida e sistemas elétricos do carro, sendo recarregada pelo alternador com o motor ligado.',
+    difficulty: 'easy'
+  },
+  {
+    id: 'q-duo-09',
+    topic: 'mechanics',
+    text: 'Qual imagem mostra o "Indicador TWI (1,6 mm)" de desgaste do pneu?',
+    type: 'image_choice',
+    badge: 'SEGURANÇA DOS PNEUS',
+    options: [
+      { id: 'a', text: 'Item 1', illustration: 'pneu-twi' },
+      { id: 'b', text: 'Item 2', illustration: 'freios' },
+      { id: 'c', text: 'Item 3', illustration: 'radiador' }
+    ],
+    correctOptionId: 'a',
+    explanation: 'O TWI é o ressalto de borracha nos sulcos do pneu. Se atingir 1,6 mm, o pneu está "careca" e deve ser substituído imediatamente.',
+    difficulty: 'easy'
+  }
 ];
 
 export const UNITS: Unit[] = [
@@ -384,7 +521,7 @@ export const UNITS: Unit[] = [
             tip: 'Dica de ouro para a prova: PARE = Parada obrigatória sempre | Dê a Preferência = Pare se vier veículo.'
           }
         ],
-        questions: [ALL_QUESTIONS[0], ALL_QUESTIONS[2]],
+        questions: [ALL_QUESTIONS[0], ALL_QUESTIONS[2], ALL_QUESTIONS[22]],
         xpReward: 20
       },
       {
@@ -399,6 +536,7 @@ export const UNITS: Unit[] = [
             title: 'Cruzamentos Não Sinalizados',
             subtitle: 'A clássica Regra da Direita (Art. 29 do CTB)',
             badge: 'Preferência de Passagem',
+            illustration: 'cruzamento-direita',
             content: 'Quando dois veículos chegam a um cruzamento sem semáforo e sem placas indicativas de preferência, a prioridade de passagem pertence sempre ao veículo que vem pela DIREITA do condutor.',
             bullets: [
               'Regra 1: Na rotatória, a preferência é de quem JÁ está circulando por ela.',
@@ -415,6 +553,7 @@ export const UNITS: Unit[] = [
             title: 'Velocidades Máximas nas Vias Urbanas',
             subtitle: 'Limites quando não houver placa R-19 regulamentando',
             badge: 'Art. 61 do CTB',
+            illustration: 'via-transito-rapido',
             content: 'O Código de Trânsito Brasileiro estabelece velocidades máximas padrão para as vias urbanas onde não existir placa de sinalização de velocidade.',
             bullets: [
               'Via de Trânsito Rápido: 80 km/h (sem cruzamentos em nível nem semáforos).',
@@ -425,7 +564,7 @@ export const UNITS: Unit[] = [
             tip: 'Mnemônico fácil para memorizar na prova: 80 - 60 - 40 - 30 (cai em quase todas as provas do DETRAN!).'
           }
         ],
-        questions: [ALL_QUESTIONS[1], ALL_QUESTIONS[3]],
+        questions: [ALL_QUESTIONS[1], ALL_QUESTIONS[3], ALL_QUESTIONS[24], ALL_QUESTIONS[25]],
         xpReward: 25
       },
       {
@@ -451,7 +590,7 @@ export const UNITS: Unit[] = [
             tip: 'Ao avistar qualquer placa amarela: solte o acelerador e prepare-se para frear preventivamente.'
           }
         ],
-        questions: [ALL_QUESTIONS[4]],
+        questions: [ALL_QUESTIONS[4], ALL_QUESTIONS[23]],
         xpReward: 20
       }
     ]
@@ -726,6 +865,7 @@ export const UNITS: Unit[] = [
             title: 'Pneus e o Indicador TWI',
             subtitle: 'A profundidade mínima de 1,6 milímetros',
             badge: 'Segurança Veicular',
+            illustration: 'pneu-twi',
             content: 'Os pneus possuem pequenos filetes de borracha no fundo dos sulcos chamados TWI (Tread Wear Indicator). Quando a borracha da banda de rodagem se desgasta e fica no mesmo nível do TWI, o pneu está "careca".',
             bullets: [
               'Profundidade mínima legal: 1,6 mm.',
@@ -738,6 +878,7 @@ export const UNITS: Unit[] = [
             title: 'Luzes do Painel de Instrumentos',
             subtitle: 'Código de cores dos alertas',
             badge: 'Painel do Carro',
+            illustration: 'luz-oleo',
             content: 'O painel do veículo comunica o estado dos sistemas por cores semelhantes às do semáforo:',
             bullets: [
               'Luzes VERMELHAS: Problemas críticos. Pare o veículo imediatamente! (Pressão de óleo, temperatura do motor, bateria/alternador, freio de mão).',
@@ -746,7 +887,7 @@ export const UNITS: Unit[] = [
             ]
           }
         ],
-        questions: [ALL_QUESTIONS[18], ALL_QUESTIONS[19]],
+        questions: [ALL_QUESTIONS[18], ALL_QUESTIONS[19], ALL_QUESTIONS[27], ALL_QUESTIONS[30]],
         xpReward: 20
       },
       {
@@ -771,6 +912,43 @@ export const UNITS: Unit[] = [
         ],
         questions: [ALL_QUESTIONS[20], ALL_QUESTIONS[21]],
         xpReward: 25
+      },
+      {
+        id: 'les-5-3',
+        unitId: 'unit-5',
+        title: 'Sistemas do Veículo: Radiador, Freios ABS & Bateria',
+        description: 'Reconheça visualmente os componentes vitais da mecânica básica.',
+        icon: 'Cpu',
+        theorySlides: [
+          {
+            id: 'ts-5-3-1',
+            title: 'Sistema de Arrefecimento & Radiador',
+            subtitle: 'Controle de temperatura do motor',
+            badge: 'Arrefecimento',
+            illustration: 'radiador',
+            content: 'O radiador dissipa o calor gerado pela combustão interna do motor, refrigerado pela ventoinha e líquido composto de água desmineralizada e aditivo etilenoglicol.',
+            bullets: [
+              'Nunca abra o reservatório de expansão com o motor quente (risco de queimaduras graves).',
+              'A ventoinha elétrica é acionada automaticamente quando a temperatura atinge o ponto programado.',
+              'Válvula termostática: regula a passagem do líquido entre o motor e o radiador.'
+            ]
+          },
+          {
+            id: 'ts-5-3-2',
+            title: 'Freios a Disco, Pastilhas & ABS',
+            subtitle: 'Segurança e controle nas frenagens',
+            badge: 'Freios & ABS',
+            illustration: 'freios',
+            content: 'O sistema de freios atua por atrito hidráulico. O sistema ABS (Antilock Braking System) impede o travamento das rodas em paradas bruscas, permitindo desviar de obstáculos.',
+            bullets: [
+              'Freio de serviço: atua hidraulicamente nas 4 rodas pelo pedal.',
+              'Freio de estacionamento (freio de mão): atua mecanicamente por cabo nas rodas traseiras.',
+              'O fluido de freio (DOT4) deve ser trocado preventivamente a cada 1 ou 2 anos.'
+            ]
+          }
+        ],
+        questions: [ALL_QUESTIONS[26], ALL_QUESTIONS[28], ALL_QUESTIONS[29]],
+        xpReward: 30
       }
     ]
   }

@@ -1,11 +1,18 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
 @layer base {
   html {
     scroll-behavior: auto;
   }
-  body {
+  html, body, button, input, textarea, select {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+  svg text {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
 }
@@ -42,7 +49,7 @@
 .duo-btn-yellow {
   background-color: #FFC800;
   border-bottom: 4px solid #CA8A04;
-  color: #18181B;
+  color: #020617;
   transition: all 0.1s ease;
 }
 .duo-btn-yellow:hover {

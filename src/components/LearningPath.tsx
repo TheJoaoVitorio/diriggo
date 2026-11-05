@@ -30,10 +30,13 @@ export const LearningPath: React.FC<LearningPathProps> = ({
   let foundActive = false;
 
   return (
-    <div className="w-full max-w-xl mx-auto py-8 px-4 flex flex-col items-center select-none">
+    <div className="w-full max-w-xl mx-auto px-4 sm:px-6 pt-8 pb-28 md:pb-12 flex flex-col items-center select-none overflow-x-hidden">
       {units.map((unit) => {
-        // Serpentine winding path offsets matching Duolingo screenshot
-        const offsets = [0, -45, -65, -30, 30, 65, 45];
+  // Serpentine winding path — base offsets for larger screens (desktop).
+  // On small screens they are scaled down proportionally via a CSS variable
+  // (see the --path-scale var below) so nodes/labels are never cut off.
+  // Scale: 0.5 on <400px (max ±33px), 0.65 on 400–640px, 1.0 on ≥640px.
+  const offsets = [0, -45, -65, -30, 30, 65, 45];
 
         return (
           <div key={unit.id} className="w-full mb-16 relative flex flex-col items-center">
@@ -69,7 +72,9 @@ export const LearningPath: React.FC<LearningPathProps> = ({
             </div>
 
             {/* FLOATING SERPENTINE NODE PATH (Diriggo Style - Clean & Distraction-free) */}
-            <div className="w-full flex flex-col items-center gap-6 relative">
+            <div
+              className="w-full max-w-full flex flex-col items-center gap-6 relative overflow-x-clip px-2 pt-16 [--path-scale:0.5] min-[400px]:[--path-scale:0.65] min-[640px]:[--path-scale:1]"
+            >
               {unit.lessons.map((lesson, lessonIdx) => {
                 const isCompleted = completedLessons.includes(lesson.id);
                 const isCurrent = !isCompleted && !foundActive;
@@ -85,12 +90,12 @@ export const LearningPath: React.FC<LearningPathProps> = ({
                 return (
                   <div
                     key={lesson.id}
-                    className="flex flex-col items-center relative transition-transform duration-200"
-                    style={{ transform: `translateX(${xOffset}px)` }}
+                    className="flex flex-col items-center relative transition-transform duration-200 will-change-transform max-w-full"
+                    style={{ transform: `translateX(calc(${xOffset}px * var(--path-scale, 1)))` }}
                   >
                     {/* Floating "COMEÇAR" badge with downward pointing caret for active node */}
                     {isCurrent && (
-                      <div className="absolute -top-12 z-20 flex flex-col items-center animate-bounce pointer-events-none select-none">
+                      <div className="absolute -top-14 z-20 flex flex-col items-center animate-bounce pointer-events-none select-none whitespace-nowrap max-w-[90vw]">
                         <div className="bg-[#131f24] dark:bg-[#131f24] border-2 border-[#CA8A04] text-[#FFC800] font-black text-xs px-4 py-1.5 rounded-xl shadow-xl tracking-wider uppercase">
                           COMEÇAR
                         </div>
@@ -136,8 +141,8 @@ export const LearningPath: React.FC<LearningPathProps> = ({
                     </button>
 
                     {/* Optional Title Label below node */}
-                    <div className="flex flex-col items-center mt-2 max-w-[150px] text-center">
-                      <span className="text-[12px] font-black text-slate-800 dark:text-slate-200 line-clamp-1">
+                    <div className="flex flex-col items-center mt-2 w-full max-w-[140px] sm:max-w-[150px] text-center min-w-0">
+                      <span className="text-[12px] font-black text-slate-800 dark:text-slate-200 line-clamp-1 break-words">
                         {lesson.title}
                       </span>
                     </div>
@@ -147,10 +152,10 @@ export const LearningPath: React.FC<LearningPathProps> = ({
 
               {/* Reward Chest (Baú de Recompensas) */}
               <div 
-                className="flex items-center justify-center relative my-2"
-                style={{ transform: 'translateX(-20px)' }}
+                className="flex items-center justify-center relative my-2 w-full max-w-full overflow-x-clip"
+                style={{ transform: 'translateX(calc(-20px * var(--path-scale, 1)))' }}
               >
-                <div className="w-[68px] h-[64px] rounded-2xl bg-[#e5e5e5] dark:bg-[#202f36] border-b-[6px] border-[#cecece] dark:border-[#162026] flex items-center justify-center relative shadow-md">
+                <div className="w-[68px] h-[64px] shrink-0 rounded-2xl bg-[#e5e5e5] dark:bg-[#202f36] border-b-[6px] border-[#cecece] dark:border-[#162026] flex items-center justify-center relative shadow-md">
                   <Package className="w-8 h-8 text-[#afafaf] dark:text-[#52656d]" />
                   <Lock className="w-3 h-3 text-slate-400 absolute" />
                 </div>
@@ -167,8 +172,8 @@ export const LearningPath: React.FC<LearningPathProps> = ({
 
               {/* Unit Final Challenge / Trophy Node */}
               <div 
-                className="flex flex-col items-center relative mt-3"
-                style={{ transform: 'translateX(35px)' }}
+                className="flex flex-col items-center relative mt-3 max-w-full"
+                style={{ transform: 'translateX(calc(35px * var(--path-scale, 1)))' }}
               >
                 <button
                   onClick={() => {
