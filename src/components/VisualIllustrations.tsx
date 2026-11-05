@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export type IllustrationType = 
   | 'motor-4-tempos'
@@ -22,6 +22,41 @@ export type IllustrationType =
   | 'faixa-seccionada'
   | 'aquaplanagem';
 
+export const COMPONENT_REAL_PHOTOS: Record<string, { src: string; alt: string }> = {
+  'radiador': {
+    src: '/componentes/radiador.jpg',
+    alt: 'Radiador automotivo de arrefecimento'
+  },
+  'bateria': {
+    src: '/componentes/bateria.jpg',
+    alt: 'Bateria automotiva 12V de partida'
+  },
+  'freios': {
+    src: '/componentes/freios.jpg',
+    alt: 'Freio automotivo a disco com pinça e ABS'
+  },
+  'pneu-twi': {
+    src: '/componentes/pneu-twi.jpg',
+    alt: 'Pneu automotivo com indicador TWI de desgaste'
+  },
+  'motor-4-tempos': {
+    src: '/componentes/motor-4-tempos.jpg',
+    alt: 'Motor automotivo de combustão interna a 4 tempos'
+  },
+  'luz-oleo': {
+    src: '/componentes/luz-oleo.png',
+    alt: 'Luz de advertência de pressão de óleo no painel'
+  },
+  'luz-bateria': {
+    src: '/componentes/luz-bateria.png',
+    alt: 'Luz de advertência da bateria/alternador no painel'
+  },
+  'luz-injecao': {
+    src: '/componentes/luz-injecao.jpg',
+    alt: 'Luz de advertência de injeção eletrônica (check engine)'
+  }
+};
+
 interface VisualIllustrationProps {
   type: IllustrationType | string;
   size?: number | 'sm' | 'md' | 'lg' | 'full';
@@ -31,9 +66,33 @@ interface VisualIllustrationProps {
 
 export const VisualIllustration: React.FC<VisualIllustrationProps> = ({
   type,
+  size = 'md',
   className = '',
   showCaption = false,
 }) => {
+  const [photoError, setPhotoError] = useState(false);
+  const realPhoto = !photoError ? COMPONENT_REAL_PHOTOS[type] : undefined;
+
+  if (realPhoto) {
+    const maxHeightClass = size === 'sm' ? 'max-h-28' : size === 'lg' ? 'max-h-56' : 'max-h-40';
+    return (
+      <div className={`flex flex-col items-center justify-center w-full h-full ${className}`}>
+        <img
+          src={realPhoto.src}
+          alt={realPhoto.alt}
+          className={`w-full h-full ${maxHeightClass} object-contain rounded-xl drop-shadow-md select-none bg-slate-900/30 p-1 border border-slate-700/40`}
+          loading="lazy"
+          onError={() => setPhotoError(true)}
+        />
+        {showCaption && (
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium text-center">
+            {realPhoto.alt}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   switch (type) {
     // ----------------------------------------------------
     // MECÂNICA BÁSICA: MOTOR 4 TEMPOS
